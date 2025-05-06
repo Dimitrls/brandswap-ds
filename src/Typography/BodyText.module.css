@@ -1,0 +1,36 @@
+.body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #161616;
+}
+.bodyLarge {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+  color: #161616;
+}
+.bodySmall {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #161616;
+}
+.bodyLight {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  color: #77787E;
+}
+.bodyLargeLight {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 28px;
+  color: #77787E;
+}
+.bodySmallLight {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 20px;
+  color: #77787E;
+} 
