@@ -4,6 +4,7 @@ import { Button } from './Button';
 export default {
   title: 'Buttons & Tags/Button',
   component: Button,
+  tags: ['autodocs'],
 };
 
 export const Filled = () => <Button variant="filled" label="Filled Button" />;
