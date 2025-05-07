@@ -57,4 +57,66 @@ export const Warning = () => {
       warningMessage="This email is already taken."
     />
   );
+};
+
+export const PrefixText = () => {
+  const [value, setValue] = React.useState('');
+  return (
+    <InputField
+      label="Amount"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Enter amount"
+      prefix="€"
+    />
+  );
+};
+
+export const SuffixText = () => {
+  const [value, setValue] = React.useState('');
+  return (
+    <InputField
+      label="Weight"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Enter weight"
+      suffix="kg"
+    />
+  );
+};
+
+export const PrefixSelect = () => {
+  const [value, setValue] = React.useState('');
+  return (
+    <InputField
+      label="Phone"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Enter phone number"
+      prefix={
+        <select defaultValue="+30">
+          <option value="+30">+30</option>
+          <option value="+44">+44</option>
+        </select>
+      }
+    />
+  );
+};
+
+export const SuffixSelect = () => {
+  const [value, setValue] = React.useState('');
+  return (
+    <InputField
+      label="Weight"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Enter weight"
+      suffix={
+        <select defaultValue="kg">
+          <option value="kg">kg</option>
+          <option value="lbs">lbs</option>
+        </select>
+      }
+    />
+  );
 }; 

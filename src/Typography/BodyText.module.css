@@ -2,35 +2,35 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color: #161616;
+  color: var(--black);
 }
 .bodyLarge {
   font-size: 18px;
   font-weight: 400;
   line-height: 28px;
-  color: #161616;
+  color: var(--black);
 }
 .bodySmall {
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
-  color: #161616;
+  color: var(--black);
 }
 .bodyLight {
   font-size: 16px;
   font-weight: 300;
   line-height: 24px;
-  color: #77787E;
+  color: var(--grey4);
 }
 .bodyLargeLight {
   font-size: 18px;
   font-weight: 300;
   line-height: 28px;
-  color: #77787E;
+  color: var(--grey4);
 }
 .bodySmallLight {
   font-size: 14px;
   font-weight: 300;
   line-height: 20px;
-  color: #77787E;
+  color: var(--grey4);
 } 
