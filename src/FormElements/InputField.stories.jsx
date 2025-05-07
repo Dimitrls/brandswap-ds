@@ -119,4 +119,32 @@ export const SuffixSelect = () => {
       }
     />
   );
+};
+
+export const NumberWithArrows = () => {
+  const [value, setValue] = React.useState(0);
+  return (
+    <InputField
+      label="Quantity"
+      type="number"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      showArrows={true}
+      placeholder="Enter a number"
+    />
+  );
+};
+
+export const NumberWithoutArrows = () => {
+  const [value, setValue] = React.useState(0);
+  return (
+    <InputField
+      label="Quantity"
+      type="number"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      showArrows={false}
+      placeholder="Enter a number"
+    />
+  );
 }; 
