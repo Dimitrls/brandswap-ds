@@ -30,4 +30,31 @@ export const Password = () => {
       placeholder="Enter your password"
     />
   );
+};
+
+export const Small = () => {
+  const [value, setValue] = React.useState('');
+  return (
+    <InputField
+      label="Small Input"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Small input"
+      size="small"
+    />
+  );
+};
+
+export const Warning = () => {
+  const [value, setValue] = React.useState('');
+  return (
+    <InputField
+      label="Email"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Enter your email"
+      warning={true}
+      warningMessage="This email is already taken."
+    />
+  );
 }; 

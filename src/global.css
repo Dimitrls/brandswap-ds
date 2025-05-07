@@ -2,4 +2,9 @@
 
 body, html, #root, * {
   font-family: 'Poppins', sans-serif;
+  --grey1: #F2F2F2;
+  --primary: #3AB78F;
+  --grey3: #A0A2A7;
+  --grey4: #77787E;
+  --warning: #FF3D60;
 } 
