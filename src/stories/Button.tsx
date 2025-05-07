@@ -3,8 +3,8 @@ import React from 'react';
 import './button.css';
 
 export interface ButtonProps {
-  /** Is this the principal call to action on the page? */
-  primary?: boolean;
+  /** Button visual variant */
+  variant?: 'filled' | 'outline' | 'filled-warning' | 'outline-warning' | 'subtle' | 'subtle-warning';
   /** What background color to use */
   backgroundColor?: string;
   /** How large should the button be? */
@@ -17,17 +17,17 @@ export interface ButtonProps {
 
 /** Primary UI component for user interaction */
 export const Button = ({
-  primary = false,
+  variant = 'filled',
   size = 'medium',
   backgroundColor,
   label,
   ...props
 }: ButtonProps) => {
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+  const variantClass = `bs-button--${variant}`;
   return (
     <button
       type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+      className={['bs-button', `bs-button--${size}`, variantClass].join(' ')}
       style={{ backgroundColor }}
       {...props}
     >

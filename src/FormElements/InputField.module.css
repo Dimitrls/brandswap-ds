@@ -64,6 +64,7 @@
 .prefix, .suffix {
   font-size: 14px;
   color: var(--grey4, #77787E);
+  cursor: pointer;
 }
 
 .prefix {
@@ -89,6 +90,7 @@
         background: transparent;
         font-size: 14px;
         font-weight: 400;
+        cursor: pointer;
     }
     & + input {
         border-radius: 0 6px 6px 0;
@@ -118,6 +120,7 @@
         background: transparent;
         font-size: 14px;
         font-weight: 400;
+        cursor: pointer;
     }
 }
 
