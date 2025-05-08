@@ -36,7 +36,7 @@ export const Button = ({
       onClick={onClick}
       {...props}
     >
-      {icon && <Icon name="plus" size={16} style={{ marginRight: 8, verticalAlign: 'middle' }} />}
+      {icon && <Icon name="pencil" size={20} />}
       {label}
     </button>
   );

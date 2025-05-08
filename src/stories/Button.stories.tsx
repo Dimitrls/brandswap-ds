@@ -19,4 +19,6 @@ export const OutlineSmall = () => <Button variant="outline" size="small" label="
 export const FilledWarningSmall = () => <Button variant="filled-warning" size="small" label="Filled Warning Small" />;
 export const OutlineWarningSmall = () => <Button variant="outline-warning" size="small" label="Outline Warning Small" />;
 export const SubtleSmall = () => <Button variant="subtle" size="small" label="Subtle Small" />;
-export const SubtleWarningSmall = () => <Button variant="subtle-warning" size="small" label="Subtle Warning Small" />; 
+export const SubtleWarningSmall = () => <Button variant="subtle-warning" size="small" label="Subtle Warning Small" />;
+
+export const WithIcon = () => <Button variant="filled" label="Button with Icon" icon />; 
