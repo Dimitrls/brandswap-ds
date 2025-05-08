@@ -8,9 +8,9 @@ export default {
 };
 
 export const Filled = () => (
-  <FloatingButton icon="pencil" ariaLabel="Add" variant="filled" />
+  <FloatingButton icon="dots-vertical" ariaLabel="Add" variant="filled" style={{ position: 'relative', bottom: 0, right: 0 }} />
 );
 
 export const Outline = () => (
-  <FloatingButton icon="pencil" ariaLabel="Add" variant="outline" />
+  <FloatingButton icon="dots-vertical" ariaLabel="Add" variant="outline" style={{ position: 'relative', bottom: 0, right: 0 }} />
 ); 
