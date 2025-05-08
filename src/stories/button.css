@@ -15,15 +15,6 @@
     filter: brightness(1.15);
   }
 }
-.bs-button--primary {
-  background-color: var(--primary, #3AB78F);
-  color: white;
-}
-.bs-button--secondary {
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
-  background-color: transparent;
-  color: #333;
-}
 .bs-button--small {
   height: 24px;
   font-size: 12px;
@@ -92,7 +83,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  box-shadow: var(--shadow-md);
   position: fixed;
   bottom: 32px;
   right: 32px;
