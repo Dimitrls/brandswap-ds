@@ -1,7 +1,6 @@
 .bs-button {
   display: inline-flex;
-  height: 40px;
-  padding: 16px;
+  padding: 0 16px;
   justify-content: center;
   align-items: center;
   gap: 4px;
@@ -9,7 +8,6 @@
   border-radius: 6px;
   cursor: pointer;
   font-weight: 400;
-  font-size: 14px;
   &:hover {
     filter: brightness(1.1);
   }
@@ -27,21 +25,21 @@
   color: #333;
 }
 .bs-button--small {
-  padding: 10px 16px;
+  height: 24px;
   font-size: 12px;
 }
 .bs-button--medium {
-  padding: 11px 20px;
+  height: 40px;
   font-size: 14px;
 }
 .bs-button--large {
-  padding: 12px 24px;
+  height: 48px;
   font-size: 16px;
 }
 .bs-button--filled {
   background-color: var(--primary, #3AB78F);
   color: white;
-  border: none;
+  border: 1px transparent;
 }
 .bs-button--outline {
   background-color: var(--primary-10, #3AB78F1a);
@@ -51,7 +49,7 @@
 .bs-button--filled-warning {
   background-color: var(--warning, #FF3D60);
   color: white;
-  border: none;
+  border: 1px transparent;
 }
 .bs-button--outline-warning {
   background-color: var(--warning-10, #FF3D601a);
@@ -61,10 +59,44 @@
 .bs-button--subtle {
   background-color: transparent;
   color: var(--primary, #3AB78F);
-  border: none;
+  border: 1px transparent;
 }
 .bs-button--subtle-warning {
   background-color: transparent;
   color: var(--warning, #FF3D60);
-  border: none;
+  border: 1px transparent;
+}
+
+.bs-icon-button {
+  padding: 0;
+  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bs-icon-button--small {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+}
+
+.bs-floating-button {
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1000;
+  font-size: 24px;
+  padding: 0;
 }
