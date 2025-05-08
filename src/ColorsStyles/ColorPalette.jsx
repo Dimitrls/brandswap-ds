@@ -16,6 +16,7 @@ const colors = [
   { name: 'Accent2 50', value: '#F2D42F80' },
   { name: 'Accent2 25', value: '#F2D42F40' },
   { name: 'Accent2 10', value: '#F2D42F1a' },
+  { name: 'Accent2 dark', value: '#B89C00' },
   { name: 'Warning', value: '#FF3D60' },
   { name: 'Warning 75', value: '#FF3D60bf' },
   { name: 'Warning 50', value: '#FF3D6080' },
