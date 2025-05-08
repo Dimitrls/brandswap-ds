@@ -13,6 +13,8 @@ const iconNames = [
   'arrow-left', 'arrow-right', 'arrow-down', 'arrow-up',
   'minimize', 'maximize', 'undo', 'redo', 'reload',
   'play', 'pause', 'minus', 'plus', 'close', 'check', 'forbid',
+  'info-circle', 'alert-triangle', 'alert-octagon', 'check-circle',
+  'search', 'upload', 'download', 'file-export', 'file-import', 'filter', 'share', 'share-ios', 'pencil', 'copy', 'trash', 'backspace', 'remove', 'cog', 'wrench', 'cinfigurations', 'lock', 'lock-off', 'unlock', 'eye', 'eye-off', 'dots', 'dots-vertical'
 ];
 
 export const AllIcons = () => (

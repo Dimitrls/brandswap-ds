@@ -1,6 +1,6 @@
 import React from 'react';
-
 import './button.css';
+import Icon from '../Icons/Icon';
 
 export interface ButtonProps {
   /** Button visual variant */
@@ -13,6 +13,8 @@ export interface ButtonProps {
   label: string;
   /** Optional click handler */
   onClick?: () => void;
+  /** Show plus icon before label */
+  icon?: boolean;
 }
 
 /** Primary UI component for user interaction */
@@ -21,6 +23,8 @@ export const Button = ({
   size = 'medium',
   backgroundColor,
   label,
+  icon = false,
+  onClick,
   ...props
 }: ButtonProps) => {
   const variantClass = `bs-button--${variant}`;
@@ -29,8 +33,10 @@ export const Button = ({
       type="button"
       className={['bs-button', `bs-button--${size}`, variantClass].join(' ')}
       style={{ backgroundColor }}
+      onClick={onClick}
       {...props}
     >
+      {icon && <Icon name="plus" size={16} style={{ marginRight: 8, verticalAlign: 'middle' }} />}
       {label}
     </button>
   );
