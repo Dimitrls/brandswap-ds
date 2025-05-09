@@ -36,7 +36,7 @@ const InputField = ({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, position: 'relative' }}>
       {label && (
         <label
           className={`${styles.label} ${size === 'small' ? styles.labelSmall : ''}`}

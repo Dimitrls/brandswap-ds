@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
+import TextArea from './TextArea';
 
 export default {
   title: 'Form Elements/InputField',
@@ -147,4 +148,16 @@ export const NumberWithoutArrows = () => {
       placeholder="Enter a number"
     />
   );
-}; 
+};
+
+export const TextAreaBasic = () => (
+  <TextArea label="Description" />
+);
+
+export const TextAreaWithToolbar = () => (
+  <TextArea label="Rich Description" showToolbar />
+);
+
+export const TextAreaWarning = () => (
+  <TextArea label="Description" warning warningMessage="This field is required." />
+); 
