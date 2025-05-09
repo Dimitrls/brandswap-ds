@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
 import TextArea from './TextArea';
+import Uploader from './Uploader';
 
 export default {
   title: 'Form Elements/InputField',
@@ -160,4 +161,8 @@ export const TextAreaWithToolbar = () => (
 
 export const TextAreaWarning = () => (
   <TextArea label="Description" warning warningMessage="This field is required." />
+);
+
+export const FileUploader = () => (
+  <Uploader label="Upload your file" />
 ); 

@@ -47,4 +47,23 @@ body, html, #root, * {
   --shadow-xl: 0px 28px 20px 0px rgba(0, 0, 0, 0.08);
   --shadow-upwards-sm: 0px -4px 4px 0px rgba(0, 0, 0, 0.08);
   --shadow-difuse: 0px 4px 64px 0px rgba(0, 0, 0, 0.08);
+}
+
+:root {
+  /* Font sizes */
+  --font-body: 14px;
+  --font-body-small: 12px;
+  --font-body-large: 16px;
+  --font-h1: 26px;
+  --font-h2: 21px;
+  --font-h3: 19px;
+  --font-h4: 17px;
+  --font-h5: 15px;
+  --font-h6: 14px;
+
+  /* Font weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
 } 

@@ -1,36 +1,36 @@
 .body {
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-regular);
+  line-height: 150%;
   color: var(--black);
 }
 .bodyLarge {
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 28px;
+  font-size: var(--font-body-large);
+  font-weight: var(--font-weight-regular);
+  line-height: 150%;
   color: var(--black);
 }
 .bodySmall {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
+  font-size: var(--font-body-small);
+  font-weight: var(--font-weight-regular);
+  line-height: 150%;
   color: var(--black);
 }
 .bodyLight {
-  font-size: 16px;
-  font-weight: 300;
-  line-height: 24px;
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-light);
+  line-height: 150%;
   color: var(--grey4);
 }
 .bodyLargeLight {
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 28px;
+  font-size: var(--font-body-large);
+  font-weight: var(--font-weight-light);
+  line-height: 150%;
   color: var(--grey4);
 }
 .bodySmallLight {
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 20px;
+  font-size: var(--font-body-small);
+  font-weight: var(--font-weight-light);
+  line-height: 150%;
   color: var(--grey4);
 } 

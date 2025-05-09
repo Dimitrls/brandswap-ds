@@ -17,15 +17,15 @@
 }
 .bs-button--small {
   height: 24px;
-  font-size: 12px;
+  font-size: var(--font-body-small);
 }
 .bs-button--medium {
   height: 40px;
-  font-size: 14px;
+  font-size: var(--font-body);
 }
 .bs-button--large {
   height: 48px;
-  font-size: 16px;
+  font-size: var(--font-body-large);
 }
 .bs-button--filled {
   background-color: var(--primary, #3AB78F);
@@ -88,7 +88,6 @@
   bottom: 32px;
   right: 32px;
   z-index: 1000;
-  font-size: 24px;
   padding: 0;
 }
 
@@ -97,7 +96,7 @@
   padding: 0 8px;
   height: 20px;
   border-radius: 2px;
-  font-size: 12px;
+  font-size: var(--font-body-small);
   font-weight: 400;
   line-height: 20px;
 }
