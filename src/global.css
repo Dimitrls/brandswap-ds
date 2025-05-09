@@ -38,6 +38,7 @@ body, html, #root, * {
   --grey2: #D3D5DD;
   --grey3: #A0A2A7;
   --grey4: #77787E;
+  --grey5: #343434;
   --warning: #FF3D60;
   --black: #161616;
   --shadow-sm: 0px 4px 4px 0px rgba(0, 0, 0, 0.08);

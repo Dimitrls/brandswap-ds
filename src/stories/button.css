@@ -131,3 +131,24 @@
 .bs-tag--subtle.bs-tag--positive { color: var(--primary, #3AB78F); }
 .bs-tag--subtle.bs-tag--negative { color: var(--warning, #FF3D60); }
 .bs-tag--subtle.bs-tag--neutral  { color: var(--grey4, #77787E); }
+
+/* Removable Tag Styles */
+.bs-tag--removable {
+  background: var(--grey2, #e0e0e0); /* Example: slightly different background */
+  position: relative;
+  border-radius: 60px;
+}
+.bs-tag__remove-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--white, #FFF);
+  transform: scale(1.25);
+  transition: color 0.2s;
+}
+.bs-tag__remove-btn:hover {
+  color: var(--grey5, #343434);
+}

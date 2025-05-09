@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tag } from './Tag';
+import { Tag, RemovableTag } from './Tag';
 
 export default {
   title: 'Buttons & Tags/Tag',
@@ -17,4 +17,11 @@ export const SubtleNeutral = () => <Tag label="Subtle Neutral" variant="neutral"
 export const SubtlePositive = () => <Tag label="Subtle Positive" variant="positive" subtle />;
 export const SubtleNegative = () => <Tag label="Subtle Negative" variant="negative" subtle />;
 export const SubtleAccent1 = () => <Tag label="Subtle Accent1" variant="accent1" subtle />;
-export const SubtleAccent2 = () => <Tag label="Subtle Accent2" variant="accent2" subtle />; 
+export const SubtleAccent2 = () => <Tag label="Subtle Accent2" variant="accent2" subtle />;
+
+export const Removable = () => {
+  const [visible, setVisible] = React.useState(true);
+  return visible ? (
+    <RemovableTag label="Removable Tag" variant="neutral" onRemove={() => setVisible(false)} />
+  ) : null;
+}; 
