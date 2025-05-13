@@ -13,8 +13,8 @@ export interface ButtonProps {
   label: string;
   /** Optional click handler */
   onClick?: () => void;
-  /** Show plus icon before label */
-  icon?: boolean;
+  /** Icon name to show before label */
+  icon?: string;
 }
 
 /** Primary UI component for user interaction */
@@ -23,7 +23,7 @@ export const Button = ({
   size = 'medium',
   backgroundColor,
   label,
-  icon = false,
+  icon,
   onClick,
   ...props
 }: ButtonProps) => {
@@ -36,7 +36,7 @@ export const Button = ({
       onClick={onClick}
       {...props}
     >
-      {icon && <Icon name="pencil" size={20} />}
+      {icon && <Icon name={icon} size={20} />}
       {label}
     </button>
   );

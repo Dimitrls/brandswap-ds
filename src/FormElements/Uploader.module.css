@@ -5,7 +5,7 @@
 }
 
 .bs-uploader-label {
-  font-size: 14px;
+  font-size: var(--font-body);
   font-weight: 300;
   line-height: 20px;
   color: var(--grey4, #77787E);
@@ -13,8 +13,15 @@
 
 .bs-uploader-input-row {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 8px;
+  border: 2px dashed var(--grey2, #D3D5DD);
+  background-color: var(--black-03, #00000008);
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
 }
 
 .bs-uploader-button {
@@ -23,7 +30,7 @@
   border: none;
   border-radius: 4px;
   padding: 6px 16px;
-  font-size: 13px;
+  font-size: var(--font-body-small);
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -32,7 +39,7 @@
 }
 
 .bs-uploader-filename {
-  font-size: 13px;
+  font-size: var(--font-body-small);
   color: var(--grey4, #77787E);
 }
 

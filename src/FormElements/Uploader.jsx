@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styles from './Uploader.module.css';
+import { Button } from '../stories/Button';
 
 /**
  * @typedef {Object} UploaderProps
@@ -25,13 +26,12 @@ const Uploader = ({ label = 'Upload file', onChange }) => {
     <div className={styles['bs-uploader-wrapper']}>
       <label className={styles['bs-uploader-label']}>{label}</label>
       <div className={styles['bs-uploader-input-row']}>
-        <button
-          type="button"
-          className={styles['bs-uploader-button']}
+        <Button
+          variant="outline"
+          label="Choose File"
           onClick={handleButtonClick}
-        >
-          Choose File
-        </button>
+          icon="upload"
+        />
         <span className={styles['bs-uploader-filename']}>
           {fileName || 'No file chosen'}
         </span>
