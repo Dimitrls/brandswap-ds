@@ -1,0 +1,40 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.custom {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  background: var(--grey-2, #D3D5DD);
+  margin-right: 8px;
+  display: inline-block;
+  position: relative;
+  transition: background 0.2s;
+}
+.input:checked + .custom {
+  background: var(--primary, #3AB78F);
+}
+.input:checked + .custom::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  width: 4px;
+  height: 11px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.label {
+  font-size: var(--font-body);
+  color: var(--grey-4, #77787E);
+} 
