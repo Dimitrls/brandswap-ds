@@ -51,4 +51,23 @@
   border-radius: 6px;
   border: 1px solid var(--grey2, #D3D5DD);
   box-sizing: border-box;
-} 
+  position: relative;
+}
+.warning {
+    color: var(--warning, #FF3D60);
+    font-size: var(--font-body-small);
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+}
+.wrapperInFormWarning {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--warning, #FF3D60);
+    box-sizing: border-box;
+    position: relative;
+}

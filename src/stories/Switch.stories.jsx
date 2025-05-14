@@ -27,4 +27,17 @@ export const InForm = () => {
       inForm
     />
   );
+};
+
+export const InFormWithWarning = () => {
+  const [on, setOn] = useState(false);
+  return (
+    <Switch
+      label="Enable notifications"
+      checked={on}
+      onChange={setOn}
+      inForm
+      warningMessage={!on ? 'You must enable notifications to proceed.' : ''}
+    />
+  );
 }; 
