@@ -15,4 +15,16 @@ export const Default = () => {
       onChange={setChecked}
     />
   );
+};
+
+export const InForm = () => {
+  const [checked, setChecked] = useState(false);
+  return (
+    <Checkbox
+      label="I agree to the privacy policy"
+      checked={checked}
+      onChange={setChecked}
+      inForm
+    />
+  );
 }; 

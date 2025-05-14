@@ -40,4 +40,16 @@ export const InFormWithWarning = () => {
       warningMessage={!on ? 'You must enable notifications to proceed.' : ''}
     />
   );
+};
+
+export const LabelOnTop = () => {
+  const [on, setOn] = useState(false);
+  return (
+    <Switch
+      label="Label on top"
+      checked={on}
+      onChange={setOn}
+      labelOnTop
+    />
+  );
 }; 

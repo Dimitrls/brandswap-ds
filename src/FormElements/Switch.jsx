@@ -8,16 +8,23 @@ import styles from './Switch.module.css';
  * @property {function} onChange - Change handler
  * @property {boolean} [inForm] - If true, use in-form wrapper styles
  * @property {string} [warningMessage] - Optional warning message (only shown in inForm mode)
+ * @property {boolean} [labelOnTop] - If true, render the label above the switch
  */
 
-const Switch = ({ label, checked, onChange, inForm = false, warningMessage }) => {
+const Switch = ({ label, checked, onChange, inForm = false, warningMessage, labelOnTop = false }) => {
   let wrapperClass = styles.wrapper;
-  if (inForm) {
+  if (labelOnTop) {
+    wrapperClass = styles.labelOnTopWrapper;
+  } else if (inForm) {
     wrapperClass = warningMessage ? styles.wrapperInFormWarning : styles.wrapperInForm;
   }
   return (
     <label className={wrapperClass}>
-      <span className={styles.label}>{label}</span>
+      {labelOnTop ? (
+        <span className={styles.label}>{label}</span>
+      ) : (
+        <span className={styles.label}>{label}</span>
+      )}
       <input
         type="checkbox"
         className={styles.input}

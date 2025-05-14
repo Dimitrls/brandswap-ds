@@ -37,4 +37,16 @@
 .label {
   font-size: var(--font-body);
   color: var(--grey-4, #77787E);
+}
+.wrapperInForm {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  height: 40px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--grey2, #D3D5DD);
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
 } 

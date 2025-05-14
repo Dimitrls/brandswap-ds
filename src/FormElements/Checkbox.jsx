@@ -6,10 +6,11 @@ import styles from './Checkbox.module.css';
  * @property {string} label - Label for the checkbox
  * @property {boolean} checked - Whether the checkbox is checked
  * @property {function} onChange - Change handler
+ * @property {boolean} [inForm] - If true, use in-form wrapper styles
  */
 
-const Checkbox = ({ label, checked, onChange }) => (
-  <label className={styles.wrapper}>
+const Checkbox = ({ label, checked, onChange, inForm = false }) => (
+  <label className={inForm ? styles.wrapperInForm : styles.wrapper}>
     <input
       type="checkbox"
       className={styles.input}

@@ -20,6 +20,7 @@
   border-radius: 40px;
   transition: background 0.2s;
   display: inline-block;
+  cursor: pointer;
 }
 .slider::before {
   content: '';
@@ -70,4 +71,11 @@
     border: 1px solid var(--warning, #FF3D60);
     box-sizing: border-box;
     position: relative;
+}
+.labelOnTopWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
 }

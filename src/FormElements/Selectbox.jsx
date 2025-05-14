@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './Selectbox.module.css';
+import Icon from '../Icons/Icon';
 
 /**
  * @typedef {Object} SelectboxProps
@@ -34,7 +35,9 @@ const Selectbox = ({ label, options = [], onChange }) => {
       {label && <label className={styles.label}>{label}</label>}
       <div className={styles.select} onClick={() => setOpen(!open)}>
         {selected}
-        <span className={styles.arrow}>▼</span>
+        <span className={styles.arrow}>
+          <Icon name="chevron-down" size={18} />
+        </span>
       </div>
       {open && (
         <ul className={styles.dropdown}>
