@@ -15,4 +15,16 @@ export const Default = () => {
       onChange={setOn}
     />
   );
+};
+
+export const InForm = () => {
+  const [on, setOn] = useState(false);
+  return (
+    <Switch
+      label={on ? 'Subscribed' : 'Not Subscribed'}
+      checked={on}
+      onChange={setOn}
+      inForm
+    />
+  );
 }; 

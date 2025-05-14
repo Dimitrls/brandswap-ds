@@ -6,10 +6,11 @@ import styles from './Switch.module.css';
  * @property {string} label - Label for the switch
  * @property {boolean} checked - Whether the switch is on
  * @property {function} onChange - Change handler
+ * @property {boolean} [inForm] - If true, use in-form wrapper styles
  */
 
-const Switch = ({ label, checked, onChange }) => (
-  <label className={styles.wrapper}>
+const Switch = ({ label, checked, onChange, inForm = false }) => (
+  <label className={inForm ? styles.wrapperInForm : styles.wrapper}>
     <span className={styles.label}>{label}</span>
     <input
       type="checkbox"
