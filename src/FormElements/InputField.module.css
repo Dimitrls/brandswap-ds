@@ -67,7 +67,6 @@
 .prefix, .suffix {
   font-size: var(--font-body);
   color: var(--grey4, #77787E);
-  cursor: pointer;
 }
 
 .prefix {
