@@ -25,4 +25,19 @@ const RadioButton = ({ label, checked, onChange, name, value }) => (
   </label>
 );
 
+export const RadioButtonGroup = ({ children, horizontal = false, className = '', ...props }) => (
+  <div
+    className={className}
+    style={{
+      display: 'flex',
+      flexDirection: horizontal ? 'row' : 'column',
+      gap: '12px',
+      ...props.style
+    }}
+    {...props}
+  >
+    {children}
+  </div>
+);
+
 export default RadioButton; 
