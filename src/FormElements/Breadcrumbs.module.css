@@ -1,0 +1,99 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.button {
+  background: none;
+  border: none;
+  color: var(--grey-4, #77787E);
+  font-size: var(--font-h4, 17px);
+  font-weight: var(--font-weight-bold);
+  font-size: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+.button[aria-current='page'], .button:disabled {
+  color: var(--black, #161616);
+  cursor: default;
+}
+
+.buttonHasDropdown {
+    border: 1px solid var(--grey-3, #A0A2A7);
+    border-radius: 6px;
+    height: 40px;
+    padding: 0 6px 0 12px;
+}
+
+.dropdownIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--grey-3, #B0B2B8);
+}
+
+.separator {
+  width: 24px;
+  height: 24px;
+  color: var(--grey-4, #77787E);
+}
+
+.dropdownChevron {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    font-size: var(--font-body);
+    border-radius: 6px;
+    box-shadow: var(--shadow-difuse);
+    z-index: 10;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    .option:has(input) {
+      padding: 0;
+      label {
+        width: 100%;
+        padding: 8px;
+      }
+    }
+}
+
+.dropdownMenuItem {
+    height: 36px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+    box-sizing: border-box;
+    &:hover {
+      background: var(--primary-10, #3AB78F1a);
+    }
+}
