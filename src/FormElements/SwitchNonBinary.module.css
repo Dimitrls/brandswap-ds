@@ -1,0 +1,29 @@
+.switchNonBinary {
+  display: flex;
+  background: var(--grey-2, #D3D5DD);
+  border-radius: 24px;
+  height: 36px;
+  padding: 4px;
+  gap: 4px;
+  width: fit-content;
+  box-sizing: border-box;
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  outline: none;
+  height: 28px;
+  padding: 0 24px;
+  border-radius: 20px;
+  line-height: 28px;
+  font-size: var(--font-body, 16px);
+  color: var(--grey-4, #77787E);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.selected {
+  background: var(--white, #FFF);
+  color: var(--black, #161616);
+} 
