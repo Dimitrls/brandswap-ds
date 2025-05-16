@@ -26,4 +26,13 @@ export const WithoutIcons = () => {
     { label: 'Tab 3', value: 'tab3' },
   ];
   return <TabsSecondary options={options} value={value} onChange={setValue} />;
+};
+
+export const OnlyIcons = () => {
+  const [value, setValue] = useState('desktop');
+  const options = [
+    { label: '', value: 'desktop', icon: <Icon name="monitor" /> },
+    { label: '', value: 'mobile', icon: <Icon name="phone" /> },
+  ];
+  return <TabsSecondary options={options} value={value} onChange={setValue} />;
 }; 

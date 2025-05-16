@@ -26,7 +26,7 @@ const TabsSecondary = ({ options, value, onChange }) => {
           onClick={() => onChange(option.value)}
         >
           {option.icon && <span className={styles.icon}>{option.icon}</span>}
-          <span>{option.label}</span>
+          {option.label ? <span>{option.label}</span> : null}
         </button>
       ))}
     </div>
