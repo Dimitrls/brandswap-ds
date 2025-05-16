@@ -4,6 +4,7 @@ import MultiSelectbox from '../FormElements/MultiSelectbox';
 export default {
   title: 'Form elements/MultiSelectbox',
   component: MultiSelectbox,
+  tags: ['autodocs'],
 };
 
 export const Default = () => {

@@ -4,6 +4,7 @@ import Checkbox from '../FormElements/Checkbox';
 export default {
   title: 'Form elements/Checkbox',
   component: Checkbox,
+  tags: ['autodocs'],
 };
 
 export const Default = () => {

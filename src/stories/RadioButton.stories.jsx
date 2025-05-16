@@ -4,6 +4,7 @@ import RadioButton from '../FormElements/RadioButton';
 export default {
   title: 'Form elements/RadioButton',
   component: RadioButton,
+  tags: ['autodocs'],
 };
 
 export const Default = () => {
