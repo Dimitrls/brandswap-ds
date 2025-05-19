@@ -17,17 +17,9 @@ const Pagination = ({ totalPages, currentPage, onChange }) => {
   } else {
     // Always show first 3
     pages.push(1, 2, 3);
-    // Ellipsis if needed
-    if (currentPage > 5) {
-      pages.push('ellipsis-left');
-    }
     // Show current page if it's not in the first 3 or last 3
     if (currentPage > 3 && currentPage < totalPages - 2) {
       pages.push(currentPage);
-    }
-    // Ellipsis if needed
-    if (currentPage < totalPages - 4) {
-      pages.push('ellipsis-right');
     }
     // Always show last 3
     pages.push(totalPages - 2, totalPages - 1, totalPages);
