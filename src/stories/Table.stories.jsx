@@ -21,6 +21,18 @@ const data = [
 
 const totalsRow = { name: 'Total', email: '', role: '3 users' };
 
+const subColumns = [
+  { key: 'item', label: 'Item', align: 'left' },
+  { key: 'value', label: 'Value', align: 'right' },
+];
+
+const subData = [
+  { item: 'Subitem 1', value: 'Value 1' },
+  { item: 'Subitem 2', value: 'Value 2' },
+  { item: 'Subitem 3', value: 'Value 3' },
+  { item: 'Subitem 4', value: 'Value 4' },
+];
+
 export const AllFeatures = (args) => (
   <Table
     title="User List"
@@ -38,7 +50,11 @@ export const AllFeatures = (args) => (
     onSort={() => {}}
     onRowExpand={() => {}}
     renderRowActions={() => <button>Edit</button>}
-    renderExpandedRow={(row) => <div>Details for {row.name}</div>}
+    renderExpandedRow={(row) => (
+      <div>
+        <Table columns={subColumns} data={subData} />
+      </div>
+    )}
     {...args}
   />
 );

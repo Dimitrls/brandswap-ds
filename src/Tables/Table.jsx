@@ -73,13 +73,13 @@ const Table = ({
           {actionsMenuOpen && (
             <ul className={styles.actionsDropdown} role="menu">
               <li role="menuitem" tabIndex={0} className={styles.actionsDropdownItem}>
-                <Icon name="file-csv" /> Export as CSV
+                <Icon name="file-export" /> Export as CSV
               </li>
               <li role="menuitem" tabIndex={0} className={styles.actionsDropdownItem}>
-                <Icon name="file-xls" /> Export as XLS
+                <Icon name="file-export" /> Export as XLS
               </li>
               <li role="menuitem" tabIndex={0} className={styles.actionsDropdownItem}>
-                <Icon name="columns" /> Edit Columns
+                <Icon name="pencil" /> Edit Columns
               </li>
             </ul>
           )}
