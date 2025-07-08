@@ -14,10 +14,10 @@ const iconNames = [
   'minimize', 'maximize', 'undo', 'redo', 'reload',
   'play', 'pause', 'minus', 'plus', 'close', 'check', 'forbid',
   'info-circle', 'alert-triangle', 'alert-octagon', 'check-circle',
-  'search', 'upload', 'download', 'file-export', 'file-import', 'filter', 'share', 'share-ios', 'pencil', 'copy', 'trash', 'backspace', 'remove', 'cog', 'wrench', 'cinfigurations', 'lock', 'lock-off', 'unlock', 'eye', 'eye-off', 'dots', 'dots-vertical',
-  'home', 'monitor', 'phone', 'calendar', 'calendar-plus', 'note', 'code', 'curly-braces', 'megaphone', 'offer', 'featured-offer', 'brush', 'design-tools', 'chart-pie', 'webpage', 'web-ad', 'store', 'test-tube', 'click', 'coffee', 'map', 'circle-square', 'table-pencil', 'gift',
+  'search', 'upload', 'download', 'file-export', 'file-import', 'filter', 'share', 'share-ios', 'pencil', 'copy', 'trash', 'backspace', 'remove', 'cog', 'wrench', 'cinfigurations', 'lock', 'lock-off', 'unlock', 'mail', 'eye', 'eye-off', 'dots', 'dots-vertical',
+  'home', 'monitor', 'phone', 'calendar', 'calendar-plus', 'note', 'code', 'curly-braces', 'megaphone', 'offer', 'featured-offer', 'brush', 'design-tools', 'chart-pie', 'webpage', 'web-ad', 'store', 'test-tube', 'click', 'coffee', 'map', 'circle-square', 'table-pencil', 'gift', 'ranking',
   'font-family', 'font-size', 'bold', 'italic', 'list', 'list-numbers', 'radius', 'padding-vertical', 'padding-horizontal', 'width', 'height', 'line-solid',
-  'money', 'money-off', 'money-in', 'money-out', 'money-hand', 'coins', 'paycheck-arrow', 'transaction', 'wallet', 'shopping-cart', 'basket',
+  'money', 'money-off', 'money-in', 'money-out', 'money-hand', 'coins', 'paycheck-arrow', 'transaction', 'wallet', 'shopping-cart', 'basket', 'basket-arrows',
   'user', 'users', 'admin', 'suspend',
 ];
 
