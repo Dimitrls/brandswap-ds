@@ -110,7 +110,13 @@ td.expandCol {
   }
 }
 
-.expandedRow 
+.expandedRow {
+  position: relative;
+  top: -8px;
+  border-radius: 0 0 8px 8px !important;
+  &>td {
+    border-radius: 0 0 8px 8px !important;
+  }
   .tableWrapper {
     padding-left: 40px;
     box-sizing: border-box;
@@ -138,6 +144,18 @@ td.expandCol {
       border-top: none;
     }
   }
+}
+
+tr:has(+ .expandedRow) {
+  td {
+    &:first-child {
+      border-radius: 8px 0 0 0 !important;
+    }
+    &:last-child {
+      border-radius: 0 8px 0 0 !important;
+    }
+  }
+}
 
 .totalsRow {
   position: sticky;

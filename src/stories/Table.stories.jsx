@@ -4,6 +4,21 @@ import Table from '../Tables/Table';
 export default {
   title: 'Tables & Lists/Table',
   component: Table,
+  parameters: {
+    backgrounds: {
+      default: 'grey1',
+      values: [
+        {
+          name: 'grey1',
+          value: '#f2f2f2',
+        },
+        {
+          name: 'white',
+          value: '#ffffff',
+        },
+      ],
+    },
+  },
 };
 
 const columns = [
