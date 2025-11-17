@@ -41,6 +41,7 @@ body, html, #root, * {
   --grey5: #343434;
   --warning: #FF3D60;
   --black: #161616;
+  --shadow-tiny: 0px 2px 2px 0px rgba(0, 0, 0, 0.04);
   --shadow-sm: 0px 4px 4px 0px rgba(0, 0, 0, 0.08);
   --shadow-md: 0px 8px 8px 0px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0px 14px 14px 0px rgba(0, 0, 0, 0.08);

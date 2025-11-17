@@ -1,6 +1,7 @@
 import React from 'react';
 
 const shadows = [
+  { name: 'shadow-tiny', varName: '--shadow-tiny' },
   { name: 'shadow-sm', varName: '--shadow-sm' },
   { name: 'shadow-md', varName: '--shadow-md' },
   { name: 'shadow-lg', varName: '--shadow-lg' },

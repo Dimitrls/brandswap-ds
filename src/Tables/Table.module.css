@@ -21,6 +21,7 @@
   tr {
     background: var(--white, #fff);
     border-radius: 8px;
+    box-shadow: var(--shadow-tiny, 0px 2px 2px 0px rgba(0, 0, 0, 0.04));
     &:hover {
       box-shadow: var(--shadow-sm, 0px 4px 4px 0px rgba(0, 0, 0, 0.08));
     }
@@ -28,6 +29,7 @@
 
   thead tr {
     background: none;
+    box-shadow: none;
     &:hover {
       box-shadow: none;
     }
@@ -114,8 +116,18 @@ td.expandCol {
   position: relative;
   top: -8px;
   border-radius: 0 0 8px 8px !important;
+  color: var(--grey5, #343434);
   &>td {
     border-radius: 0 0 8px 8px !important;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: var(--white, #fff);
   }
   .tableWrapper {
     padding-left: 40px;

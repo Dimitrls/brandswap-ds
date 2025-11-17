@@ -37,15 +37,17 @@ const data = [
 const totalsRow = { name: 'Total', email: '', role: '3 users' };
 
 const subColumns = [
-  { key: 'item', label: 'Item', align: 'left' },
-  { key: 'value', label: 'Value', align: 'right' },
+  { key: 'advertiser', label: 'Advertiser', align: 'left', sortable: true },
+  { key: 'offer', label: 'Offer', align: 'left', sortable: true },
+  { key: 'commission', label: 'Commission', align: 'right', sortable: true },
+  { key: 'eCPM', label: 'eCPM', align: 'right' },
 ];
 
 const subData = [
-  { item: 'Subitem 1', value: 'Value 1' },
-  { item: 'Subitem 2', value: 'Value 2' },
-  { item: 'Subitem 3', value: 'Value 3' },
-  { item: 'Subitem 4', value: 'Value 4' },
+  { advertiser: 'Lymp Adv', offer: 'Summer offer 9.99', commission: '10%', eCPM: '£1.00' },
+  { advertiser: 'Beer52', offer: '30% discount', commission: '10%', eCPM: '£1.00' },
+  { advertiser: 'SnackBox', offer: 'Free shipping on orders over £20', commission: '10%', eCPM: '£1.00' },
+  { advertiser: 'Fitmeal', offer: 'Buy one get one half price', commission: '5%', eCPM: '£0.50' },
 ];
 
 export const AllFeatures = (args) => (
