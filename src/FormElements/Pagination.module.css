@@ -9,7 +9,7 @@
 .arrow {
   background: transparent;
   border: none;
-  color: var(--grey-4, #77787E);
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
@@ -31,7 +31,7 @@
   height: 28px;
   background: transparent;
   border: 1px solid transparent;
-  color: var(--grey-4, #77787E);
+  color: var(--text-muted);
   cursor: pointer;
   border-radius: 4px;
   font-size: var(--font-body, 16px);
@@ -39,13 +39,13 @@
 }
 .active {
   background: var(--primary-10, #3AB78F10);
-  color: var(--grey-5, #343434);
+  color: var(--text-subtle);
   border: 1px solid var(--primary, #3AB78F);
 }
 
 .ellipsis {
   padding: 0 6px;
-  color: var(--grey-3, #B0B2B8);
+  color: var(--text-weak);
   font-size: 18px;
   user-select: none;
 } 

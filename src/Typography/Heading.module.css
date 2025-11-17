@@ -1,6 +1,6 @@
-.h1 { font-size: var(--font-h1); font-weight: var(--font-weight-bold); line-height: 120%; color: var(--black); }
-.h2 { font-size: var(--font-h2); font-weight: var(--font-weight-bold); line-height: 120%; color: var(--black); }
-.h3 { font-size: var(--font-h3); font-weight: var(--font-weight-bold); line-height: 120%; color: var(--black); }
-.h4 { font-size: var(--font-h4); font-weight: var(--font-weight-medium); line-height: 120%; color: var(--black); }
-.h5 { font-size: var(--font-h5); font-weight: var(--font-weight-regular); line-height: 120%; color: var(--black); }
-.h6 { font-size: var(--font-h6); font-weight: var(--font-weight-regular); line-height: 120%; color: var(--black); } 
+.h1 { font-size: var(--font-h1); font-weight: var(--font-weight-bold); line-height: 120%; color: var(--text-default)); }
+.h2 { font-size: var(--font-h2); font-weight: var(--font-weight-bold); line-height: 120%; color: var(--text-default)); }
+.h3 { font-size: var(--font-h3); font-weight: var(--font-weight-bold); line-height: 120%; color: var(--text-default)); }
+.h4 { font-size: var(--font-h4); font-weight: var(--font-weight-medium); line-height: 120%; color: var(--text-default)); }
+.h5 { font-size: var(--font-h5); font-weight: var(--font-weight-regular); line-height: 120%; color: var(--text-default)); }
+.h6 { font-size: var(--font-h6); font-weight: var(--font-weight-regular); line-height: 120%; color: var(--text-default)); } 

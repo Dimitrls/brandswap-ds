@@ -2,35 +2,35 @@
   font-size: var(--font-body);
   font-weight: var(--font-weight-regular);
   line-height: 150%;
-  color: var(--black);
+  color: var(--text-default));
 }
 .bodyLarge {
   font-size: var(--font-body-large);
   font-weight: var(--font-weight-regular);
   line-height: 150%;
-  color: var(--black);
+  color: var(--text-default));
 }
 .bodySmall {
   font-size: var(--font-body-small);
   font-weight: var(--font-weight-regular);
   line-height: 150%;
-  color: var(--black);
+  color: var(--text-default));
 }
 .bodyLight {
   font-size: var(--font-body);
   font-weight: var(--font-weight-light);
   line-height: 150%;
-  color: var(--grey4);
+  color: var(--text-muted);
 }
 .bodyLargeLight {
   font-size: var(--font-body-large);
   font-weight: var(--font-weight-light);
   line-height: 150%;
-  color: var(--grey4);
+  color: var(--text-muted);
 }
 .bodySmallLight {
   font-size: var(--font-body-small);
   font-weight: var(--font-weight-light);
   line-height: 150%;
-  color: var(--grey4);
+  color: var(--text-muted);
 } 

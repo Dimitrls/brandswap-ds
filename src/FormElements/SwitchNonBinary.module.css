@@ -1,6 +1,6 @@
 .switchNonBinary {
   display: flex;
-  background: var(--grey-2, #D3D5DD);
+  background-color: var(--bg2);
   border-radius: 24px;
   height: 36px;
   padding: 4px;
@@ -18,12 +18,12 @@
   border-radius: 20px;
   line-height: 28px;
   font-size: var(--font-body, 16px);
-  color: var(--grey-4, #77787E);
+  color: var(--text-muted);
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
 
 .selected {
   background: var(--white, #FFF);
-  color: var(--black, #161616);
+  color: var(--text-default), #161616);
 } 

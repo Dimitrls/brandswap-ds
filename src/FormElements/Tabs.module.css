@@ -17,13 +17,13 @@
   gap: 8px;
   font-size: var(--font-h5, 15px);
   font-weight: var(--font-weight-bold);
-  color: var(--grey-3, #A0A2A7);
+  color: var(--text-weak);
   border-bottom: 4px solid transparent;
 }
 
 .selected {
   position: relative;
-  color: var(--black, #161616);
+  color: var(--text-default), #161616);
   border-bottom: 4px solid var(--primary, #3AB78F);
 }
 

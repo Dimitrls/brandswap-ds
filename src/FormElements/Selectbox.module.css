@@ -7,14 +7,14 @@
 }
 .label { 
   font-size: var(--font-body);
-  color: var(--grey-4, #77787E);
+  color: var(--text-muted);
  }
 .select {
   height: 40px;
   padding: 8px 32px 8px 12px;
   border-radius: 6px;
   border: 1px solid transparent;
-  background-color: var(--grey1, #F2F2F2);
+  background-color: var(--bg1);
   transition: border-color 0.2s;
   font-size: var(--font-body);
   width: 100%;
@@ -68,5 +68,5 @@
   }
 }
 .placeholder {
-  color: var(--grey-3, #A0A2A7);
+  color: var(--text-weak);
 }

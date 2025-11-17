@@ -8,7 +8,7 @@
   font-size: var(--font-body);
   font-weight: 300;
   line-height: 20px;
-  color: var(--grey4, #77787E);
+  color: var(--text-muted);
 }
 
 .bs-uploader-input-row {
@@ -18,7 +18,7 @@
   align-items: center;
   gap: 8px;
   border: 2px dashed var(--grey2, #D3D5DD);
-  background-color: var(--black-03, #00000008);
+  background-color: var(--bg-xlight);
   border-radius: 6px;
   padding: 12px;
   cursor: pointer;
@@ -40,7 +40,7 @@
 
 .bs-uploader-filename {
   font-size: var(--font-body-small);
-  color: var(--grey4, #77787E);
+  color: var(--text-muted);
 }
 
 .bs-uploader-input {

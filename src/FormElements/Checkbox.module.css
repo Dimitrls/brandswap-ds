@@ -14,7 +14,7 @@
   width: 16px;
   height: 16px;
   border-radius: 2px;
-  background: var(--grey-2, #D3D5DD);
+  background: var(--bg2);
   margin-right: 8px;
   display: inline-block;
   position: relative;
@@ -36,7 +36,7 @@
 }
 .label {
   font-size: var(--font-body);
-  color: var(--grey-4, #77787E);
+  color: var(--text-muted);
 }
 .wrapperInForm {
   display: flex;
@@ -45,7 +45,7 @@
   height: 40px;
   padding: 8px 12px;
   border-radius: 6px;
-  border: 1px solid var(--grey2, #D3D5DD);
+  border: 1px solid var(--border-default);
   box-sizing: border-box;
   position: relative;
   cursor: pointer;

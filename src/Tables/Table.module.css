@@ -2,7 +2,7 @@
   width: 100%;
   overflow-x: auto;
   position: relative;
-  background: var(--grey1, #f2f2f2);
+  background-color: var(--bg1);
   
   .table {
     width: 100%;
@@ -116,7 +116,7 @@ td.expandCol {
   position: relative;
   top: -8px;
   border-radius: 0 0 8px 8px !important;
-  color: var(--grey5, #343434);
+  color: var(--text-subtle);
   &>td {
     border-radius: 0 0 8px 8px !important;
   }

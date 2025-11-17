@@ -16,7 +16,7 @@
   position: relative;
   width: 48px;
   height: 24px;
-  background: var(--grey-2, #D3D5DD);
+  background-color: var(--bg2);
   border-radius: 40px;
   transition: background 0.2s;
   display: inline-block;
@@ -41,7 +41,7 @@
 }
 .label {
     font-size: var(--font-body);
-    color: var(--grey-4, #77787E);
+    color: var(--text-muted);
 }
 .wrapperInForm {
   display: flex;
