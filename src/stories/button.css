@@ -16,30 +16,30 @@
   }
 }
 .bs-button--small {
-  height: 24px;
+  height: 28px;
   font-size: var(--font-body-small);
 }
 .bs-button--medium {
-  height: 40px;
+  height: 32px;
   font-size: var(--font-body);
 }
 .bs-button--large {
-  height: 48px;
+  height: 44px;
   font-size: var(--font-body-large);
 }
 .bs-button--filled {
   background-color: var(--primary, #3AB78F);
-  color: white;
+  color: var(--text-on-primary);
   border: 1px transparent;
 }
 .bs-button--outline {
   background-color: var(--primary-10, #3AB78F1a);
-  color: var(--text-default), #161616);
+  color: var(--text-default);
   border: 1px solid var(--primary, #3AB78F);
 }
 .bs-button--filled-warning {
   background-color: var(--warning, #FF3D60);
-  color: white;
+  color: var(--text-on-warning);
   border: 1px transparent;
 }
 .bs-button--outline-warning {
@@ -61,18 +61,26 @@
 .bs-icon-button {
   padding: 0;
   border-radius: 6px;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .bs-icon-button--small {
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  min-height: 24px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+}
+
+.bs-icon-button--large {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
 }
 
@@ -144,7 +152,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--white, #FFF);
+  color: var(--text-negative);
   transform: scale(1.25);
   transition: color 0.2s;
 }

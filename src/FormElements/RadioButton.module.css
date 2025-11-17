@@ -13,9 +13,9 @@
 .custom {
   width: 18px;
   height: 18px;
-  border: 2px solid var(--grey-2, #D3D5DD);
+  border: 2px solid var(--border-default);
   border-radius: 50%;
-  background: var(--white, #fff);
+  background: var(--bg-default);
   margin-right: 8px;
   display: inline-block;
   position: relative;

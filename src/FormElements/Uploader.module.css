@@ -17,7 +17,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border: 2px dashed var(--grey2, #D3D5DD);
+  border: 2px dashed var(--border-default);
   background-color: var(--bg-xlight);
   border-radius: 6px;
   padding: 12px;

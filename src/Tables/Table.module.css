@@ -19,7 +19,7 @@
   }
 
   tr {
-    background: var(--white, #fff);
+    background: var(--bg-default);
     border-radius: 8px;
     box-shadow: var(--shadow-tiny, 0px 2px 2px 0px rgba(0, 0, 0, 0.04));
     &:hover {
@@ -127,7 +127,7 @@ td.expandCol {
     left: 0;
     width: 100%;
     height: 10px;
-    background: var(--white, #fff);
+    background: var(--bg-default);
   }
   .tableWrapper {
     padding-left: 40px;
@@ -177,7 +177,7 @@ tr:has(+ .expandedRow) {
 }
 
 .tableActionsButton {
-  background: var(--white, #fff);
+  background: var(--bg-default);
   border: none;
   border-radius: 4px;
   cursor: pointer;

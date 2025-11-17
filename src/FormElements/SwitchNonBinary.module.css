@@ -24,6 +24,6 @@
 }
 
 .selected {
-  background: var(--white, #FFF);
+  background: var(--bg-default);
   color: var(--text-default), #161616);
 } 

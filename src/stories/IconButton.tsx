@@ -8,7 +8,7 @@ export interface IconButtonProps {
   ariaLabel: string;
   onClick?: () => void;
   variant?: 'filled' | 'outline' | 'subtle' | 'warning' | 'subtle-warning' | 'filled-warning' | 'outline-warning';
-  sizeVariant?: 'small' | 'medium';
+  sizeVariant?: 'small' | 'medium' | 'large';
 }
 
 export const IconButton = ({
@@ -21,8 +21,13 @@ export const IconButton = ({
   ...props
 }: IconButtonProps) => {
   const variantClass = `bs-button--${variant}`;
-  const sizeClass = sizeVariant === 'small' ? 'bs-icon-button--small' : '';
-  const iconSize = size || (sizeVariant === 'small' ? 16 : 20);
+  const sizeClass =
+    sizeVariant === 'small'
+      ? 'bs-icon-button--small'
+      : sizeVariant === 'large'
+        ? 'bs-icon-button--large'
+        : '';
+  const iconSize = size || (sizeVariant === 'small' ? 16 : sizeVariant === 'large' ? 24 : 20);
   return (
     <button
       type="button"
