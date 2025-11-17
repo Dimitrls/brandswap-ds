@@ -21,7 +21,7 @@
 .button {
   background: none;
   border: none;
-  color: var(--grey-4, #77787E);
+  color: var(--text-muted);
   font-size: var(--font-h4, 17px);
   font-weight: var(--font-weight-bold);
   font-size: inherit;
@@ -33,12 +33,12 @@
   transition: color 0.2s;
 }
 .button[aria-current='page'], .button:disabled {
-  color: var(--black, #161616);
+  color: var(--text-default);
   cursor: default;
 }
 
 .buttonHasDropdown {
-    border: 1px solid var(--grey-3, #A0A2A7);
+    border: 1px solid var(--border-default);
     border-radius: 6px;
     height: 40px;
     padding: 0 6px 0 12px;
@@ -47,13 +47,13 @@
 .dropdownIcon {
   width: 20px;
   height: 20px;
-  color: var(--grey-3, #B0B2B8);
+  color: var(--text-weak);
 }
 
 .separator {
   width: 24px;
   height: 24px;
-  color: var(--grey-4, #77787E);
+  color: var(--text-muted);
 }
 
 .dropdownChevron {

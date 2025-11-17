@@ -3,7 +3,7 @@
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid transparent;
-  background-color: var(--grey1, #F2F2F2);
+  background-color: var(--bg1);
   transition: border-color 0.2s;
   font-size: var(--font-body);
   width: 100%;
@@ -22,12 +22,12 @@
 }
 
 .input::placeholder {
-  color: var(--grey3, #A0A2A7);
+  color: var(--text-weak);
   opacity: 1;
 }
 
 .label {
-  color: var(--grey4, #77787E);
+  color: var(--text-muted);
   font-size: var(--font-body);
   font-weight: 400;
 }
@@ -41,7 +41,7 @@
 .labelSmall {
   font-size: var(--font-body-small);
   font-weight: 400;
-  color: var(--grey4, #77787E);
+  color: var(--text-muted);
 }
 
 .inputWarning {
@@ -70,7 +70,7 @@
 }
 
 .prefix {
-    border: 1px solid var(--grey2, #D3D5DD);
+    border: 1px solid var(--border-default);
     height: 40px;
     display: flex;
     align-items: center;
@@ -79,7 +79,7 @@
     box-sizing: border-box;
     border-radius: 6px 0 0 6px;
     font-size: var(--font-body);
-    color: var(--grey4);
+    color: var(--text-muted);
     &:has(select) {
         padding: 0;
     }
@@ -88,7 +88,7 @@
         outline: none;
         padding: 8px;
         margin-right: 8px;
-        color: var(--grey4, #77787E);
+        color: var(--text-muted);
         background: transparent;
         font-size: var(--font-body);
         font-weight: 400;
@@ -100,7 +100,7 @@
 }
 
 .suffix {
-    border: 1px solid var(--grey2, #D3D5DD);
+    border: 1px solid var(--border-default);
     height: 40px;
     display: flex;
     align-items: center;
@@ -109,7 +109,7 @@
     box-sizing: border-box;
     border-radius: 0 6px 6px 0;
     font-size: var(--font-body);
-    color: var(--grey4);
+    color: var(--text-muted);
     &:has(select) {
         padding: 0;
     }
@@ -118,7 +118,7 @@
         outline: none;
         padding: 8px;
         margin-right: 8px;
-        color: var(--grey4, #77787E);
+        color: var(--text-muted);
         background: transparent;
         font-size: var(--font-body);
         font-weight: 400;
