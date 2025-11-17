@@ -9,7 +9,7 @@ const InputField = ({
   onChange,
   placeholder,
   type = 'text',
-  size = 'default',
+  size = 'medium',
   warning = false,
   warningMessage = '',
   prefix,
@@ -35,17 +35,41 @@ const InputField = ({
     onChange({ target: { value: newValue } });
   };
 
+  const getInputSizeClass = () => {
+    if (size === 'small') return styles.inputSmall;
+    if (size === 'large') return styles.inputLarge;
+    return styles.inputMedium;
+  };
+
+  const getLabelSizeClass = () => {
+    if (size === 'small') return styles.labelSmall;
+    if (size === 'large') return styles.labelLarge;
+    return styles.labelMedium;
+  };
+
+  const getPrefixSizeClass = () => {
+    if (size === 'small') return styles.prefixSmall;
+    if (size === 'large') return styles.prefixLarge;
+    return styles.prefixMedium;
+  };
+
+  const getSuffixSizeClass = () => {
+    if (size === 'small') return styles.suffixSmall;
+    if (size === 'large') return styles.suffixLarge;
+    return styles.suffixMedium;
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, position: 'relative' }}>
       {label && (
         <label
-          className={`${styles.label} ${size === 'small' ? styles.labelSmall : ''}`}
+          className={`${styles.label} ${getLabelSizeClass()}`}
         >
           {label}
         </label>
       )}
       <div className={styles.inputWrapper} style={{ position: 'relative' }}>
-        {prefix && <span className={styles.prefix}>{prefix}</span>}
+        {prefix && <span className={`${styles.prefix} ${getPrefixSizeClass()}`}>{prefix}</span>}
         <input
           type={type}
           value={value}
@@ -56,7 +80,7 @@ const InputField = ({
           step={step}
           className={[
             styles.input,
-            size === 'small' ? styles.inputSmall : '',
+            getInputSizeClass(),
             warning ? styles.inputWarning : '',
           ].join(' ')}
           {...props}
@@ -73,11 +97,11 @@ const InputField = ({
           </span>
         )}
         {spinner ? (
-          <span className={styles.suffix}>
+          <span className={`${styles.suffix} ${getSuffixSizeClass()}`}>
             <svg className={styles.spinner} width="20" height="20" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="#3AB78F" strokeWidth="4" strokeDasharray="31.4 31.4" transform="rotate(-90 25 25)"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/></circle></svg>
           </span>
         ) : (
-          suffix && <span className={styles.suffix}>{suffix}</span>
+          suffix && <span className={`${styles.suffix} ${getSuffixSizeClass()}`}>{suffix}</span>
         )}
       </div>
       {warning && warningMessage && (
@@ -93,7 +117,7 @@ InputField.propTypes = {
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   type: PropTypes.string,
-  size: PropTypes.oneOf(['default', 'small']),
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
   warning: PropTypes.bool,
   warningMessage: PropTypes.string,
   prefix: PropTypes.node,

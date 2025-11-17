@@ -1,11 +1,8 @@
 .input {
-  height: 40px;
-  padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid transparent;
   background-color: var(--bg1);
   transition: border-color 0.2s;
-  font-size: var(--font-body);
   width: 100%;
   box-sizing: border-box;
   &:has(~ .suffix) {
@@ -33,13 +30,37 @@
 }
 
 .inputSmall {
-  height: 24px;
+  height: 28px;
   font-size: var(--font-body-small);
   padding: 8px;
 }
 
+.inputMedium {
+  height: 36px;
+  font-size: var(--font-body);
+  padding: 8px 12px;
+}
+
+.inputLarge {
+  height: 44px;
+  font-size: var(--font-body);
+  padding: 12px 16px;
+}
+
 .labelSmall {
   font-size: var(--font-body-small);
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.labelMedium {
+  font-size: var(--font-body);
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.labelLarge {
+  font-size: var(--font-body);
   font-weight: 400;
   color: var(--text-muted);
 }
@@ -71,7 +92,6 @@
 
 .prefix {
     border: 1px solid var(--border-default);
-    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,9 +119,26 @@
     }
 }
 
+.prefixSmall {
+    height: 28px;
+    padding: 8px;
+    font-size: var(--font-body-small);
+}
+
+.prefixMedium {
+    height: 36px;
+    padding: 8px 12px 8px 16px;
+    font-size: var(--font-body);
+}
+
+.prefixLarge {
+    height: 44px;
+    padding: 12px 16px;
+    font-size: var(--font-body);
+}
+
 .suffix {
     border: 1px solid var(--border-default);
-    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,6 +161,24 @@
         font-weight: 400;
         cursor: pointer;
     }
+}
+
+.suffixSmall {
+    height: 28px;
+    padding: 8px;
+    font-size: var(--font-body-small);
+}
+
+.suffixMedium {
+    height: 36px;
+    padding: 8px 16px 8px 12px;
+    font-size: var(--font-body);
+}
+
+.suffixLarge {
+    height: 44px;
+    padding: 12px 16px;
+    font-size: var(--font-body);
 }
 
 .input[type='number']::-webkit-outer-spin-button,

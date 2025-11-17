@@ -20,7 +20,7 @@
   font-size: var(--font-body-small);
 }
 .bs-button--medium {
-  height: 32px;
+  height: 36px;
   font-size: var(--font-body);
 }
 .bs-button--large {
@@ -61,8 +61,8 @@
 .bs-icon-button {
   padding: 0;
   border-radius: 6px;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
