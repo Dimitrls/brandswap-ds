@@ -1,0 +1,11 @@
+.filtersBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--bg-default);
+  border-bottom: 1px solid var(--border-subtle);
+  min-height: 64px;
+}
+

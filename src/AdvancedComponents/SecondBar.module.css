@@ -1,0 +1,10 @@
+.secondBar {
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+  background: var(--bg-xlight);
+  border-bottom: 1px solid var(--border-subtle);
+  min-height: 40px;
+  gap: 16px;
+}
+

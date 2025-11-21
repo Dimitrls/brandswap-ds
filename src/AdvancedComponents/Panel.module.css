@@ -1,0 +1,30 @@
+.panel {
+  background: var(--bg-default);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel__header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-h4);
+  color: var(--text-default);
+}
+
+.panel__body {
+  padding: 20px;
+  flex: 1;
+  color: var(--text-default);
+}
+
+.panel__footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-xlight);
+}
+
