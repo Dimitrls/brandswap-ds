@@ -1,5 +1,5 @@
 import React from 'react';
-import ColorPalette from './ColorPalette';
+import ColorPalette, { primitiveColors, semanticColors } from './ColorPalette';
 
 export default {
   title: 'Colors & Styles/ColorPalette',
@@ -7,4 +7,15 @@ export default {
   tags: ['autodocs'],
 };
 
-export const Palette = () => <ColorPalette />; 
+export const Palette = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+    <section>
+      <h3 style={{ marginBottom: 16 }}>Primitive Colors</h3>
+      <ColorPalette colors={primitiveColors} />
+    </section>
+    <section>
+      <h3 style={{ marginBottom: 16 }}>Semantic Colors</h3>
+      <ColorPalette colors={semanticColors} />
+    </section>
+  </div>
+);
