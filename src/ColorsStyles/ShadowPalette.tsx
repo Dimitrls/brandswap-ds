@@ -7,7 +7,7 @@ const shadows = [
   { name: 'shadow-lg', varName: '--shadow-lg' },
   { name: 'shadow-xl', varName: '--shadow-xl' },
   { name: 'shadow-upwards-sm', varName: '--shadow-upwards-sm' },
-  { name: 'shadow-difuse', varName: '--shadow-difuse' },
+  { name: 'shadow-diffuse', varName: '--shadow-diffuse' },
 ];
 
 export const ShadowPalette = () => (

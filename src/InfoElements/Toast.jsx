@@ -6,8 +6,8 @@ import styles from './Toast.module.css';
 const VARIANT_ICON = {
   success: 'check-circle',
   info: 'info-circle',
-  warning: 'alert-triangle',
-  error: 'x-circle',
+  warning: 'alert-octagon',
+  error: 'alert-triangle',
 };
 
 const Toast = ({
@@ -47,7 +47,7 @@ const Toast = ({
           aria-label="Dismiss notification"
           className={styles.toast__dismiss}
         >
-          <Icon name="x" size={16} />
+          <Icon name="close" size={16} />
         </button>
       ) : null}
     </div>

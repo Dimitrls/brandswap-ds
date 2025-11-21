@@ -54,7 +54,7 @@ body, html, #root, * {
   --shadow-lg: 0px 14px 14px 0px rgba(0, 0, 0, 0.08);
   --shadow-xl: 0px 28px 20px 0px rgba(0, 0, 0, 0.08);
   --shadow-upwards-sm: 0px -4px 4px 0px rgba(0, 0, 0, 0.08);
-  --shadow-difuse: 0px 4px 64px 0px rgba(0, 0, 0, 0.08);
+  --shadow-diffuse: 0px 4px 64px 0px rgba(0, 0, 0, 0.08);
 
   /* Semantic colors */
   --bg-default: var(--white);
