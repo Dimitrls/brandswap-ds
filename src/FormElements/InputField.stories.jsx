@@ -9,7 +9,7 @@ export default {
   tags: ['autodocs'],
 };
 
-export const Basic = () => {
+export const Default = () => {
   const [value, setValue] = useState('');
   return (
     <InputField
@@ -17,19 +17,6 @@ export const Basic = () => {
       value={value}
       onChange={e => setValue(e.target.value)}
       placeholder="Enter your name"
-    />
-  );
-};
-
-export const Password = () => {
-  const [value, setValue] = useState('');
-  return (
-    <InputField
-      label="Password"
-      type="password"
-      value={value}
-      onChange={e => setValue(e.target.value)}
-      placeholder="Enter your password"
     />
   );
 };
@@ -43,6 +30,32 @@ export const Small = () => {
       onChange={e => setValue(e.target.value)}
       placeholder="Small input"
       size="small"
+    />
+  );
+};
+
+export const Large = () => {
+  const [value, setValue] = React.useState('');
+  return (
+    <InputField
+      label="Large Input"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Large input"
+      size="large"
+    />
+  );
+};
+
+export const Password = () => {
+  const [value, setValue] = useState('');
+  return (
+    <InputField
+      label="Password"
+      type="password"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Enter your password"
     />
   );
 };
