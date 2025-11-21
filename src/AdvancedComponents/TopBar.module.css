@@ -5,8 +5,9 @@
   padding: 12px 20px;
   background: var(--bg-default);
   border-bottom: 1px solid var(--border-default);
-  min-height: 56px;
+  min-height: 60px;
   gap: 16px;
+  box-sizing: border-box;
 }
 
 .topBar__left {
