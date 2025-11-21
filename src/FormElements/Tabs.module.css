@@ -1,6 +1,6 @@
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--grey-2, #D3D5DD);
+  border-bottom: 1px solid var(--grey2);
   height: 59px;
   gap: 4px;
   width: 100%;
@@ -23,7 +23,7 @@
 
 .selected {
   position: relative;
-  color: var(--text-default), #161616);
+  color: var(--text-default);
   border-bottom: 4px solid var(--primary, #3AB78F);
 }
 
