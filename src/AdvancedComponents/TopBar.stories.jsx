@@ -41,6 +41,22 @@ const mockCompanies = [
   { id: '4', name: 'Digital Advertisers LLC', type: 'advertiser' },
   { id: '5', name: 'Hosting Services Co', type: 'host' },
   { id: '6', name: 'Unified Marketing', type: 'both' },
+  { id: '7', name: 'Premium Ad Network', type: 'advertiser' },
+  { id: '8', name: 'Cloud Hosting Pro', type: 'host' },
+  { id: '9', name: 'Media Partners Worldwide', type: 'both' },
+  { id: '10', name: 'AdTech Innovations', type: 'advertiser' },
+  { id: '11', name: 'Server Solutions Ltd', type: 'host' },
+  { id: '12', name: 'Dual Platform Media', type: 'both' },
+  { id: '13', name: 'Creative Ad Agency', type: 'advertiser' },
+  { id: '14', name: 'Enterprise Hosting', type: 'host' },
+  { id: '15', name: 'Full Service Media Co', type: 'both' },
+  { id: '16', name: 'Brand Marketing Group', type: 'advertiser' },
+  { id: '17', name: 'Infrastructure Hosting', type: 'host' },
+  { id: '18', name: 'Complete Media Solutions', type: 'both' },
+  { id: '19', name: 'Performance Advertisers', type: 'advertiser' },
+  { id: '20', name: 'Reliable Host Services', type: 'host' },
+  { id: '21', name: 'Integrated Media Platform', type: 'both' },
+  { id: '22', name: 'Strategic Ad Partners', type: 'advertiser' },
 ];
 
 const mockUser = {

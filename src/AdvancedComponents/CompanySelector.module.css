@@ -76,7 +76,6 @@
   top: calc(100% + 8px);
   right: 0;
   width: 360px;
-  max-height: 480px;
   background: var(--white);
   border-radius: 6px;
   box-shadow: var(--shadow-diffuse, 0 4px 12px rgba(0, 0, 0, 0.1));
@@ -127,9 +126,11 @@
 }
 
 .companySelector__list {
-  max-height: 320px;
+  max-height: 370px;
   overflow-y: auto;
   padding: 4px 0;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .companySelector__empty {
@@ -137,6 +138,11 @@
   text-align: center;
   color: var(--text-muted, var(--grey4));
   font-size: var(--font-body, 15px);
+}
+
+.companySelector__pagination {
+  padding: 0 12px;
+  flex-shrink: 0;
 }
 
 .companySelector__item {
@@ -167,16 +173,7 @@
 }
 
 .companySelector__radioCustom {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--border-default, var(--grey150));
-  border-radius: 50%;
-  background: var(--bg-default, var(--white));
-  display: inline-block;
-  position: relative;
-  transition: border-color 0.2s, background 0.2s;
-  flex-shrink: 0;
-  margin-right: 8px;
+  display: none;
 }
 
 .companySelector__radioCustom::after {

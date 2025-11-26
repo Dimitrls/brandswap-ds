@@ -4,6 +4,7 @@ import styles from './CompanySelector.module.css';
 import Icon from '../Icons/Icon';
 import InputField from '../FormElements/InputField';
 import TabsSecondary from '../FormElements/TabsSecondary';
+import Pagination from '../FormElements/Pagination';
 
 const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,7 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
   const [searchQuery, setSearchQuery] = useState('');
   const [internalSelectedCompany, setInternalSelectedCompany] = useState(selectedCompany);
   const [selectedType, setSelectedType] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const dropdownRef = useRef(null);
 
   // Sync internal state with prop when prop changes
@@ -66,6 +68,18 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
     const matchesSearch = company.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTab && matchesSearch;
   });
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, searchQuery]);
+
+  // Pagination calculations
+  const itemsPerPage = 10;
+  const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedCompanies = filteredCompanies.slice(startIndex, endIndex);
 
   const handleCompanySelect = (companyId) => {
     setInternalSelectedCompany(companyId);
@@ -154,7 +168,7 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
             {filteredCompanies.length === 0 ? (
               <div className={styles.companySelector__empty}>No companies found</div>
             ) : (
-              filteredCompanies.map((company) => (
+              paginatedCompanies.map((company) => (
                 <div
                   key={company.id}
                   className={styles.companySelector__item}
@@ -181,6 +195,15 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
               ))
             )}
           </div>
+          {filteredCompanies.length > 0 && totalPages > 1 && (
+            <div className={styles.companySelector__pagination}>
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onChange={setCurrentPage}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
