@@ -1,21 +1,66 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './TopBar.module.css';
+import Breadcrumbs from '../FormElements/Breadcrumbs';
+import Notifications from './Notifications';
+import CompanySelector from './CompanySelector';
+import Avatar from './Avatar';
 
-const TopBar = ({ leftContent, centerContent, rightContent, className, ...props }) => {
+const TopBar = ({ breadcrumbs, notifications, companies, selectedCompany, onCompanyChange, user, onProfileClick, onLogoutClick, className, ...props }) => {
   return (
     <div className={[styles.topBar, className].filter(Boolean).join(' ')} {...props}>
-      {leftContent && <div className={styles.topBar__left}>{leftContent}</div>}
-      {centerContent && <div className={styles.topBar__center}>{centerContent}</div>}
-      {rightContent && <div className={styles.topBar__right}>{rightContent}</div>}
+      <div className={styles.topBar__left}>
+        {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+      </div>
+      <div className={styles.topBar__right}>
+        <Notifications notifications={notifications} />
+        <CompanySelector 
+          companies={companies} 
+          selectedCompany={selectedCompany}
+          onCompanyChange={onCompanyChange}
+        />
+        <Avatar 
+          user={user}
+          onProfileClick={onProfileClick}
+          onLogoutClick={onLogoutClick}
+        />
+      </div>
     </div>
   );
 };
 
 TopBar.propTypes = {
-  leftContent: PropTypes.node,
-  centerContent: PropTypes.node,
-  rightContent: PropTypes.node,
+  breadcrumbs: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      hasDropdown: PropTypes.bool,
+      onClick: PropTypes.func,
+      dropdownItems: PropTypes.arrayOf(PropTypes.string),
+    })
+  ),
+  notifications: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      message: PropTypes.string.isRequired,
+      timestamp: PropTypes.string,
+    })
+  ),
+  companies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['advertiser', 'host', 'both']).isRequired,
+    })
+  ),
+  selectedCompany: PropTypes.string,
+  onCompanyChange: PropTypes.func,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    initials: PropTypes.string.isRequired,
+  }),
+  onProfileClick: PropTypes.func,
+  onLogoutClick: PropTypes.func,
   className: PropTypes.string,
 };
 

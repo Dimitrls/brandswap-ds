@@ -1,0 +1,90 @@
+.avatar {
+  position: relative;
+}
+
+.avatar__button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 12px;
+  background: var(--bg1, var(--grey050));
+  border: 1px solid var(--border-default, var(--grey150));
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-default, var(--black));
+  transition: all 0.2s;
+}
+
+.avatar__button:hover {
+  background: var(--bg-xlight, var(--grey075));
+  border-color: var(--primary, #3AB78F);
+}
+
+.avatar__initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--primary, #3AB78F);
+  color: var(--text-on-primary, var(--white));
+  border-radius: 4px;
+  font-size: var(--font-body-small, 13px);
+  font-weight: var(--font-weight-bold, 600);
+  flex-shrink: 0;
+}
+
+.avatar__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: var(--white);
+  border: 1px solid var(--border-default, var(--grey150));
+  border-radius: 8px;
+  box-shadow: var(--shadow-diffuse, 0 4px 12px rgba(0, 0, 0, 0.1));
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.avatar__userInfo {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-default, var(--grey150));
+}
+
+.avatar__userName {
+  font-size: var(--font-body, 15px);
+  font-weight: var(--font-weight-bold, 600);
+  color: var(--text-default, var(--black));
+  margin-bottom: 4px;
+}
+
+.avatar__userEmail {
+  font-size: var(--font-body-small, 13px);
+  color: var(--text-muted, var(--grey4));
+}
+
+.avatar__menu {
+  padding: 4px 0;
+}
+
+.avatar__menuItem {
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-default, var(--black));
+  font-size: var(--font-body, 15px);
+  transition: background 0.2s;
+}
+
+.avatar__menuItem:hover {
+  background: var(--bg-xlight, var(--grey050));
+}
+
+.avatar__menuItem:first-child {
+  border-top: none;
+}
+

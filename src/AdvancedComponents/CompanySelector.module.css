@@ -1,0 +1,199 @@
+.companySelector {
+  position: relative;
+}
+
+.companySelector__button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg1, var(--grey050));
+  border: 1px solid var(--border-default, var(--grey150));
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-default, var(--black));
+  font-size: var(--font-body, 15px);
+  transition: all 0.2s;
+  min-width: 160px;
+}
+
+.companySelector__button:hover {
+  background: var(--bg-xlight, var(--grey075));
+  border-color: var(--primary, #3AB78F);
+}
+
+.companySelector__selectedName {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.companySelector__typeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--primary-10, rgba(58, 183, 143, 0.1));
+  color: var(--primary, #3AB78F);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold, 600);
+}
+
+.companySelector__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 360px;
+  max-height: 480px;
+  background: var(--white);
+  border: 1px solid var(--border-default, var(--grey150));
+  border-radius: 8px;
+  box-shadow: var(--shadow-diffuse, 0 4px 12px rgba(0, 0, 0, 0.1));
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.companySelector__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-default, var(--grey150));
+  padding: 0 8px;
+}
+
+.companySelector__tab {
+  flex: 1;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  color: var(--text-muted, var(--grey4));
+  font-size: var(--font-body, 15px);
+  font-weight: var(--font-weight-medium, 500);
+  transition: all 0.2s;
+  margin-bottom: -1px;
+}
+
+.companySelector__tab:hover {
+  color: var(--text-default, var(--black));
+  background: var(--bg-xlight, var(--grey050));
+}
+
+.companySelector__tabActive {
+  color: var(--primary, #3AB78F);
+  border-bottom-color: var(--primary, #3AB78F);
+  font-weight: var(--font-weight-bold, 600);
+}
+
+.companySelector__search {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-default, var(--grey150));
+}
+
+.companySelector__list {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.companySelector__empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--text-muted, var(--grey4));
+  font-size: var(--font-body, 15px);
+}
+
+.companySelector__item {
+  display: block;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.companySelector__item:hover {
+  background: var(--bg-xlight, var(--grey050));
+}
+
+.companySelector__itemLabel {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  gap: 8px;
+  position: relative;
+}
+
+.companySelector__radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.companySelector__radioCustom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-default, var(--grey150));
+  border-radius: 50%;
+  background: var(--bg-default, var(--white));
+  display: inline-block;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.companySelector__radioCustom::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  background-color: var(--bg2, var(--grey1));
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.companySelector__radio:checked + .companySelector__radioCustom {
+  border-color: var(--primary, #3AB78F);
+}
+
+.companySelector__radio:checked + .companySelector__radioCustom::after {
+  background-color: var(--primary, #3AB78F);
+}
+
+.companySelector__itemContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+
+.companySelector__itemName {
+  flex: 1;
+  font-size: var(--font-body, 15px);
+  color: var(--text-default, var(--black));
+}
+
+.companySelector__itemType {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--primary-10, rgba(58, 183, 143, 0.1));
+  color: var(--primary, #3AB78F);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold, 600);
+}
+

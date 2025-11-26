@@ -1,6 +1,5 @@
 import React from 'react';
 import TopBar from './TopBar';
-import { IconButton } from '../stories/IconButton';
 
 export default {
   title: 'Advanced components/TopBar',
@@ -8,30 +7,82 @@ export default {
   tags: ['autodocs'],
 };
 
+const mockBreadcrumbs = [
+  { label: 'Home', onClick: () => {} },
+  { label: 'Dashboard', onClick: () => {} },
+  { label: 'Analytics' },
+];
+
+const mockNotifications = [
+  {
+    id: '1',
+    message: 'New campaign created successfully',
+    timestamp: '2 hours ago',
+    read: false,
+  },
+  {
+    id: '2',
+    message: 'Your report is ready for download',
+    timestamp: '5 hours ago',
+    read: false,
+  },
+  {
+    id: '3',
+    message: 'Weekly summary available',
+    timestamp: '1 day ago',
+    read: true,
+  },
+];
+
+const mockCompanies = [
+  { id: '1', name: 'Acme Corporation', type: 'advertiser' },
+  { id: '2', name: 'Tech Solutions Inc', type: 'host' },
+  { id: '3', name: 'Global Media Group', type: 'both' },
+  { id: '4', name: 'Digital Advertisers LLC', type: 'advertiser' },
+  { id: '5', name: 'Hosting Services Co', type: 'host' },
+  { id: '6', name: 'Unified Marketing', type: 'both' },
+];
+
+const mockUser = {
+  name: 'John Doe',
+  email: 'john.doe@example.com',
+  initials: 'JD',
+};
+
 export const Default = () => (
   <TopBar
-    leftContent={<h2 style={{ margin: 0, fontSize: 'var(--font-h3)' }}>Dashboard</h2>}
-    rightContent={
-      <>
-        <IconButton icon="bell" ariaLabel="Notifications" variant="subtle" />
-        <IconButton icon="user" ariaLabel="Profile" variant="subtle" />
-      </>
-    }
+    breadcrumbs={mockBreadcrumbs}
+    notifications={mockNotifications}
+    companies={mockCompanies}
+    selectedCompany="1"
+    onCompanyChange={(id) => console.log('Company changed:', id)}
+    user={mockUser}
+    onProfileClick={() => console.log('Profile clicked')}
+    onLogoutClick={() => console.log('Logout clicked')}
   />
 );
 
-export const WithCenterContent = () => (
+export const WithNoNotifications = () => (
   <TopBar
-    leftContent={<IconButton icon="menu" ariaLabel="Menu" variant="subtle" />}
-    centerContent={<input type="text" placeholder="Search..." style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border-default)', width: '300px' }} />}
-    rightContent={<IconButton icon="settings" ariaLabel="Settings" variant="subtle" />}
+    breadcrumbs={mockBreadcrumbs}
+    notifications={[]}
+    companies={mockCompanies}
+    selectedCompany="3"
+    user={mockUser}
   />
 );
 
-export const Minimal = () => (
+export const WithManyNotifications = () => (
   <TopBar
-    leftContent={<span style={{ fontWeight: 'var(--font-weight-bold)' }}>BrandSwap</span>}
-    rightContent={<button style={{ padding: '8px 16px', background: 'var(--primary)', color: 'var(--text-on-primary)', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>Sign In</button>}
+    breadcrumbs={mockBreadcrumbs}
+    notifications={[
+      ...mockNotifications,
+      { id: '4', message: 'Another notification', timestamp: '2 days ago', read: true },
+      { id: '5', message: 'Yet another one', timestamp: '3 days ago', read: false },
+    ]}
+    companies={mockCompanies}
+    selectedCompany="2"
+    user={mockUser}
   />
 );
 
