@@ -10,12 +10,29 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [internalSelectedCompany, setInternalSelectedCompany] = useState(selectedCompany);
+  const [selectedType, setSelectedType] = useState(null);
   const dropdownRef = useRef(null);
 
   // Sync internal state with prop when prop changes
   useEffect(() => {
     setInternalSelectedCompany(selectedCompany);
   }, [selectedCompany]);
+
+  // Initialize selected type based on company type
+  useEffect(() => {
+    const company = companies.find(c => c.id === internalSelectedCompany);
+    if (company) {
+      if (company.type === 'both') {
+        setSelectedType('host'); // Default to 'host' when both are available
+      } else if (company.type === 'advertiser') {
+        setSelectedType('advertiser');
+      } else if (company.type === 'host') {
+        setSelectedType('host');
+      }
+    } else {
+      setSelectedType(null);
+    }
+  }, [internalSelectedCompany, companies]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -77,9 +94,42 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
           {selectedCompanyData ? selectedCompanyData.name : 'Select company'}
         </span>
         {selectedCompanyData && (
-          <span className={styles.companySelector__typeBadge}>
-            {getTypeLabel(selectedCompanyData.type)}
-          </span>
+          <div className={styles.companySelector__typeBadges}>
+            {(selectedCompanyData.type === 'advertiser' || selectedCompanyData.type === 'both') && (
+              <button
+                type="button"
+                className={[
+                  styles.companySelector__typeButton,
+                  selectedType === 'advertiser' ? styles.companySelector__typeButtonSelected : ''
+                ].filter(Boolean).join(' ')}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedType('advertiser');
+                }}
+                aria-label="Advertiser"
+                aria-pressed={selectedType === 'advertiser'}
+              >
+                A
+              </button>
+            )}
+            {(selectedCompanyData.type === 'host' || selectedCompanyData.type === 'both') && (
+              <button
+                type="button"
+                className={[
+                  styles.companySelector__typeButton,
+                  selectedType === 'host' ? styles.companySelector__typeButtonSelected : ''
+                ].filter(Boolean).join(' ')}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedType('host');
+                }}
+                aria-label="Host"
+                aria-pressed={selectedType === 'host'}
+              >
+                H
+              </button>
+            )}
+          </div>
         )}
       </button>
       {isOpen && (
