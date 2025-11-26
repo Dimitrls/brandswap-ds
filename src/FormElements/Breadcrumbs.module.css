@@ -40,7 +40,7 @@
 .buttonHasDropdown {
     border: 1px solid var(--border-default);
     border-radius: 6px;
-    height: 40px;
+    height: 36px;
     padding: 0 6px 0 12px;
 }
 
