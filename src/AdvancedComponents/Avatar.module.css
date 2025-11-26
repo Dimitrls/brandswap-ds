@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 0;
   background: transparent;
   border: none;
   border-radius: 6px;
@@ -25,12 +26,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   background: var(--primary, #3AB78F);
   color: var(--text-on-primary, var(--white));
   border-radius: 4px;
-  font-size: var(--font-body-small, 13px);
+  font-size: var(--font-h4);
   font-weight: var(--font-weight-bold, 600);
   flex-shrink: 0;
 }

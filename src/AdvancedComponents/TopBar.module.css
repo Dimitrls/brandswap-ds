@@ -8,6 +8,7 @@
   background: var(--bg-default);
   border-bottom: 1px solid var(--border-default);
   gap: 16px;
+  box-sizing: border-box;
 }
 
 .topBar__left {
