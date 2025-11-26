@@ -17,18 +17,13 @@
   transition: all 0.2s;
 }
 
-.avatar__button:hover {
-  background: var(--bg-xlight, var(--grey075));
-  border-color: var(--primary, #3AB78F);
-}
-
 .avatar__initials {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: var(--primary, #3AB78F);
+  background: var(--accent1);
   color: var(--text-on-primary, var(--white));
   border-radius: 4px;
   font-size: var(--font-h4);

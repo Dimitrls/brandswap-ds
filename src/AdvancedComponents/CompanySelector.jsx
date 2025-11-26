@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './CompanySelector.module.css';
 import Icon from '../Icons/Icon';
 import InputField from '../FormElements/InputField';
+import TabsSecondary from '../FormElements/TabsSecondary';
 
 const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +51,12 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
     setIsOpen(false);
   };
 
+  const tabOptions = [
+    { label: 'Advertisers', value: 'advertisers' },
+    { label: 'Hosts', value: 'hosts' },
+    { label: 'All', value: 'all' },
+  ];
+
   return (
     <div className={styles.companySelector} ref={dropdownRef}>
       <button
@@ -71,36 +78,11 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
       {isOpen && (
         <div className={styles.companySelector__dropdown}>
           <div className={styles.companySelector__tabs}>
-            <button
-              type="button"
-              className={[
-                styles.companySelector__tab,
-                activeTab === 'advertisers' ? styles.companySelector__tabActive : ''
-              ].filter(Boolean).join(' ')}
-              onClick={() => setActiveTab('advertisers')}
-            >
-              Advertisers
-            </button>
-            <button
-              type="button"
-              className={[
-                styles.companySelector__tab,
-                activeTab === 'hosts' ? styles.companySelector__tabActive : ''
-              ].filter(Boolean).join(' ')}
-              onClick={() => setActiveTab('hosts')}
-            >
-              Hosts
-            </button>
-            <button
-              type="button"
-              className={[
-                styles.companySelector__tab,
-                activeTab === 'all' ? styles.companySelector__tabActive : ''
-              ].filter(Boolean).join(' ')}
-              onClick={() => setActiveTab('all')}
-            >
-              All
-            </button>
+            <TabsSecondary
+              options={tabOptions}
+              value={activeTab}
+              onChange={setActiveTab}
+            />
           </div>
           <div className={styles.companySelector__search}>
             <InputField
