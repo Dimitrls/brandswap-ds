@@ -9,7 +9,13 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [internalSelectedCompany, setInternalSelectedCompany] = useState(selectedCompany);
   const dropdownRef = useRef(null);
+
+  // Sync internal state with prop when prop changes
+  useEffect(() => {
+    setInternalSelectedCompany(selectedCompany);
+  }, [selectedCompany]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -27,7 +33,7 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
     };
   }, [isOpen]);
 
-  const selectedCompanyData = companies.find(c => c.id === selectedCompany);
+  const selectedCompanyData = companies.find(c => c.id === internalSelectedCompany);
   
   const getTypeLabel = (type) => {
     if (type === 'advertiser') return 'A';
@@ -45,6 +51,7 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
   });
 
   const handleCompanySelect = (companyId) => {
+    setInternalSelectedCompany(companyId);
     if (onCompanyChange) {
       onCompanyChange(companyId);
     }
@@ -108,7 +115,7 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
                       type="radio"
                       name="company"
                       value={company.id}
-                      checked={selectedCompany === company.id}
+                      checked={internalSelectedCompany === company.id}
                       onChange={() => handleCompanySelect(company.id)}
                       className={styles.companySelector__radio}
                     />
