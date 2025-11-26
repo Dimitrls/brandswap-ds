@@ -1,11 +1,12 @@
 .topBar {
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 12px 16px;
-  background: var(--bg-xlight, var(--white));
-  border-bottom: 1px solid var(--border-default, var(--grey150));
+  padding: 12px 20px;
+  background: var(--bg-default);
+  border-bottom: 1px solid var(--border-default);
   gap: 16px;
 }
 

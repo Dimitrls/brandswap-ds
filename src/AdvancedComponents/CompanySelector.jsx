@@ -67,7 +67,6 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
             {getTypeLabel(selectedCompanyData.type)}
           </span>
         )}
-        <Icon name="chevron-down" size={16} />
       </button>
       {isOpen && (
         <div className={styles.companySelector__dropdown}>

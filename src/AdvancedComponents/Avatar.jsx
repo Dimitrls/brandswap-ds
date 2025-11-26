@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Avatar.module.css';
-import Icon from '../Icons/Icon';
 
 const Avatar = ({ user, onProfileClick, onLogoutClick }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +48,6 @@ const Avatar = ({ user, onProfileClick, onLogoutClick }) => {
         <div className={styles.avatar__initials}>
           {user?.initials || 'U'}
         </div>
-        <Icon name="chevron-down" size={16} />
       </button>
       {isOpen && (
         <div className={styles.avatar__dropdown}>

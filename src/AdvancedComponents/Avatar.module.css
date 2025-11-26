@@ -3,12 +3,13 @@
 }
 
 .avatar__button {
+  height: 32px;
+  width: 32px;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 4px 4px 12px;
-  background: var(--bg1, var(--grey050));
-  border: 1px solid var(--border-default, var(--grey150));
+  background: transparent;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
   color: var(--text-default, var(--black));
