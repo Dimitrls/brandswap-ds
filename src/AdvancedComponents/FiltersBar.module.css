@@ -1,12 +1,11 @@
 .filtersBar {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: 6px;
+  padding: 6px;
   background: var(--bg-default);
-  border-bottom: 1px solid var(--border-subtle);
-  min-height: 64px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
 }
 
 .filtersBar__searchbox {
@@ -25,4 +24,3 @@
   flex-shrink: 0;
   margin-left: auto;
 }
-

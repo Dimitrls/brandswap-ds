@@ -23,21 +23,26 @@ const FiltersBar = ({
     
     if (type === 'multiselectbox') {
       // MultiSelectbox uses 'selected' prop instead of 'value'
-      const { selected, ...multiSelectProps } = filterProps;
+      // Remove label and size from props to ensure no labels are shown and size is always large
+      const { selected, size, label, ...multiSelectProps } = filterProps;
       return (
         <MultiSelectbox
           key={index}
           selected={selected || []}
           {...multiSelectProps}
+          size="large"
         />
       );
     } else {
       // Default to selectbox
       // Selectbox doesn't use controlled value prop, but we can pass it for future use
+      // Remove label and size from props to ensure no labels are shown and size is always large
+      const { size, label, ...selectProps } = filterProps;
       return (
         <Selectbox
           key={index}
-          {...filterProps}
+          {...selectProps}
+          size="large"
         />
       );
     }
@@ -52,7 +57,7 @@ const FiltersBar = ({
             placeholder={searchPlaceholder}
             value={searchValue}
             onChange={onSearchChange}
-            size="small"
+            size="large"
             icon={true}
             iconName="search"
             style={{ width: '200px' }}
@@ -65,8 +70,8 @@ const FiltersBar = ({
       {onApply && (
         <div className={styles.filtersBar__button}>
           <Button
-            variant="filled"
-            size="medium"
+            variant="outline"
+            size="large"
             label={applyLabel}
             onClick={onApply}
           />

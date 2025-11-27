@@ -20,6 +20,7 @@ export const Default = () => {
     >
       <Selectbox
         options={['All Status', 'Active', 'Inactive']}
+        size="large"
         icon={true}
         iconName="filter"
       />
@@ -37,20 +38,23 @@ export const WithMultipleFilters = () => {
       onSearchChange={(e) => setSearch(e.target.value)}
       searchPlaceholder="Search companies..."
       onApply={() => console.log('Apply clicked')}
-      applyLabel="Apply Filters"
+      applyLabel="Apply"
     >
       <Selectbox
         options={['All Categories', 'Category 1', 'Category 2']}
+        size="large"
         icon={true}
         iconName="filter"
       />
       <Selectbox
         options={['All Dates', 'Today', 'This Week', 'This Month']}
+        size="large"
         icon={true}
         iconName="calendar"
       />
       <Selectbox
         options={['All Types', 'Type A', 'Type B']}
+        size="large"
         icon={true}
         iconName="list"
       />
@@ -65,11 +69,13 @@ export const WithoutSearchbox = () => {
     >
       <Selectbox
         options={['All Status', 'Active', 'Inactive']}
+        size="large"
         icon={true}
         iconName="filter"
       />
       <Selectbox
         options={['All Categories', 'Category 1', 'Category 2']}
+        size="large"
         icon={true}
         iconName="list"
       />
@@ -88,6 +94,7 @@ export const WithoutApplyButton = () => {
     >
       <Selectbox
         options={['All Status', 'Active', 'Inactive']}
+        size="large"
         icon={true}
         iconName="filter"
       />
@@ -104,28 +111,22 @@ export const WithConfigurableFilters = () => {
   const filters = [
     {
       type: 'selectbox',
-      label: 'Status',
       options: ['All Status', 'Active', 'Inactive'],
       value: status,
       onChange: setStatus,
-      size: 'small',
     },
     {
       type: 'multiselectbox',
-      label: 'Categories',
       options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
       selected: categories,
       onChange: setCategories,
       placeholder: 'Select categories...',
-      size: 'small',
     },
     {
       type: 'selectbox',
-      label: 'Date Range',
       options: ['All Dates', 'Today', 'This Week', 'This Month'],
       value: dateRange,
       onChange: setDateRange,
-      size: 'small',
     },
   ];
   
@@ -137,7 +138,7 @@ export const WithConfigurableFilters = () => {
       searchPlaceholder="Search..."
       filters={filters}
       onApply={() => console.log('Apply clicked', { status, categories, dateRange })}
-      applyLabel="Apply Filters"
+      applyLabel="Apply"
     />
   );
 };
