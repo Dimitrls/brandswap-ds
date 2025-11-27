@@ -52,8 +52,13 @@ const Avatar = ({ user, onProfileClick, onLogoutClick }) => {
       {isOpen && (
         <div className={styles.avatar__dropdown}>
           <div className={styles.avatar__userInfo}>
-            <div className={styles.avatar__userName}>{user?.name || 'User'}</div>
-            <div className={styles.avatar__userEmail}>{user?.email || ''}</div>
+            <div className={styles.avatar__initials}>
+              {user?.initials || 'U'}
+            </div>
+            <div>
+              <div className={styles.avatar__userName}>{user?.name || 'User'}</div>
+              <div className={styles.avatar__userEmail}>{user?.email || ''}</div>
+            </div>
           </div>
           <div className={styles.avatar__menu}>
             <button

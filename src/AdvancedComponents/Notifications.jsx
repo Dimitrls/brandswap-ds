@@ -2,9 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Notifications.module.css';
 import Icon from '../Icons/Icon';
+import Pagination from '../FormElements/Pagination';
 
-const Notifications = ({ notifications = [] }) => {
+const Notifications = ({ notifications = [], itemsPerPage = 5 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +25,20 @@ const Notifications = ({ notifications = [] }) => {
     };
   }, [isOpen]);
 
+  // Reset to page 1 when dropdown opens
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentPage(1);
+    }
+  }, [isOpen]);
+
   const unreadCount = notifications.filter(n => !n.read).length;
+  
+  // Pagination logic
+  const totalPages = Math.ceil(notifications.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedNotifications = notifications.slice(startIndex, endIndex);
 
   return (
     <div className={styles.notifications} ref={dropdownRef}>
@@ -45,7 +60,7 @@ const Notifications = ({ notifications = [] }) => {
             {notifications.length === 0 ? (
               <div className={styles.notifications__empty}>No notifications</div>
             ) : (
-              notifications.map((notification) => (
+              paginatedNotifications.map((notification) => (
                 <div
                   key={notification.id}
                   className={[
@@ -65,6 +80,15 @@ const Notifications = ({ notifications = [] }) => {
               ))
             )}
           </div>
+          {notifications.length > 0 && totalPages > 1 && (
+            <div className={styles.notifications__pagination}>
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onChange={setCurrentPage}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -80,6 +104,7 @@ Notifications.propTypes = {
       read: PropTypes.bool,
     })
   ),
+  itemsPerPage: PropTypes.number,
 };
 
 export default Notifications;

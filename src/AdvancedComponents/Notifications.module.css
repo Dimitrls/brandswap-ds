@@ -59,7 +59,7 @@
 }
 
 .notifications__list {
-  max-height: 320px;
+  max-height: 340px;
   overflow-y: auto;
 }
 
@@ -105,5 +105,12 @@
 .notifications__itemTimestamp {
   font-size: var(--font-body-small, 13px);
   color: var(--text-muted, var(--grey4));
+}
+
+.notifications__pagination {
+  padding: 8px 16px;
+  border-top: 1px solid var(--border-default, var(--grey150));
+  display: flex;
+  justify-content: center;
 }
 

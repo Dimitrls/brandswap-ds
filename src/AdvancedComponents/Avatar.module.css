@@ -46,6 +46,15 @@
 .avatar__userInfo {
   padding: 12px 16px;
   border-bottom: 1px solid var(--border-default, var(--grey150));
+  display: flex;
+  gap: 12px;
+
+  .avatar__initials {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    font-size: var(--font-h1);
+  }
 }
 
 .avatar__userName {
