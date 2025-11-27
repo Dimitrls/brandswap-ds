@@ -161,7 +161,8 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
               placeholder="Search companies..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              prefix={<Icon name="search" size={16} />}
+              icon={true}
+              iconName="search"
             />
           </div>
           <div className={styles.companySelector__list}>

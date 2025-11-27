@@ -41,9 +41,6 @@ const Notifications = ({ notifications = [] }) => {
       </button>
       {isOpen && (
         <div className={styles.notifications__dropdown}>
-          <div className={styles.notifications__header}>
-            <h3 className={styles.notifications__title}>Notifications</h3>
-          </div>
           <div className={styles.notifications__list}>
             {notifications.length === 0 ? (
               <div className={styles.notifications__empty}>No notifications</div>
