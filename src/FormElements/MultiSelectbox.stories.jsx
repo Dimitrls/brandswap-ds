@@ -20,3 +20,45 @@ export const Default = () => {
   );
 };
 
+export const Small = () => {
+  const [selected, setSelected] = useState([]);
+  return (
+    <MultiSelectbox
+      label="Small multiselectbox"
+      options={['Food & Drink', 'Sports', 'Books', 'Car Electronics']}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Choose categories..."
+      size="small"
+    />
+  );
+};
+
+export const Medium = () => {
+  const [selected, setSelected] = useState([]);
+  return (
+    <MultiSelectbox
+      label="Medium multiselectbox (default)"
+      options={['Food & Drink', 'Sports', 'Books', 'Car Electronics']}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Choose categories..."
+      size="medium"
+    />
+  );
+};
+
+export const Large = () => {
+  const [selected, setSelected] = useState([]);
+  return (
+    <MultiSelectbox
+      label="Large multiselectbox"
+      options={['Food & Drink', 'Sports', 'Books', 'Car Electronics']}
+      selected={selected}
+      onChange={setSelected}
+      placeholder="Choose categories..."
+      size="large"
+    />
+  );
+};
+

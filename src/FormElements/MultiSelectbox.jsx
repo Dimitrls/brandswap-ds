@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Selectbox.module.css';
 import Checkbox from './Checkbox';
 import { RemovableTag } from '../Buttons/Tag';
@@ -12,9 +13,10 @@ import Icon from '../Icons/Icon';
  * @property {string} [placeholder] - Optional placeholder
  * @property {boolean} [inForm] - If true, use in-form wrapper styles
  * @property {boolean} [labelOnTop] - If true, render the label above the select
+ * @property {'small' | 'medium' | 'large'} [size='medium'] - Size of the multiselectbox
  */
 
-const MultiSelectbox = ({ options = [], selected = [], onChange, label, placeholder = 'Select...', inForm = false, labelOnTop = false }) => {
+const MultiSelectbox = ({ options = [], selected = [], onChange, label, placeholder = 'Select...', inForm = false, labelOnTop = false, size = 'medium' }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef();
 
@@ -40,6 +42,18 @@ const MultiSelectbox = ({ options = [], selected = [], onChange, label, placehol
     onChange(selected.filter((item) => item !== option));
   };
 
+  const getSelectSizeClass = () => {
+    if (size === 'small') return styles.selectSmall;
+    if (size === 'large') return styles.selectLarge;
+    return styles.selectMedium;
+  };
+
+  const getLabelSizeClass = () => {
+    if (size === 'small') return styles.labelSmall;
+    if (size === 'large') return styles.labelLarge;
+    return styles.labelMedium;
+  };
+
   let wrapperClass = styles.wrapper;
   if (labelOnTop) {
     wrapperClass = styles.labelOnTopWrapper;
@@ -50,11 +64,11 @@ const MultiSelectbox = ({ options = [], selected = [], onChange, label, placehol
   return (
     <div className={wrapperClass} ref={ref}>
       {labelOnTop ? (
-        <span className={styles.label} style={{ marginBottom: 4 }}>{label}</span>
+        <span className={`${styles.label} ${getLabelSizeClass()}`} style={{ marginBottom: 4 }}>{label}</span>
       ) : label ? (
-        <span className={styles.label}>{label}</span>
+        <span className={`${styles.label} ${getLabelSizeClass()}`}>{label}</span>
       ) : null}
-      <div className={styles.select} onClick={() => setOpen(!open)} tabIndex={0}>
+      <div className={`${styles.select} ${getSelectSizeClass()}`} onClick={() => setOpen(!open)} tabIndex={0}>
         {selected.length === 0 ? (
           <span className={styles.placeholder}>{placeholder}</span>
         ) : (
@@ -65,7 +79,7 @@ const MultiSelectbox = ({ options = [], selected = [], onChange, label, placehol
           </div>
         )}
         <span className={styles.arrow}>
-          <Icon name="chevron-down" size={18} />
+          <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
         </span>
       </div>
       {open && (
@@ -84,6 +98,17 @@ const MultiSelectbox = ({ options = [], selected = [], onChange, label, placehol
       )}
     </div>
   );
+};
+
+MultiSelectbox.propTypes = {
+  options: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selected: PropTypes.arrayOf(PropTypes.string),
+  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  inForm: PropTypes.bool,
+  labelOnTop: PropTypes.bool,
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
 };
 
 export default MultiSelectbox; 

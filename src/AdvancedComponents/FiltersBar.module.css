@@ -9,3 +9,20 @@
   min-height: 64px;
 }
 
+.filtersBar__searchbox {
+  flex-shrink: 0;
+}
+
+.filtersBar__filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  flex: 1;
+}
+
+.filtersBar__button {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
