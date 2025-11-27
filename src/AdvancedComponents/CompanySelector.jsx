@@ -5,6 +5,7 @@ import Icon from '../Icons/Icon';
 import InputField from '../FormElements/InputField';
 import TabsSecondary from '../Navigation/TabsSecondary';
 import Pagination from '../Navigation/Pagination';
+import { Button } from '../Buttons/Button';
 
 const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -205,6 +206,15 @@ const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) =
               />
             </div>
           )}
+          <div className={styles.companySelector__buttonContainer}>
+            <Button
+              variant="outline"
+              size="large"
+              label="Add new company"
+              icon="plus"
+              onClick={() => console.log('Add new company clicked')}
+            />
+          </div>
         </div>
       )}
     </div>
