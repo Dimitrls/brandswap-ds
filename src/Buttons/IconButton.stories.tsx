@@ -33,4 +33,5 @@ export const SubtleWarning = () => (
 
 export const Small = () => (
   <IconButton icon="pencil" ariaLabel="Add" variant="filled" sizeVariant="small" />
-); 
+);
+

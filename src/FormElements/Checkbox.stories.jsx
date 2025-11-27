@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Checkbox from '../FormElements/Checkbox';
+import Checkbox from './Checkbox';
 
 export default {
   title: 'Form elements/Checkbox',
@@ -28,4 +28,5 @@ export const InForm = () => {
       inForm
     />
   );
-}; 
+};
+

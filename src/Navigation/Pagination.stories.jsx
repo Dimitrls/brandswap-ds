@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Pagination from '../FormElements/Pagination';
+import Pagination from './Pagination';
 
 export default {
   title: 'Navigation/Pagination',
@@ -15,4 +15,5 @@ export const FewPages = () => {
 export const ManyPages = () => {
   const [page, setPage] = useState(1);
   return <Pagination totalPages={15} currentPage={page} onChange={setPage} />;
-}; 
+};
+

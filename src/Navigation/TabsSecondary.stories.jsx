@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TabsSecondary from '../FormElements/TabsSecondary';
+import TabsSecondary from './TabsSecondary';
 import Icon from '../Icons/Icon';
 
 export default {
@@ -35,4 +35,5 @@ export const OnlyIcons = () => {
     { label: '', value: 'mobile', icon: <Icon name="phone" /> },
   ];
   return <TabsSecondary options={options} value={value} onChange={setValue} />;
-}; 
+};
+

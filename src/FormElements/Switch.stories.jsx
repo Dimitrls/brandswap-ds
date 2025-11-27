@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Switch from '../FormElements/Switch';
+import Switch from './Switch';
 
 export default {
   title: 'Form elements/Switch',
@@ -53,4 +53,5 @@ export const LabelOnTop = () => {
       labelOnTop
     />
   );
-}; 
+};
+

@@ -39,4 +39,5 @@ export const RemovableTag = ({ label, variant = 'neutral', subtle = false, onRem
       {label}
     </span>
   );
-}; 
+};
+

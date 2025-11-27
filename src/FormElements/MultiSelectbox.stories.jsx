@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import MultiSelectbox from '../FormElements/MultiSelectbox';
+import MultiSelectbox from './MultiSelectbox';
 
 export default {
   title: 'Form elements/MultiSelectbox',
@@ -18,4 +18,5 @@ export const Default = () => {
       placeholder="Choose categories..."
     />
   );
-}; 
+};
+

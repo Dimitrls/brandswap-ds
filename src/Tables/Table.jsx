@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Table.module.css';
-import Pagination from '../FormElements/Pagination';
+import Pagination from '../Navigation/Pagination';
 import Icon from '../Icons/Icon';
 
 const Table = ({

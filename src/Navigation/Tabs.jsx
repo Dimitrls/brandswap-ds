@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './TabsSecondary.module.css';
+import styles from './Tabs.module.css';
 
 /**
  * @typedef {Object} TabOption
@@ -11,9 +11,9 @@ import styles from './TabsSecondary.module.css';
 /**
  * @param {{ options: TabOption[], value: string, onChange: (value: string) => void }} props
  */
-const TabsSecondary = ({ options, value, onChange }) => {
+const Tabs = ({ options, value, onChange }) => {
   return (
-    <div className={styles.tabsSecondary}>
+    <div className={styles.tabs}>
       {options.map(option => (
         <button
           key={option.value}
@@ -26,11 +26,12 @@ const TabsSecondary = ({ options, value, onChange }) => {
           onClick={() => onChange(option.value)}
         >
           {option.icon && <span className={styles.icon}>{option.icon}</span>}
-          {option.label ? <span>{option.label}</span> : null}
+          <span>{option.label}</span>
         </button>
       ))}
     </div>
   );
 };
 
-export default TabsSecondary; 
+export default Tabs;
+

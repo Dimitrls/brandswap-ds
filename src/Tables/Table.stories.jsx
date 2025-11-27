@@ -1,5 +1,5 @@
 import React from 'react';
-import Table from '../Tables/Table';
+import Table from './Table';
 
 export default {
   title: 'Tables & Lists/Table',
@@ -86,4 +86,5 @@ export const SimpleTable = (args) => (
   />
 );
 
-SimpleTable.storyName = 'Simple Table (No Actions, No Expand, No Title, No Pagination, No Totals)'; 
+SimpleTable.storyName = 'Simple Table (No Actions, No Expand, No Title, No Pagination, No Totals)';
+

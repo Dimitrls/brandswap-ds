@@ -89,4 +89,5 @@ const Breadcrumbs = ({ items }) => {
   );
 };
 
-export default Breadcrumbs; 
+export default Breadcrumbs;
+

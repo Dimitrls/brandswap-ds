@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styles from './CompanySelector.module.css';
 import Icon from '../Icons/Icon';
 import InputField from '../FormElements/InputField';
-import TabsSecondary from '../FormElements/TabsSecondary';
-import Pagination from '../FormElements/Pagination';
+import TabsSecondary from '../Navigation/TabsSecondary';
+import Pagination from '../Navigation/Pagination';
 
 const CompanySelector = ({ companies = [], selectedCompany, onCompanyChange }) => {
   const [isOpen, setIsOpen] = useState(false);

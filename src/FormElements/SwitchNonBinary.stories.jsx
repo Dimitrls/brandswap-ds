@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SwitchNonBinary from '../FormElements/SwitchNonBinary';
+import SwitchNonBinary from './SwitchNonBinary';
 
 export default {
   title: 'Form elements/SwitchNonBinary',
@@ -27,4 +27,5 @@ export const WithThreeStates = () => {
         onChange={setValue}
       />
     );
-  }; 
+  };
+

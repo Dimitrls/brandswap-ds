@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './SecondBar.module.css';
-import Tabs from '../FormElements/Tabs';
-import { Button } from '../stories/Button';
+import Tabs from '../Navigation/Tabs';
+import { Button } from '../Buttons/Button';
 
 const SecondBar = ({ 
   tabsOptions = [], 

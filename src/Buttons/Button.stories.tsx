@@ -24,4 +24,5 @@ export const IconButtonOutline = () => <IconButton icon="pencil" ariaLabel="Edit
 export const IconButtonFilledWarning = () => <IconButton icon="pencil" ariaLabel="Edit" variant="filled-warning" sizeVariant="medium" />;
 export const IconButtonOutlineWarning = () => <IconButton icon="pencil" ariaLabel="Edit" variant="outline-warning" sizeVariant="medium" />;
 export const IconButtonSubtle = () => <IconButton icon="pencil" ariaLabel="Edit" variant="subtle" sizeVariant="medium" />;
-export const IconButtonSubtleWarning = () => <IconButton icon="pencil" ariaLabel="Edit" variant="subtle-warning" sizeVariant="medium" />; 
+export const IconButtonSubtleWarning = () => <IconButton icon="pencil" ariaLabel="Edit" variant="subtle-warning" sizeVariant="medium" />;
+

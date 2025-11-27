@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './Selectbox.module.css';
 import Checkbox from './Checkbox';
-import { RemovableTag } from '../stories/Tag';
+import { RemovableTag } from '../Buttons/Tag';
 import Icon from '../Icons/Icon';
 /**
  * @typedef {Object} MultiSelectboxProps

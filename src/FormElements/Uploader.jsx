@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Uploader.module.css';
-import { Button } from '../stories/Button';
+import { Button } from '../Buttons/Button';
 
 /**
  * @typedef {Object} UploaderProps

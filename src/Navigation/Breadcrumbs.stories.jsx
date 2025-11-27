@@ -1,5 +1,5 @@
 import React from 'react';
-import Breadcrumbs from '../FormElements/Breadcrumbs';
+import Breadcrumbs from './Breadcrumbs';
 
 export default {
   title: 'Navigation/Breadcrumbs',
@@ -27,4 +27,5 @@ export const WithoutDropdowns = () => (
       { label: 'Current' },
     ]}
   />
-); 
+);
+

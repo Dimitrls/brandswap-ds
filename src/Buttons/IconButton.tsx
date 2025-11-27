@@ -39,4 +39,5 @@ export const IconButton = ({
       <Icon name={icon} size={iconSize} />
     </button>
   );
-}; 
+};
+

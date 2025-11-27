@@ -18,3 +18,4 @@ export const FilledLarge = () => (
 export const Outline = () => (
   <FloatingButton icon="dots-vertical" ariaLabel="Add" variant="outline" style={{ position: 'relative', bottom: 0, right: 0 }} />
 );
+

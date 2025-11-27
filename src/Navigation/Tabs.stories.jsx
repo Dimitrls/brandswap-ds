@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Tabs from '../FormElements/Tabs';
+import Tabs from './Tabs';
 import Icon from '../Icons/Icon';
 
 export default {
@@ -26,4 +26,5 @@ export const WithoutIcons = () => {
     { label: 'Tab 3', value: 'tab3' },
   ];
   return <Tabs options={options} value={value} onChange={setValue} />;
-}; 
+};
+

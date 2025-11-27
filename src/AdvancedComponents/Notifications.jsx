@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Notifications.module.css';
 import Icon from '../Icons/Icon';
-import Pagination from '../FormElements/Pagination';
+import Pagination from '../Navigation/Pagination';
 
 const Notifications = ({ notifications = [], itemsPerPage = 5 }) => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,5 +1,5 @@
 import React from 'react';
-import Selectbox from '../FormElements/Selectbox';
+import Selectbox from './Selectbox';
 
 export default {
   title: 'Form elements/Selectbox',
@@ -12,4 +12,5 @@ export const Default = () => (
     label="Choose an option"
     options={['Option 1', 'Option 2', 'Option 3']}
   />
-); 
+);
+

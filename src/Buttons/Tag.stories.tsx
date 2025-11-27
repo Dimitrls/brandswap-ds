@@ -24,4 +24,5 @@ export const Removable = () => {
   return visible ? (
     <RemovableTag label="Removable Tag" variant="neutral" onRemove={() => setVisible(false)} />
   ) : null;
-}; 
+};
+
