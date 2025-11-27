@@ -135,6 +135,20 @@ export const SuffixSelect = () => {
   );
 };
 
+export const WithSearchIcon = () => {
+  const [value, setValue] = React.useState('');
+  return (
+    <InputField
+      label="Search"
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      placeholder="Search..."
+      icon={true}
+      iconName="search"
+    />
+  );
+};
+
 export const NumberWithArrows = () => {
   const [value, setValue] = React.useState(0);
   return (

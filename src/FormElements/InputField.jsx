@@ -16,6 +16,8 @@ const InputField = ({
   suffix,
   spinner = false,
   showArrows = true,
+  icon = false,
+  iconName = 'search',
   min,
   max,
   step = 1,
@@ -59,6 +61,9 @@ const InputField = ({
     return styles.suffixMedium;
   };
 
+  // Extract style from props to merge properly
+  const { style: propsStyle, ...restProps } = props;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, position: 'relative' }}>
       {label && (
@@ -70,6 +75,11 @@ const InputField = ({
       )}
       <div className={styles.inputWrapper} style={{ position: 'relative' }}>
         {prefix && <span className={`${styles.prefix} ${getPrefixSizeClass()}`}>{prefix}</span>}
+        {icon && (
+          <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', zIndex: 1, opacity: 0.6, display: 'flex', alignItems: 'center', pointerEvents: 'none' }}>
+            <Icon name={iconName} size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
+          </span>
+        )}
         <input
           type={type}
           value={value}
@@ -83,7 +93,11 @@ const InputField = ({
             getInputSizeClass(),
             warning ? styles.inputWarning : '',
           ].join(' ')}
-          {...props}
+          style={{
+            ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
+            ...propsStyle,
+          }}
+          {...restProps}
         />
         {/* Custom arrows for number input */}
         {type === 'number' && showArrows && (
@@ -124,6 +138,8 @@ InputField.propTypes = {
   suffix: PropTypes.node,
   spinner: PropTypes.bool,
   showArrows: PropTypes.bool,
+  icon: PropTypes.bool,
+  iconName: PropTypes.string,
   min: PropTypes.number,
   max: PropTypes.number,
   step: PropTypes.number,
