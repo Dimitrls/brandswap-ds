@@ -171,3 +171,47 @@ export const MixedFilters = () => {
   );
 };
 
+export const WithLabels = () => {
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState('All Status');
+  const [categories, setCategories] = useState([]);
+  const [dateRange, setDateRange] = useState('All Dates');
+  
+  const filters = [
+    {
+      type: 'selectbox',
+      label: 'Status',
+      options: ['All Status', 'Active', 'Inactive'],
+      value: status,
+      onChange: setStatus,
+    },
+    {
+      type: 'multiselectbox',
+      label: 'Categories',
+      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
+      selected: categories,
+      onChange: setCategories,
+      placeholder: 'Select categories...',
+    },
+    {
+      type: 'selectbox',
+      label: 'Date Range',
+      options: ['All Dates', 'Today', 'This Week', 'This Month'],
+      value: dateRange,
+      onChange: setDateRange,
+    },
+  ];
+  
+  return (
+    <FiltersBar
+      labels={true}
+      searchbox={true}
+      searchValue={search}
+      onSearchChange={(e) => setSearch(e.target.value)}
+      searchPlaceholder="Search..."
+      filters={filters}
+      onApply={() => console.log('Apply clicked', { status, categories, dateRange })}
+      applyLabel="Apply"
+    />
+  );
+};
