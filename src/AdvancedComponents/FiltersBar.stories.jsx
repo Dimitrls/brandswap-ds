@@ -22,7 +22,7 @@ export const Default = () => {
         options={['All Status', 'Active', 'Inactive']}
         size="large"
         icon={true}
-        iconName="filter"
+        iconName="check"
       />
     </FiltersBar>
   );
@@ -44,7 +44,7 @@ export const WithMultipleFilters = () => {
         options={['All Categories', 'Category 1', 'Category 2']}
         size="large"
         icon={true}
-        iconName="filter"
+        iconName="check"
       />
       <Selectbox
         options={['All Dates', 'Today', 'This Week', 'This Month']}
@@ -71,7 +71,7 @@ export const WithoutSearchbox = () => {
         options={['All Status', 'Active', 'Inactive']}
         size="large"
         icon={true}
-        iconName="filter"
+        iconName="check"
       />
       <Selectbox
         options={['All Categories', 'Category 1', 'Category 2']}
@@ -96,7 +96,7 @@ export const WithoutApplyButton = () => {
         options={['All Status', 'Active', 'Inactive']}
         size="large"
         icon={true}
-        iconName="filter"
+        iconName="check"
       />
     </FiltersBar>
   );
@@ -114,6 +114,8 @@ export const WithConfigurableFilters = () => {
       options: ['All Status', 'Active', 'Inactive'],
       value: status,
       onChange: setStatus,
+      icon: true,
+      iconName: 'check',
     },
     {
       type: 'multiselectbox',
@@ -121,12 +123,16 @@ export const WithConfigurableFilters = () => {
       selected: categories,
       onChange: setCategories,
       placeholder: 'Select categories...',
+      icon: true,
+      iconName: 'list',
     },
     {
       type: 'selectbox',
       options: ['All Dates', 'Today', 'This Week', 'This Month'],
       value: dateRange,
       onChange: setDateRange,
+      icon: true,
+      iconName: 'calendar',
     },
   ];
   
@@ -184,6 +190,8 @@ export const WithLabels = () => {
       options: ['All Status', 'Active', 'Inactive'],
       value: status,
       onChange: setStatus,
+      icon: true,
+      iconName: 'check',
     },
     {
       type: 'multiselectbox',
@@ -192,6 +200,8 @@ export const WithLabels = () => {
       selected: categories,
       onChange: setCategories,
       placeholder: 'Select categories...',
+      icon: true,
+      iconName: 'coffee',
     },
     {
       type: 'selectbox',
@@ -199,6 +209,8 @@ export const WithLabels = () => {
       options: ['All Dates', 'Today', 'This Week', 'This Month'],
       value: dateRange,
       onChange: setDateRange,
+      icon: true,
+      iconName: 'calendar',
     },
   ];
   

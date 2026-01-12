@@ -27,13 +27,15 @@ const FiltersBar = ({
       // Conditionally include label based on labels prop, and size is always large
       const { selected, size, label, ...multiSelectProps } = filterProps;
       return (
-        <MultiSelectbox
-          key={index}
-          selected={selected || []}
-          {...(labels && label ? { label } : {})}
-          {...multiSelectProps}
-          size="large"
-        />
+        <div data-filter-with-label={labels && label ? 'true' : undefined}>
+          <MultiSelectbox
+            key={index}
+            selected={selected || []}
+            {...(labels && label ? { label, labelInside: true } : {})}
+            {...multiSelectProps}
+            size="large"
+          />
+        </div>
       );
     } else {
       // Default to selectbox
@@ -41,18 +43,24 @@ const FiltersBar = ({
       // Conditionally include label based on labels prop, and size is always large
       const { size, label, ...selectProps } = filterProps;
       return (
-        <Selectbox
-          key={index}
-          {...(labels && label ? { label } : {})}
-          {...selectProps}
-          size="large"
-        />
+        <div data-filter-with-label={labels && label ? 'true' : undefined}>
+          <Selectbox
+            key={index}
+            {...(labels && label ? { label, labelInside: true } : {})}
+            {...selectProps}
+            size="large"
+          />
+        </div>
       );
     }
   };
 
   return (
-    <div className={[styles.filtersBar, className].filter(Boolean).join(' ')} {...props}>
+    <div 
+      className={[styles.filtersBar, labels && styles.filtersBarWithLabels, className].filter(Boolean).join(' ')} 
+      data-labels-enabled={labels ? 'true' : undefined}
+      {...props}
+    >
       {searchbox && (
         <div className={styles.filtersBar__searchbox}>
           <InputField

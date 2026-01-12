@@ -13,10 +13,13 @@ import Icon from '../Icons/Icon';
  * @property {string} [placeholder] - Optional placeholder
  * @property {boolean} [inForm] - If true, use in-form wrapper styles
  * @property {boolean} [labelOnTop] - If true, render the label above the select
+ * @property {boolean} [labelInside=false] - If true, render label inside the select element
+ * @property {boolean} [icon=false] - Whether to show an icon at the beginning
+ * @property {string} [iconName='search'] - Name of the icon to display
  * @property {'small' | 'medium' | 'large'} [size='medium'] - Size of the multiselectbox
  */
 
-const MultiSelectbox = ({ options = [], selected = [], onChange, label, placeholder = 'Select...', inForm = false, labelOnTop = false, size = 'medium' }) => {
+const MultiSelectbox = ({ options = [], selected = [], onChange, label, placeholder = 'Select...', inForm = false, labelOnTop = false, labelInside = false, icon = false, iconName = 'search', size = 'medium' }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef();
 
@@ -63,24 +66,43 @@ const MultiSelectbox = ({ options = [], selected = [], onChange, label, placehol
 
   return (
     <div className={wrapperClass} ref={ref}>
-      {labelOnTop ? (
+      {!labelInside && labelOnTop ? (
         <span className={`${styles.label} ${getLabelSizeClass()}`} style={{ marginBottom: 4 }}>{label}</span>
-      ) : label ? (
+      ) : !labelInside && label ? (
         <span className={`${styles.label} ${getLabelSizeClass()}`}>{label}</span>
       ) : null}
-      <div className={`${styles.select} ${getSelectSizeClass()}`} onClick={() => setOpen(!open)} tabIndex={0}>
-        {selected.length === 0 ? (
-          <span className={styles.placeholder}>{placeholder}</span>
-        ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {selected.map((option) => (
-              <RemovableTag key={option} label={option} onRemove={() => handleRemove(option)} />
-            ))}
-          </div>
+      <div className={styles.selectWrapper} style={{ position: 'relative' }}>
+        {icon && (
+          <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', zIndex: 1, opacity: 0.6, display: 'flex', alignItems: 'center', pointerEvents: 'none' }}>
+            <Icon name={iconName} size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
+          </span>
         )}
-        <span className={styles.arrow}>
-          <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
-        </span>
+        <div 
+          className={`${styles.select} ${getSelectSizeClass()}`} 
+          onClick={() => setOpen(!open)} 
+          tabIndex={0}
+          style={{
+            ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
+          }}
+        >
+          {labelInside && label && (
+            <span className="labelInside" style={{ color: 'var(--text-muted)', marginRight: '6px' }}>
+              {label}:
+            </span>
+          )}
+          {selected.length === 0 ? (
+            <span className={styles.placeholder}>{placeholder}</span>
+          ) : (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {selected.map((option) => (
+                <RemovableTag key={option} label={option} onRemove={() => handleRemove(option)} />
+              ))}
+            </div>
+          )}
+          <span className={styles.arrow}>
+            <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
+          </span>
+        </div>
       </div>
       {open && (
         <ul className={styles.dropdown} style={{ maxHeight: 220, overflowY: 'auto' }}>
@@ -108,6 +130,9 @@ MultiSelectbox.propTypes = {
   placeholder: PropTypes.string,
   inForm: PropTypes.bool,
   labelOnTop: PropTypes.bool,
+  labelInside: PropTypes.bool,
+  icon: PropTypes.bool,
+  iconName: PropTypes.string,
   size: PropTypes.oneOf(['small', 'medium', 'large']),
 };
 

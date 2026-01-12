@@ -36,3 +36,37 @@
     z-index: -1;
   }
 }
+
+/* Target labels inside select boxes when labels are enabled */
+.filtersBarWithLabels .filtersBar__filters :global(.labelInside),
+[data-labels-enabled="true"] .filtersBar__filters :global(.labelInside) {
+  font-size: var(--font-body-small);
+  display: block;
+}
+
+.filtersBarWithLabels[data-labels-enabled="true"] {
+  height: 48px;
+}
+
+/* Target filter boxes (wrapper) when labels are enabled */
+/* The wrapper is the first direct child div of the data-filter-with-label div */
+.filtersBarWithLabels .filtersBar__filters [data-filter-with-label="true"] > div,
+[data-labels-enabled="true"] .filtersBar__filters [data-filter-with-label="true"] > div {
+  
+}
+
+/* Target select elements when labels are enabled */
+/* Structure: wrapper > selectWrapper > select */
+/* Target the div that contains the labelInside span (the select element) */
+.filtersBarWithLabels .filtersBar__filters [data-filter-with-label="true"] > div > div > div:has(.labelInside),
+[data-labels-enabled="true"] .filtersBar__filters [data-filter-with-label="true"] > div > div > div:has(.labelInside) {
+  
+}
+
+/* Fallback: Target the div inside selectWrapper (the select element) */
+/* This works because selectWrapper always contains exactly one direct child div (the select) */
+.filtersBarWithLabels .filtersBar__filters [data-filter-with-label="true"] > div > div:last-child > div,
+[data-labels-enabled="true"] .filtersBar__filters [data-filter-with-label="true"] > div > div:last-child > div {
+  padding: 4px 32px 4px 16px;
+  height: 48px;
+}
