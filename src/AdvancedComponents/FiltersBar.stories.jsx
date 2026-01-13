@@ -20,7 +20,7 @@ export const Default = () => {
     >
       <Selectbox
         options={['All Status', 'Active', 'Inactive']}
-        size="large"
+        size="medium"
         icon={true}
         iconName="check"
       />
@@ -42,19 +42,19 @@ export const WithMultipleFilters = () => {
     >
       <Selectbox
         options={['All Categories', 'Category 1', 'Category 2']}
-        size="large"
+        size="medium"
         icon={true}
         iconName="check"
       />
       <Selectbox
         options={['All Dates', 'Today', 'This Week', 'This Month']}
-        size="large"
+        size="medium"
         icon={true}
         iconName="calendar"
       />
       <Selectbox
         options={['All Types', 'Type A', 'Type B']}
-        size="large"
+        size="medium"
         icon={true}
         iconName="list"
       />
@@ -69,13 +69,13 @@ export const WithoutSearchbox = () => {
     >
       <Selectbox
         options={['All Status', 'Active', 'Inactive']}
-        size="large"
+        size="medium"
         icon={true}
         iconName="check"
       />
       <Selectbox
         options={['All Categories', 'Category 1', 'Category 2']}
-        size="large"
+        size="medium"
         icon={true}
         iconName="list"
       />
@@ -94,7 +94,7 @@ export const WithoutApplyButton = () => {
     >
       <Selectbox
         options={['All Status', 'Active', 'Inactive']}
-        size="large"
+        size="medium"
         icon={true}
         iconName="check"
       />

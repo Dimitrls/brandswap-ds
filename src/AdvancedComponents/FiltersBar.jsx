@@ -24,7 +24,7 @@ const FiltersBar = ({
     
     if (type === 'multiselectbox') {
       // MultiSelectbox uses 'selected' prop instead of 'value'
-      // Conditionally include label based on labels prop, and size is always large
+      // Conditionally include label based on labels prop, and size is large when labels is true
       const { selected, size, label, ...multiSelectProps } = filterProps;
       return (
         <div data-filter-with-label={labels && label ? 'true' : undefined}>
@@ -33,14 +33,14 @@ const FiltersBar = ({
             selected={selected || []}
             {...(labels && label ? { label, labelInside: true } : {})}
             {...multiSelectProps}
-            size="large"
+            size={labels ? "large" : "medium"}
           />
         </div>
       );
     } else {
       // Default to selectbox
       // Selectbox doesn't use controlled value prop, but we can pass it for future use
-      // Conditionally include label based on labels prop, and size is always large
+      // Conditionally include label based on labels prop, and size is large when labels is true
       const { size, label, ...selectProps } = filterProps;
       return (
         <div data-filter-with-label={labels && label ? 'true' : undefined}>
@@ -48,7 +48,7 @@ const FiltersBar = ({
             key={index}
             {...(labels && label ? { label, labelInside: true } : {})}
             {...selectProps}
-            size="large"
+            size={labels ? "large" : "medium"}
           />
         </div>
       );
@@ -68,7 +68,7 @@ const FiltersBar = ({
             placeholder={searchPlaceholder}
             value={searchValue}
             onChange={onSearchChange}
-            size="large"
+            size={labels ? "large" : "medium"}
             icon={true}
             iconName="search"
             style={{ width: '200px' }}
@@ -82,7 +82,7 @@ const FiltersBar = ({
         <div className={styles.filtersBar__button}>
           <Button
             variant="outline"
-            size="large"
+            size={labels ? "large" : "medium"}
             label={applyLabel}
             onClick={onApply}
           />

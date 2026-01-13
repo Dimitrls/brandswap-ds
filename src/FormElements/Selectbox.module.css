@@ -46,6 +46,9 @@
   text-overflow: ellipsis;
   user-select: none;
   padding-right: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .selectSmall {

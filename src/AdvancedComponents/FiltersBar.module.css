@@ -45,7 +45,7 @@
 }
 
 .filtersBarWithLabels[data-labels-enabled="true"] {
-  height: 48px;
+  height: 44px;
 }
 
 /* Target filter boxes (wrapper) when labels are enabled */
@@ -67,6 +67,5 @@
 /* This works because selectWrapper always contains exactly one direct child div (the select) */
 .filtersBarWithLabels .filtersBar__filters [data-filter-with-label="true"] > div > div:last-child > div,
 [data-labels-enabled="true"] .filtersBar__filters [data-filter-with-label="true"] > div > div:last-child > div {
-  padding: 4px 32px 4px 16px;
-  height: 48px;
+  height: 44px;
 }
