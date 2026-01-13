@@ -16,7 +16,7 @@ const FiltersBar = ({
   searchPlaceholder = 'Search...',
   onApply,
   applyLabel = 'Apply',
-  labels = false,
+  labels = true,
   ...props 
 }) => {
   const renderFilter = (filter, index) => {

@@ -10,100 +10,6 @@ export default {
 
 export const Default = () => {
   const [search, setSearch] = useState('');
-  
-  return (
-    <FiltersBar
-      searchbox={true}
-      searchValue={search}
-      onSearchChange={(e) => setSearch(e.target.value)}
-      onApply={() => console.log('Apply clicked')}
-    >
-      <Selectbox
-        options={['All Status', 'Active', 'Inactive']}
-        size="medium"
-        icon={true}
-        iconName="check"
-      />
-    </FiltersBar>
-  );
-};
-
-export const WithMultipleFilters = () => {
-  const [search, setSearch] = useState('');
-  
-  return (
-    <FiltersBar
-      searchbox={true}
-      searchValue={search}
-      onSearchChange={(e) => setSearch(e.target.value)}
-      searchPlaceholder="Search companies..."
-      onApply={() => console.log('Apply clicked')}
-      applyLabel="Apply"
-    >
-      <Selectbox
-        options={['All Categories', 'Category 1', 'Category 2']}
-        size="medium"
-        icon={true}
-        iconName="check"
-      />
-      <Selectbox
-        options={['All Dates', 'Today', 'This Week', 'This Month']}
-        size="medium"
-        icon={true}
-        iconName="calendar"
-      />
-      <Selectbox
-        options={['All Types', 'Type A', 'Type B']}
-        size="medium"
-        icon={true}
-        iconName="list"
-      />
-    </FiltersBar>
-  );
-};
-
-export const WithoutSearchbox = () => {
-  return (
-    <FiltersBar
-      onApply={() => console.log('Apply clicked')}
-    >
-      <Selectbox
-        options={['All Status', 'Active', 'Inactive']}
-        size="medium"
-        icon={true}
-        iconName="check"
-      />
-      <Selectbox
-        options={['All Categories', 'Category 1', 'Category 2']}
-        size="medium"
-        icon={true}
-        iconName="list"
-      />
-    </FiltersBar>
-  );
-};
-
-export const WithoutApplyButton = () => {
-  const [search, setSearch] = useState('');
-  
-  return (
-    <FiltersBar
-      searchbox={true}
-      searchValue={search}
-      onSearchChange={(e) => setSearch(e.target.value)}
-    >
-      <Selectbox
-        options={['All Status', 'Active', 'Inactive']}
-        size="medium"
-        icon={true}
-        iconName="check"
-      />
-    </FiltersBar>
-  );
-};
-
-export const WithConfigurableFilters = () => {
-  const [search, setSearch] = useState('');
   const [status, setStatus] = useState('All Status');
   const [categories, setCategories] = useState([]);
   const [dateRange, setDateRange] = useState('All Dates');
@@ -124,7 +30,7 @@ export const WithConfigurableFilters = () => {
       onChange: setCategories,
       placeholder: 'Select categories...',
       icon: true,
-      iconName: 'list',
+      iconName: 'coffee',
     },
     {
       type: 'selectbox',
@@ -138,6 +44,7 @@ export const WithConfigurableFilters = () => {
   
   return (
     <FiltersBar
+      labels={false}
       searchbox={true}
       searchValue={search}
       onSearchChange={(e) => setSearch(e.target.value)}
@@ -149,31 +56,23 @@ export const WithConfigurableFilters = () => {
   );
 };
 
-export const MixedFilters = () => {
-  const [status, setStatus] = useState('All Status');
-  const [tags, setTags] = useState([]);
-  
-  const filters = [
-    {
-      type: 'selectbox',
-      options: ['All Status', 'Active', 'Inactive'],
-      value: status,
-      onChange: setStatus,
-    },
-    {
-      type: 'multiselectbox',
-      options: ['Tag 1', 'Tag 2', 'Tag 3'],
-      selected: tags,
-      onChange: setTags,
-      placeholder: 'Select tags...',
-    },
-  ];
-  
+export const WithoutSearchbox = () => {
   return (
     <FiltersBar
-      filters={filters}
-      onApply={() => console.log('Apply clicked', { status, tags })}
-    />
+      labels={false}
+      onApply={() => console.log('Apply clicked')}
+    >
+      <Selectbox
+        options={['All Status', 'Active', 'Inactive']}
+        icon={true}
+        iconName="check"
+      />
+      <Selectbox
+        options={['All Categories', 'Category 1', 'Category 2']}
+        icon={true}
+        iconName="coffee"
+      />
+    </FiltersBar>
   );
 };
 
