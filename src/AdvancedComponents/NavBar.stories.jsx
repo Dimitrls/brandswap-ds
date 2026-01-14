@@ -30,7 +30,6 @@ export const Default = () => {
         items={navItems}
         activeItem={activeItem}
         onItemClick={setActiveItem}
-        logo={<span>BrandSwap</span>}
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed(!collapsed)}
       />
@@ -51,7 +50,6 @@ export const Expanded = () => {
         items={navItems}
         activeItem={activeItem}
         onItemClick={setActiveItem}
-        logo={<span>BrandSwap</span>}
         collapsed={false}
         onToggleCollapse={() => {}}
       />
@@ -72,64 +70,12 @@ export const Collapsed = () => {
         items={navItems}
         activeItem={activeItem}
         onItemClick={setActiveItem}
-        logo={<Icon name="coffee" size={24} />}
         collapsed={true}
         onToggleCollapse={() => {}}
       />
       <div>
         <h1>Collapsed Sidebar</h1>
         <p>The sidebar is always collapsed in this example, showing only icons.</p>
-      </div>
-    </div>
-  );
-};
-
-export const WithLogoIcon = () => {
-  const [activeItem, setActiveItem] = useState('home');
-  const [collapsed, setCollapsed] = useState(false);
-  
-  return (
-    <div style={{ marginLeft: collapsed ? '64px' : '256px', padding: '20px', transition: 'margin-left 0.3s ease' }}>
-      <NavBar
-        items={navItems}
-        activeItem={activeItem}
-        onItemClick={setActiveItem}
-        logo={collapsed ? <Icon name="coffee" size={24} /> : <span>BrandSwap</span>}
-        collapsed={collapsed}
-        onToggleCollapse={() => setCollapsed(!collapsed)}
-      />
-      <div>
-        <h1>With Logo Icon</h1>
-        <p>This example shows how to use different logos for collapsed and expanded states.</p>
-      </div>
-    </div>
-  );
-};
-
-export const WithBadges = () => {
-  const [activeItem, setActiveItem] = useState('analytics');
-  const [collapsed, setCollapsed] = useState(false);
-  
-  const itemsWithBadges = [
-    { id: 'inbox', label: 'Inbox', icon: <Icon name="mail" size={20} />, badge: '12' },
-    { id: 'notifications', label: 'Notifications', icon: <Icon name="bell" size={20} />, badge: '5' },
-    { id: 'messages', label: 'Messages', icon: <Icon name="message-circle" size={20} />, badge: '99+' },
-    { id: 'tasks', label: 'Tasks', icon: <Icon name="list" size={20} />, badge: '3' },
-  ];
-  
-  return (
-    <div style={{ marginLeft: collapsed ? '64px' : '256px', padding: '20px', transition: 'margin-left 0.3s ease' }}>
-      <NavBar
-        items={itemsWithBadges}
-        activeItem={activeItem}
-        onItemClick={setActiveItem}
-        logo={<span>BrandSwap</span>}
-        collapsed={collapsed}
-        onToggleCollapse={() => setCollapsed(!collapsed)}
-      />
-      <div>
-        <h1>With Badges</h1>
-        <p>Notice how badges are positioned in both expanded and collapsed states.</p>
       </div>
     </div>
   );

@@ -2,25 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './NavBar.module.css';
 import Icon from '../Icons/Icon';
+import Logo from '../Icons/Logo';
 
 const NavBar = ({ items, activeItem, onItemClick, className, logo, collapsed = false, onToggleCollapse, ...props }) => {
   return (
     <nav className={[styles.navBar, collapsed ? styles['navBar--collapsed'] : styles['navBar--expanded'], className].filter(Boolean).join(' ')} {...props}>
       <div className={styles.navBar__header}>
-        {logo && (
+        {logo ? (
           <div className={styles.navBar__logo}>
             {logo}
           </div>
-        )}
-        {onToggleCollapse && (
-          <button
-            className={styles.navBar__toggle}
-            onClick={onToggleCollapse}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            type="button"
-          >
-            <Icon name={collapsed ? 'chevron-right' : 'chevron-left'} size={16} />
-          </button>
+        ) : (
+          <div className={styles.navBar__logo}>
+            <Logo variant={collapsed ? 'icon' : 'default'} color="primary" />
+          </div>
         )}
       </div>
       <div className={styles.navBar__items}>
@@ -37,6 +32,18 @@ const NavBar = ({ items, activeItem, onItemClick, className, logo, collapsed = f
             {item.badge && <span className={styles.navBar__badge}>{item.badge}</span>}
           </button>
         ))}
+      </div>
+      <div className={styles.navBar__footer}>
+        {onToggleCollapse && (
+          <button
+            className={styles.navBar__toggle}
+            onClick={onToggleCollapse}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            type="button"
+          >
+            <Icon name={collapsed ? 'chevrons-right' : 'chevrons-left'} size={16} />
+          </button>
+        )}
       </div>
     </nav>
   );
