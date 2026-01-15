@@ -1,0 +1,137 @@
+.alertBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 4px solid transparent;
+  font-size: 14px;
+  width: 100%;
+  background: var(--bg-default);
+  color: var(--text-default);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.alertBanner__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+}
+
+.alertBanner__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.alertBanner__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.alertBanner__title {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-h4);
+  line-height: 1.4;
+}
+
+.alertBanner__message {
+  font-size: var(--font-body);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.alertBanner__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 12px;
+}
+
+.alertBanner__button {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.alertBanner__button:hover {
+  background: var(--bg1);
+}
+
+.alertBanner__dismiss {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.alertBanner__dismiss:hover {
+  color: var(--text-default);
+  background: var(--bg1);
+}
+
+.alertBanner__dismiss svg {
+  width: 100%;
+  height: 100%;
+}
+
+.alertBanner--success {
+  border-color: var(--primary);
+  background: var(--green-pseudo10);
+}
+
+.alertBanner--success .alertBanner__icon {
+  color: var(--primary);
+}
+
+.alertBanner--info {
+  border-color: var(--accent1);
+  background: var(--purple-10);
+}
+
+.alertBanner--info .alertBanner__icon {
+  color: var(--accent1);
+}
+
+.alertBanner--warning {
+  border-color: var(--accent2);
+  background: var(--yellow-10);
+}
+
+.alertBanner--warning .alertBanner__icon {
+  color: var(--yellow-dark);
+}
+
+.alertBanner--error {
+  border-color: var(--warning);
+  background: var(--red-10);
+}
+
+.alertBanner--error .alertBanner__icon {
+  color: var(--warning);
+}

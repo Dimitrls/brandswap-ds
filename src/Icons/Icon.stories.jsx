@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from './Icon';
 
 export default {
-  title: 'Icons/Icon',
+  title: 'Graphics/Icon',
   component: Icon,
   tags: ['autodocs'],
 };

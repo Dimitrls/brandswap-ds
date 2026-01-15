@@ -2,7 +2,7 @@ import React from 'react';
 import Logo from './Logo';
 
 export default {
-  title: 'Icons/Logo',
+  title: 'Graphics/Logo',
   component: Logo,
   tags: ['autodocs'],
 };
