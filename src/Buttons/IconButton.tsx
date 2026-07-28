@@ -2,7 +2,8 @@ import React from 'react';
 import Icon from '../Icons/Icon';
 import './button.module.css';
 
-export interface IconButtonProps {
+export interface IconButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon: string;
   size?: number;
   ariaLabel: string;
