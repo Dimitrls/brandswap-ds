@@ -1,8 +1,9 @@
 import React from 'react';
-import './button.css';
+import './button.module.css';
 import Icon from '../Icons/Icon';
 
-export interface ButtonProps {
+export interface ButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   /** Button visual variant */
   variant?: 'filled' | 'outline' | 'filled-warning' | 'outline-warning' | 'subtle' | 'subtle-warning';
   /** What background color to use */
@@ -25,13 +26,17 @@ export const Button = ({
   label,
   icon,
   onClick,
+  type = 'button',
+  className,
   ...props
 }: ButtonProps) => {
   const variantClass = `bs-button--${variant}`;
   return (
     <button
-      type="button"
-      className={['bs-button', `bs-button--${size}`, variantClass].join(' ')}
+      type={type}
+      className={['bs-button', `bs-button--${size}`, variantClass, className]
+        .filter(Boolean)
+        .join(' ')}
       style={{ backgroundColor }}
       onClick={onClick}
       {...props}

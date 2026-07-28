@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from '../Icons/Icon';
-import './button.css';
+import './button.module.css';
 
 export interface FloatingButtonProps {
   icon: string;

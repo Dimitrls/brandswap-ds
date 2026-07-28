@@ -7,6 +7,7 @@
   "repository": "dimitrls/brandswap-ds",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
+  "types": "index.d.ts",
   "source": "src/index.js",
   "engines": {
     "node": ">=16"
@@ -60,7 +61,8 @@
     "typescript": "4.9.5"
   },
   "files": [
-    "dist"
+    "dist",
+    "index.d.ts"
   ],
   "eslintConfig": {
     "extends": [

@@ -1,5 +1,5 @@
 import React from 'react';
-import './button.css';
+import './button.module.css';
 import Icon from '../Icons/Icon';
 
 export interface TagProps {

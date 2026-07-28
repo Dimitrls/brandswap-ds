@@ -1,0 +1,202 @@
+:global(.bs-button) {
+  display: inline-flex;
+  padding: 0 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 400;
+  border: none;
+}
+
+:global(.bs-button:hover:not(:disabled)) {
+  filter: brightness(1.1);
+}
+
+:global(.bs-button:active:not(:disabled)) {
+  filter: brightness(1.15);
+}
+
+:global(.bs-button:disabled) {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+:global(.bs-button--small) {
+  height: 28px;
+  font-size: var(--font-body-small);
+}
+
+:global(.bs-button--medium) {
+  height: 36px;
+  font-size: var(--font-body);
+}
+
+:global(.bs-button--large) {
+  height: 44px;
+  font-size: var(--font-body-large);
+}
+
+:global(.bs-button--filled) {
+  background-color: var(--primary, #3ab78f);
+  color: var(--text-on-primary);
+  border: 1px solid transparent;
+}
+
+:global(.bs-button--outline) {
+  background-color: var(--primary-10, #3ab78f1a);
+  color: var(--text-default);
+  border: 1px solid var(--primary, #3ab78f);
+}
+
+:global(.bs-button--filled-warning) {
+  background-color: var(--warning, #ff3d60);
+  color: var(--text-on-warning);
+  border: 1px solid transparent;
+}
+
+:global(.bs-button--outline-warning) {
+  background-color: var(--warning-10, #ff3d601a);
+  color: var(--warning, #ff3d60);
+  border: 1px solid var(--warning, #ff3d60);
+}
+
+:global(.bs-button--subtle) {
+  background-color: transparent;
+  color: var(--primary, #3ab78f);
+  border: 1px solid transparent;
+}
+
+:global(.bs-button--subtle-warning) {
+  background-color: transparent;
+  color: var(--warning, #ff3d60);
+  border: 1px solid transparent;
+}
+
+:global(.bs-icon-button) {
+  padding: 0;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(.bs-icon-button--small) {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+}
+
+:global(.bs-icon-button--large) {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+}
+
+:global(.bs-floating-button) {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1000;
+  padding: 0;
+}
+
+:global(.bs-floating-button--large) {
+  width: 60px;
+  height: 60px;
+  box-shadow: var(--shadow-lg);
+}
+
+:global(.bs-tag) {
+  display: inline-block;
+  padding: 0 8px;
+  height: 20px;
+  border-radius: 2px;
+  font-size: var(--font-body-small);
+  font-weight: 400;
+  line-height: 20px;
+}
+
+:global(.bs-tag--neutral) {
+  background-color: var(--bg1);
+  color: var(--text-muted);
+}
+
+:global(.bs-tag--positive) {
+  background: var(--primary-25, rgba(58, 183, 143, 0.25));
+  color: var(--primary, #3ab78f);
+}
+
+:global(.bs-tag--negative) {
+  background: var(--warning-25, rgba(255, 61, 96, 0.25));
+  color: var(--warning, #ff3d60);
+}
+
+:global(.bs-tag--accent1) {
+  background: var(--accent1-25, rgba(132, 74, 255, 0.25));
+  color: var(--accent1, #844aff);
+}
+
+:global(.bs-tag--accent2) {
+  background: var(--accent2-25, rgba(242, 212, 47, 0.25));
+  color: var(--accent2-dark, #b89c00);
+}
+
+:global(.bs-tag--subtle) {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+:global(.bs-tag--subtle.bs-tag--accent1) {
+  color: var(--accent1, #844aff);
+}
+:global(.bs-tag--subtle.bs-tag--accent2) {
+  color: var(--accent2-dark, #b89c00);
+}
+:global(.bs-tag--subtle.bs-tag--positive) {
+  color: var(--primary, #3ab78f);
+}
+:global(.bs-tag--subtle.bs-tag--negative) {
+  color: var(--warning, #ff3d60);
+}
+:global(.bs-tag--subtle.bs-tag--neutral) {
+  color: var(--text-muted);
+}
+
+:global(.bs-tag--removable) {
+  background-color: var(--bg2);
+  position: relative;
+  border-radius: 60px;
+}
+
+:global(.bs-tag__remove-btn) {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--text-negative);
+  transform: scale(1.25);
+  transition: color 0.2s;
+}
+
+:global(.bs-tag__remove-btn:hover) {
+  color: var(--text-subtle);
+}
