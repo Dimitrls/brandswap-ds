@@ -19,6 +19,7 @@ export const IconButton = ({
   onClick,
   variant = 'filled',
   sizeVariant = 'medium',
+  className,
   ...props
 }: IconButtonProps) => {
   const variantClass = `bs-button--${variant}`;
@@ -32,7 +33,7 @@ export const IconButton = ({
   return (
     <button
       type="button"
-      className={['bs-button', 'bs-icon-button', sizeClass, variantClass].join(' ')}
+      className={['bs-button', 'bs-icon-button', className, sizeClass, variantClass].join(' ')}
       aria-label={ariaLabel}
       onClick={onClick}
       {...props}

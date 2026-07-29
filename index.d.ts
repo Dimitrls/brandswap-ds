@@ -1,4 +1,4 @@
-export interface ButtonProps {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
   | 'filled'
   | 'outline'
@@ -19,7 +19,7 @@ export interface ButtonProps {
 
 export function Button(props: ButtonProps): JSX.Element;
 
-export interface IconButtonProps {
+export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: string;
   size?: number;
   ariaLabel: string;
@@ -37,7 +37,7 @@ export interface IconButtonProps {
 
 export function IconButton(props: IconButtonProps): JSX.Element;
 
-export interface FloatingButtonProps {
+export interface FloatingButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: string;
   size?: number;
   ariaLabel: string;
@@ -49,7 +49,7 @@ export interface FloatingButtonProps {
 
 export function FloatingButton(props: FloatingButtonProps): JSX.Element;
 
-export interface TagProps {
+export interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   variant?: 'neutral' | 'positive' | 'negative' | 'accent1' | 'accent2';
   subtle?: boolean;
@@ -57,7 +57,7 @@ export interface TagProps {
 
 export function Tag(props: TagProps): JSX.Element;
 
-export interface RemovableTagProps extends TagProps {
+export interface RemovableTagProps extends TagProps, React.HTMLAttributes<HTMLDivElement> {
   onRemove: () => void;
 }
 

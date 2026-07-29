@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from '../Icons/Icon';
 import './button.module.css';
 
-export interface FloatingButtonProps {
+export interface FloatingButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: string;
   size?: number;
   ariaLabel: string;
@@ -20,6 +20,7 @@ export const FloatingButton = ({
   variant = 'filled',
   sizeVariant = 'default',
   style,
+  className,
   ...props
 }: FloatingButtonProps) => {
   const variantClass = `bs-button--${variant}`;
@@ -27,7 +28,7 @@ export const FloatingButton = ({
   return (
     <button
       type="button"
-      className={['bs-button', 'bs-floating-button', sizeClass, variantClass].join(' ').trim()}
+      className={['bs-button', 'bs-floating-button', className, sizeClass, variantClass].join(' ').trim()}
       aria-label={ariaLabel}
       onClick={onClick}
       style={style}
