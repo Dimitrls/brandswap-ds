@@ -2,21 +2,24 @@ import React from 'react';
 import './Switch.css';
 
 const styles: Record<string, string> = {
-  wrapper: "bs-switch--wrapper",
-  input: "bs-switch--input",
-  slider: "bs-switch--slider",
-  label: "bs-switch--label",
-  wrapperInForm: "bs-switch--wrapperInForm",
-  warning: "bs-switch--warning",
-  wrapperInFormWarning: "bs-switch--wrapperInFormWarning",
-  labelOnTopWrapper: "bs-switch--labelOnTopWrapper",
+  wrapper: 'bs-switch--wrapper',
+  input: 'bs-switch--input',
+  slider: 'bs-switch--slider',
+  label: 'bs-switch--label',
+  wrapperInForm: 'bs-switch--wrapperInForm',
+  warning: 'bs-switch--warning',
+  wrapperInFormWarning: 'bs-switch--wrapperInFormWarning',
+  labelOnTopWrapper: 'bs-switch--labelOnTopWrapper',
 };
 
 export interface SwitchProps
-  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
+  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange' | 'onBlur'> {
   label: string;
   checked: boolean;
+  /** Called with the next checked state. */
   onChange: (checked: boolean) => void;
+  /** Called with the current checked state on blur. */
+  onBlur?: (checked: boolean) => void;
   inForm?: boolean;
   warningMessage?: string;
   labelOnTop?: boolean;
@@ -26,6 +29,7 @@ export const Switch = ({
   label,
   checked,
   onChange,
+  onBlur,
   inForm = false,
   warningMessage,
   labelOnTop = false,
@@ -47,6 +51,7 @@ export const Switch = ({
         className={styles.input}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
+        onBlur={() => onBlur?.(checked)}
       />
       <span className={styles.slider} />
       {inForm && warningMessage && <span className={styles.warning}>{warningMessage}</span>}

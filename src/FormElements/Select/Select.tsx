@@ -5,36 +5,46 @@ import { Checkbox } from '../Checkbox';
 import { RadioButton } from '../RadioButton';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
+import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
+
+export { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
 
 const styles: Record<string, string> = {
-  wrapper: "bs-selectbox--wrapper",
-  label: "bs-selectbox--label",
-  labelSmall: "bs-selectbox--labelSmall",
-  labelMedium: "bs-selectbox--labelMedium",
-  labelLarge: "bs-selectbox--labelLarge",
-  selectWrapper: "bs-selectbox--selectWrapper",
-  select: "bs-selectbox--select",
-  selectSmall: "bs-selectbox--selectSmall",
-  selectMedium: "bs-selectbox--selectMedium",
-  selectLarge: "bs-selectbox--selectLarge",
-  arrow: "bs-selectbox--arrow",
-  dropdown: "bs-selectbox--dropdown",
-  option: "bs-selectbox--option",
-  placeholder: "bs-selectbox--placeholder",
-  wrapperInForm: "bs-selectbox--wrapperInForm",
-  labelOnTopWrapper: "bs-selectbox--labelOnTopWrapper",
-  searchBox: "bs-selectbox--searchBox",
-  searchInput: "bs-selectbox--searchInput",
-  searchIcon: "bs-selectbox--searchIcon",
-  emptyState: "bs-selectbox--emptyState",
-  optionSelected: "bs-selectbox--optionSelected",
-  dropdownScroll: "bs-selectbox--dropdownScroll",
+  wrapper: 'bs-selectbox--wrapper',
+  label: 'bs-selectbox--label',
+  labelSmall: 'bs-selectbox--labelSmall',
+  labelMedium: 'bs-selectbox--labelMedium',
+  labelLarge: 'bs-selectbox--labelLarge',
+  selectWrapper: 'bs-selectbox--selectWrapper',
+  select: 'bs-selectbox--select',
+  selectSmall: 'bs-selectbox--selectSmall',
+  selectMedium: 'bs-selectbox--selectMedium',
+  selectLarge: 'bs-selectbox--selectLarge',
+  arrow: 'bs-selectbox--arrow',
+  dropdown: 'bs-selectbox--dropdown',
+  option: 'bs-selectbox--option',
+  placeholder: 'bs-selectbox--placeholder',
+  wrapperInForm: 'bs-selectbox--wrapperInForm',
+  labelOnTopWrapper: 'bs-selectbox--labelOnTopWrapper',
+  searchBox: 'bs-selectbox--searchBox',
+  searchInput: 'bs-selectbox--searchInput',
+  searchIcon: 'bs-selectbox--searchIcon',
+  emptyState: 'bs-selectbox--emptyState',
+  optionSelected: 'bs-selectbox--optionSelected',
+  dropdownScroll: 'bs-selectbox--dropdownScroll',
 };
 
 export type SelectOptionVariant = 'default' | 'checkbox' | 'radio';
 
-type SelectSharedProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> & {
-  options: string[];
+type SelectSharedProps<T> = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'onChange' | 'onBlur' | 'defaultValue'
+> & {
+  options: T[];
+  /** Resolve the display label for an option (defaults to string / label / name) */
+  getOptionLabel?: (option: T) => string;
+  /** Resolve a stable key for comparison and React keys */
+  getOptionKey?: (option: T, index?: number) => string | number;
   label?: string;
   placeholder?: string;
   inForm?: boolean;
@@ -43,35 +53,41 @@ type SelectSharedProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> 
   icon?: boolean;
   iconName?: IconName;
   size?: 'small' | 'medium' | 'large';
-  /** How options are rendered in the dropdown */
   optionVariant?: SelectOptionVariant;
-  /** Show a search input inside the dropdown */
   searchable?: boolean;
   searchPlaceholder?: string;
 };
 
-export type SelectSingleProps = SelectSharedProps & {
+export type SelectSingleProps<T> = SelectSharedProps<T> & {
   multiple?: false;
-  value?: string;
-  onChange: (value: string) => void;
+  value?: T | null;
+  onChange: (value: T | null) => void;
+  onBlur?: (value: T | null) => void;
 };
 
-export type SelectMultiProps = SelectSharedProps & {
+export type SelectMultiProps<T> = SelectSharedProps<T> & {
   multiple: true;
-  value?: string[];
-  onChange: (value: string[]) => void;
+  value?: T[];
+  onChange: (value: T[]) => void;
+  onBlur?: (value: T[]) => void;
 };
 
-export type SelectProps = SelectSingleProps | SelectMultiProps;
+export type SelectProps<T = string> = SelectSingleProps<T> | SelectMultiProps<T>;
 
-function isMulti(props: SelectProps): props is SelectMultiProps {
+function isMulti<T>(props: SelectProps<T>): props is SelectMultiProps<T> {
   return props.multiple === true;
 }
 
-export const Select = (props: SelectProps) => {
+function isEmptyValue<T>(value: T | null | undefined): boolean {
+  return value == null || value === ('' as unknown as T);
+}
+
+export function Select<T = string>(props: SelectProps<T>) {
   const multiple = isMulti(props);
   const {
     options = [],
+    getOptionLabel = defaultGetOptionLabel,
+    getOptionKey,
     label,
     placeholder = 'Select...',
     inForm = false,
@@ -86,17 +102,26 @@ export const Select = (props: SelectProps) => {
     className,
     value,
     onChange,
+    onBlur,
     multiple: _multiple,
     ...divProps
   } = props;
 
-  const selectedValues: string[] = multiple
-    ? ((value as string[] | undefined) ?? [])
-    : value
-      ? [value as string]
-      : [];
+  const resolveKey = (option: T, index = 0) =>
+    getOptionKey ? getOptionKey(option) : defaultGetOptionKey(option, index);
 
-  const selectedKey = selectedValues.join('\0');
+  const selectedValues: T[] = multiple
+    ? ((value as T[] | undefined) ?? [])
+    : isEmptyValue(value as T | null | undefined)
+      ? []
+      : [value as T];
+
+  const selectedKey = selectedValues.map((option, index) => resolveKey(option, index)).join('\0');
+
+  const isSelected = (option: T) =>
+    selectedValues.some(
+      (selected, index) => resolveKey(selected, index) === resolveKey(option)
+    );
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -105,25 +130,51 @@ export const Select = (props: SelectProps) => {
   const tagsContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const radioGroupName = useId();
+  const wasOpenRef = useRef(false);
 
   const filteredOptions = searchable
-    ? options.filter((option) => option.toLowerCase().includes(search.toLowerCase()))
+    ? options.filter((option) =>
+        getOptionLabel(option).toLowerCase().includes(search.toLowerCase())
+      )
     : options;
 
-  // Radio only makes sense for single select; fall back to checkbox when multi
   const resolvedVariant: SelectOptionVariant =
     optionVariant === 'radio' && multiple ? 'checkbox' : optionVariant;
+
+  const emitBlur = () => {
+    if (multiple) {
+      (onBlur as SelectMultiProps<T>['onBlur'])?.(selectedValues);
+    } else {
+      (onBlur as SelectSingleProps<T>['onBlur'])?.(selectedValues[0] ?? null);
+    }
+  };
+
+  const closeDropdown = (shouldBlur = false) => {
+    setOpen(false);
+    setSearch('');
+    if (shouldBlur) {
+      emitBlur();
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
-        setSearch('');
+        if (wasOpenRef.current) {
+          closeDropdown(true);
+        } else {
+          closeDropdown(false);
+        }
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedKey, multiple, onBlur]);
+
+  useEffect(() => {
+    wasOpenRef.current = open;
+  }, [open]);
 
   useEffect(() => {
     if (open && searchable) {
@@ -220,7 +271,7 @@ export const Select = (props: SelectProps) => {
           removeBtn.appendChild(svg);
 
           tagSpan.appendChild(removeBtn);
-          tagSpan.appendChild(document.createTextNode(option));
+          tagSpan.appendChild(document.createTextNode(getOptionLabel(option)));
           tagWrapper.appendChild(tagSpan);
           measureContainer.appendChild(tagWrapper);
 
@@ -263,34 +314,34 @@ export const Select = (props: SelectProps) => {
       cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
     };
-    // selectedKey tracks value changes without depending on a new array each render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedKey, size, icon, labelInside, label, multiple]);
 
-  const emitChange = (next: string[]) => {
+  const emitChange = (next: T[]) => {
     if (multiple) {
-      (onChange as (value: string[]) => void)(next);
+      (onChange as SelectMultiProps<T>['onChange'])(next);
     } else {
-      (onChange as (value: string) => void)(next[0] ?? '');
+      (onChange as SelectSingleProps<T>['onChange'])(next[0] ?? null);
     }
   };
 
-  const handleSelect = (option: string) => {
+  const handleSelect = (option: T) => {
     if (multiple) {
-      if (selectedValues.includes(option)) {
-        emitChange(selectedValues.filter((item) => item !== option));
+      if (isSelected(option)) {
+        emitChange(
+          selectedValues.filter((item) => resolveKey(item) !== resolveKey(option))
+        );
       } else {
         emitChange([...selectedValues, option]);
       }
     } else {
       emitChange([option]);
-      setOpen(false);
-      setSearch('');
+      closeDropdown(false);
     }
   };
 
-  const handleRemove = (option: string) => {
-    emitChange(selectedValues.filter((item) => item !== option));
+  const handleRemove = (option: T) => {
+    emitChange(selectedValues.filter((item) => resolveKey(item) !== resolveKey(option)));
   };
 
   const getSelectSizeClass = () => {
@@ -331,8 +382,12 @@ export const Select = (props: SelectProps) => {
             alignItems: 'center',
           }}
         >
-          {selectedValues.slice(0, visibleCount).map((option) => (
-            <RemovableTag key={option} label={option} onRemove={() => handleRemove(option)} />
+          {selectedValues.slice(0, visibleCount).map((option, index) => (
+            <RemovableTag
+              key={resolveKey(option, index)}
+              label={getOptionLabel(option)}
+              onRemove={() => handleRemove(option)}
+            />
           ))}
           {visibleCount < selectedValues.length && (
             <Tag label={`+${selectedValues.length - visibleCount}`} variant="neutral" />
@@ -341,18 +396,24 @@ export const Select = (props: SelectProps) => {
       );
     }
 
-    return selectedValues[0];
+    return getOptionLabel(selectedValues[0]);
   })();
 
-  const renderOption = (option: string) => {
-    const isSelected = selectedValues.includes(option);
+  const renderOption = (option: T, index: number) => {
+    const optionLabel = getOptionLabel(option);
+    const optionKey = resolveKey(option, index);
+    const selected = isSelected(option);
 
     if (resolvedVariant === 'checkbox') {
       return (
-        <li key={option} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
+        <li
+          key={optionKey}
+          className={styles.option}
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
           <Checkbox
-            label={option}
-            checked={isSelected}
+            label={optionLabel}
+            checked={selected}
             onChange={() => handleSelect(option)}
             inForm={false}
           />
@@ -362,13 +423,17 @@ export const Select = (props: SelectProps) => {
 
     if (resolvedVariant === 'radio') {
       return (
-        <li key={option} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
+        <li
+          key={optionKey}
+          className={styles.option}
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
           <RadioButton
-            label={option}
-            checked={isSelected}
+            label={optionLabel}
+            checked={selected}
             onChange={() => handleSelect(option)}
             name={radioGroupName}
-            value={option}
+            value={String(optionKey)}
           />
         </li>
       );
@@ -376,15 +441,15 @@ export const Select = (props: SelectProps) => {
 
     return (
       <li
-        key={option}
-        className={[styles.option, isSelected ? styles.optionSelected : '']
+        key={optionKey}
+        className={[styles.option, selected ? styles.optionSelected : '']
           .filter(Boolean)
           .join(' ')}
         onClick={() => handleSelect(option)}
         role="option"
-        aria-selected={isSelected}
+        aria-selected={selected}
       >
-        {option}
+        {optionLabel}
       </li>
     );
   };
@@ -427,12 +492,20 @@ export const Select = (props: SelectProps) => {
           role="combobox"
           aria-expanded={open}
           aria-haspopup="listbox"
+          onBlur={(e) => {
+            if (!ref.current?.contains(e.relatedTarget as Node)) {
+              emitBlur();
+            }
+          }}
           style={{
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
         >
           {labelInside && label && (
-            <span className="bs-selectbox--labelInside" style={{ color: 'var(--text-muted)', marginRight: '6px' }}>
+            <span
+              className="bs-selectbox--labelInside"
+              style={{ color: 'var(--text-muted)', marginRight: '6px' }}
+            >
               {label}:
             </span>
           )}
@@ -475,4 +548,4 @@ export const Select = (props: SelectProps) => {
       )}
     </div>
   );
-};
+}

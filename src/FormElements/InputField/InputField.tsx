@@ -27,10 +27,16 @@ const styles: Record<string, string> = {
 };
 
 export interface InputFieldProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'onChange'> {
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'size' | 'prefix' | 'onChange' | 'onBlur'
+  > {
   label?: string;
   value?: string | number;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  /** Called with the input's current string value (Ant Design–style value callback). */
+  onChange: (value: string) => void;
+  /** Called with the input's current string value when the field blurs. */
+  onBlur?: (value: string) => void;
   placeholder?: string;
   type?: string;
   size?: 'small' | 'medium' | 'large';
@@ -50,6 +56,7 @@ export const InputField = ({
   label,
   value,
   onChange,
+  onBlur,
   placeholder,
   type = 'text',
   size = 'medium',
@@ -68,18 +75,20 @@ export const InputField = ({
   wrapperClassName,
   ...props
 }: InputFieldProps) => {
+  const currentValue = value === undefined || value === null ? '' : String(value);
+
   const handleIncrement = () => {
-    let newValue = value === '' || value === undefined ? 0 : Number(value);
+    let newValue = currentValue === '' ? 0 : Number(currentValue);
     newValue += Number(step);
     if (typeof max !== 'undefined' && newValue > Number(max)) newValue = Number(max);
-    onChange({ target: { value: String(newValue) } } as React.ChangeEvent<HTMLInputElement>);
+    onChange(String(newValue));
   };
 
   const handleDecrement = () => {
-    let newValue = value === '' || value === undefined ? 0 : Number(value);
+    let newValue = currentValue === '' ? 0 : Number(currentValue);
     newValue -= Number(step);
     if (typeof min !== 'undefined' && newValue < Number(min)) newValue = Number(min);
-    onChange({ target: { value: String(newValue) } } as React.ChangeEvent<HTMLInputElement>);
+    onChange(String(newValue));
   };
 
   const getInputSizeClass = () => {
@@ -136,7 +145,8 @@ export const InputField = ({
         <input
           type={type}
           value={value}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={() => onBlur?.(currentValue)}
           placeholder={placeholder}
           min={min}
           max={max}

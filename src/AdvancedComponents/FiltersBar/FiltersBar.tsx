@@ -45,7 +45,7 @@ export interface FiltersBarProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   searchbox?: boolean;
   searchValue?: string;
-  onSearchChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onSearchChange?: (value: string) => void;
   searchPlaceholder?: string;
   onApply?: () => void;
   applyLabel?: string;

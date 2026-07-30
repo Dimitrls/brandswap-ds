@@ -14,7 +14,7 @@ export const Default = () => {
     <InputField
       label="Name"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Enter your name"
     />
   );
@@ -26,7 +26,7 @@ export const Small = () => {
     <InputField
       label="Small Input"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Small input"
       size="small"
     />
@@ -39,7 +39,7 @@ export const Large = () => {
     <InputField
       label="Large Input"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Large input"
       size="large"
     />
@@ -53,7 +53,7 @@ export const Password = () => {
       label="Password"
       type="password"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Enter your password"
     />
   );
@@ -65,7 +65,7 @@ export const Warning = () => {
     <InputField
       label="Email"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Enter your email"
       warning={true}
       warningMessage="This email is already taken."
@@ -79,7 +79,7 @@ export const PrefixText = () => {
     <InputField
       label="Amount"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Enter amount"
       prefix="€"
     />
@@ -92,7 +92,7 @@ export const SuffixText = () => {
     <InputField
       label="Weight"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Enter weight"
       suffix="kg"
     />
@@ -105,7 +105,7 @@ export const PrefixSelect = () => {
     <InputField
       label="Phone"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Enter phone number"
       prefix={
         <select defaultValue="+30">
@@ -123,7 +123,7 @@ export const SuffixSelect = () => {
     <InputField
       label="Weight"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Enter weight"
       suffix={
         <select defaultValue="kg">
@@ -141,7 +141,7 @@ export const WithSearchIcon = () => {
     <InputField
       label="Search"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       placeholder="Search..."
       icon={true}
       iconName="search"
@@ -156,7 +156,7 @@ export const NumberWithArrows = () => {
       label="Quantity"
       type="number"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       showArrows={true}
       placeholder="Enter a number"
     />
@@ -170,7 +170,7 @@ export const NumberWithoutArrows = () => {
       label="Quantity"
       type="number"
       value={value}
-      onChange={e => setValue(e.target.value)}
+      onChange={setValue}
       showArrows={false}
       placeholder="Enter a number"
     />

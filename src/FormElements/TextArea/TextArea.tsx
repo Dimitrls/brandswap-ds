@@ -4,14 +4,14 @@ import './TextArea.css';
 import { Icon } from '../../Icons/Icon';
 
 const styles: Record<string, string> = {
-  "bs-textarea-wrapper": "bs-textarea--wrapper",
-  "bs-textarea-label": "bs-textarea--label",
-  "bs-textarea-toolbar": "bs-textarea--toolbar",
-  "bs-textarea": "bs-textarea--root",
-  "bs-textarea-toolbar-btn": "bs-textarea--toolbar-btn",
-  "bs-textarea--warning": "bs-textarea--warning",
-  "bs-textarea-warning-text": "bs-textarea--warning-text",
-  "bs-textarea-style-select": "bs-textarea--style-select",
+  'bs-textarea-wrapper': 'bs-textarea--wrapper',
+  'bs-textarea-label': 'bs-textarea--label',
+  'bs-textarea-toolbar': 'bs-textarea--toolbar',
+  'bs-textarea': 'bs-textarea--root',
+  'bs-textarea-toolbar-btn': 'bs-textarea--toolbar-btn',
+  'bs-textarea--warning': 'bs-textarea--warning',
+  'bs-textarea-warning-text': 'bs-textarea--warning-text',
+  'bs-textarea-style-select': 'bs-textarea--style-select',
 };
 
 const STYLE_OPTIONS = [
@@ -38,8 +38,20 @@ const TOOLBAR_CONTROLS: Array<{
   { type: 'ol', icon: <Icon name="list-numbers" size={16} />, ariaLabel: 'Numbered list' },
 ];
 
-export interface TextAreaProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TextAreaProps
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    'onChange' | 'onBlur' | 'defaultValue'
+  > {
   label: string;
+  value?: string;
+  defaultValue?: string;
+  /** Called with the textarea's current string value. */
+  onChange?: (value: string) => void;
+  /** Called with the textarea's current string value on blur. */
+  onBlur?: (value: string) => void;
+  placeholder?: string;
+  rows?: number;
   showToolbar?: boolean;
   warning?: boolean;
   warningMessage?: string;
@@ -47,18 +59,34 @@ export interface TextAreaProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const TextArea = ({
   label,
+  value,
+  defaultValue = '',
+  onChange,
+  onBlur,
+  placeholder,
+  rows = 5,
   showToolbar = false,
   warning = false,
   warningMessage = '',
   className,
   ...props
 }: TextAreaProps) => {
-  const [value, setValue] = useState('');
+  const isControlled = value !== undefined;
+  const [internalValue, setInternalValue] = useState(defaultValue);
   const [selection, setSelection] = useState({ start: 0, end: 0 });
   const [textStyle, setTextStyle] = useState<string>('paragraph');
 
+  const currentValue = isControlled ? value : internalValue;
+
+  const updateValue = (next: string) => {
+    if (!isControlled) {
+      setInternalValue(next);
+    }
+    onChange?.(next);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value);
+    updateValue(e.target.value);
   };
 
   const handleSelect = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
@@ -67,18 +95,33 @@ export const TextArea = ({
   };
 
   const handleToolbarClick = (type: ToolbarControlType) => {
-    let newValue = value;
+    let newValue = currentValue;
     const { start, end } = selection;
     if (type === 'bold') {
-      newValue = value.slice(0, start) + '**' + value.slice(start, end) + '**' + value.slice(end);
+      newValue =
+        currentValue.slice(0, start) +
+        '**' +
+        currentValue.slice(start, end) +
+        '**' +
+        currentValue.slice(end);
     } else if (type === 'italic') {
-      newValue = value.slice(0, start) + '*' + value.slice(start, end) + '*' + value.slice(end);
+      newValue =
+        currentValue.slice(0, start) +
+        '*' +
+        currentValue.slice(start, end) +
+        '*' +
+        currentValue.slice(end);
     } else if (type === 'ul') {
-      newValue = value.slice(0, start) + '\n- ' + value.slice(start, end) + value.slice(end);
+      newValue =
+        currentValue.slice(0, start) + '\n- ' + currentValue.slice(start, end) + currentValue.slice(end);
     } else if (type === 'ol') {
-      newValue = value.slice(0, start) + '\n1. ' + value.slice(start, end) + value.slice(end);
+      newValue =
+        currentValue.slice(0, start) +
+        '\n1. ' +
+        currentValue.slice(start, end) +
+        currentValue.slice(end);
     }
-    setValue(newValue);
+    updateValue(newValue);
   };
 
   const handleStyleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -120,15 +163,15 @@ export const TextArea = ({
       )}
       <textarea
         className={`${styles['bs-textarea']}${warning ? ` ${styles['bs-textarea--warning']}` : ''}`}
-        value={value}
+        value={currentValue}
         onChange={handleChange}
+        onBlur={() => onBlur?.(currentValue)}
         onSelect={handleSelect}
-        rows={5}
+        placeholder={placeholder}
+        rows={rows}
       />
       {warning && warningMessage && (
-        <div className={styles['bs-textarea-warning']}>
-          <span className={styles['bs-textarea-warning-text']}>{warningMessage}</span>
-        </div>
+        <span className={styles['bs-textarea-warning-text']}>{warningMessage}</span>
       )}
     </div>
   );

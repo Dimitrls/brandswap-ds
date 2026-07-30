@@ -47,7 +47,7 @@ export const Default = () => {
       labels={false}
       searchbox={true}
       searchValue={search}
-      onSearchChange={(e) => setSearch(e.target.value)}
+      onSearchChange={setSearch}
       searchPlaceholder="Search..."
       filters={filters}
       onApply={() => console.log('Apply clicked', { status, categories, dateRange })}
@@ -118,7 +118,7 @@ export const WithLabels = () => {
       labels={true}
       searchbox={true}
       searchValue={search}
-      onSearchChange={(e) => setSearch(e.target.value)}
+      onSearchChange={setSearch}
       searchPlaceholder="Search..."
       filters={filters}
       onApply={() => console.log('Apply clicked', { status, categories, dateRange })}

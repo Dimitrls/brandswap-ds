@@ -16,27 +16,31 @@ const styles: Record<string, string> = {
 };
 
 export interface UploaderProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'onBlur'> {
   label?: string;
   onChange?: (file: File | undefined) => void;
+  onBlur?: (file: File | undefined) => void;
   size?: 'default' | 'small';
 }
 
 export const Uploader = ({
   label = 'Upload file',
   onChange,
+  onBlur,
   size = 'default',
   className,
   ...props
 }: UploaderProps) => {
   const [fileName, setFileName] = useState('');
+  const [file, setFile] = useState<File | undefined>();
   const inputRef = useRef<HTMLInputElement>(null);
   const isSmall = size === 'small';
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    setFileName(file ? file.name : '');
-    onChange?.(file);
+    const next = e.target.files?.[0];
+    setFile(next);
+    setFileName(next ? next.name : '');
+    onChange?.(next);
   };
 
   const handleButtonClick = () => {
@@ -83,6 +87,7 @@ export const Uploader = ({
           type="file"
           className={styles['bs-uploader-input']}
           onChange={handleFileChange}
+          onBlur={() => onBlur?.(file)}
           tabIndex={-1}
         />
       </div>

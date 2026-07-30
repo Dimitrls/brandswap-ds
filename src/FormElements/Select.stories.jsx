@@ -18,8 +18,15 @@ const OPTIONS = [
   'Health',
 ];
 
+const OBJECT_OPTIONS = [
+  { id: 1, name: 'Food & Drink' },
+  { id: 2, name: 'Sports' },
+  { id: 3, name: 'Books' },
+  { id: 4, name: 'Fashion' },
+];
+
 export const SingleDefault = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(null);
   return (
     <Select
       label="Category"
@@ -33,7 +40,7 @@ export const SingleDefault = () => {
 };
 
 export const SingleWithRadio = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(null);
   return (
     <Select
       label="Category"
@@ -77,7 +84,7 @@ export const MultiDefault = () => {
 };
 
 export const WithoutSearch = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(null);
   return (
     <Select
       label="Category"
@@ -91,7 +98,7 @@ export const WithoutSearch = () => {
 };
 
 export const Small = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(null);
   return (
     <Select
       label="Small select"
@@ -121,7 +128,7 @@ export const Large = () => {
 };
 
 export const WithIcon = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(null);
   return (
     <Select
       label="Search categories"
@@ -132,5 +139,43 @@ export const WithIcon = () => {
       iconName="filter"
       placeholder="Filter..."
     />
+  );
+};
+
+export const ObjectOptions = () => {
+  const [value, setValue] = useState(null);
+  const [multi, setMulti] = useState([]);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <Select
+        label="Single object option"
+        options={OBJECT_OPTIONS}
+        getOptionLabel={(option) => option.name}
+        getOptionKey={(option) => option.id}
+        value={value}
+        onChange={(option) => {
+          // option is { id, name } | null — same type as options items
+          setValue(option);
+        }}
+        onBlur={(option) => {
+          console.log('blur value', option);
+        }}
+        placeholder="Choose..."
+      />
+      <Select
+        label="Multi object options"
+        options={OBJECT_OPTIONS}
+        multiple
+        getOptionLabel={(option) => option.name}
+        getOptionKey={(option) => option.id}
+        value={multi}
+        onChange={setMulti}
+        optionVariant="checkbox"
+        placeholder="Choose..."
+      />
+      <pre style={{ fontSize: 12 }}>
+        {JSON.stringify({ value, multi }, null, 2)}
+      </pre>
+    </div>
   );
 };

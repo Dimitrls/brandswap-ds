@@ -1,4 +1,4 @@
-export { Select } from './Select';
+export { Select, defaultGetOptionKey, defaultGetOptionLabel } from './Select';
 export type {
   SelectProps,
   SelectSingleProps,

@@ -2,70 +2,84 @@ import React, { useState, useRef, useEffect } from 'react';
 import './Selectbox.css';
 
 import { Icon, IconName } from '../../Icons/Icon';
+import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
 
 const styles: Record<string, string> = {
-  wrapper: "bs-selectbox--wrapper",
-  label: "bs-selectbox--label",
-  labelSmall: "bs-selectbox--labelSmall",
-  labelMedium: "bs-selectbox--labelMedium",
-  labelLarge: "bs-selectbox--labelLarge",
-  selectWrapper: "bs-selectbox--selectWrapper",
-  select: "bs-selectbox--select",
-  selectSmall: "bs-selectbox--selectSmall",
-  selectMedium: "bs-selectbox--selectMedium",
-  selectLarge: "bs-selectbox--selectLarge",
-  arrow: "bs-selectbox--arrow",
-  dropdown: "bs-selectbox--dropdown",
-  option: "bs-selectbox--option",
-  placeholder: "bs-selectbox--placeholder",
-  wrapperInForm: "bs-selectbox--wrapperInForm",
-  labelOnTopWrapper: "bs-selectbox--labelOnTopWrapper",
-  searchBox: "bs-selectbox--searchBox",
-  searchInput: "bs-selectbox--searchInput",
-  searchIcon: "bs-selectbox--searchIcon",
-  emptyState: "bs-selectbox--emptyState",
-  optionSelected: "bs-selectbox--optionSelected",
-  dropdownScroll: "bs-selectbox--dropdownScroll",
+  wrapper: 'bs-selectbox--wrapper',
+  label: 'bs-selectbox--label',
+  labelSmall: 'bs-selectbox--labelSmall',
+  labelMedium: 'bs-selectbox--labelMedium',
+  labelLarge: 'bs-selectbox--labelLarge',
+  selectWrapper: 'bs-selectbox--selectWrapper',
+  select: 'bs-selectbox--select',
+  selectSmall: 'bs-selectbox--selectSmall',
+  selectMedium: 'bs-selectbox--selectMedium',
+  selectLarge: 'bs-selectbox--selectLarge',
+  arrow: 'bs-selectbox--arrow',
+  dropdown: 'bs-selectbox--dropdown',
+  option: 'bs-selectbox--option',
+  placeholder: 'bs-selectbox--placeholder',
+  wrapperInForm: 'bs-selectbox--wrapperInForm',
+  labelOnTopWrapper: 'bs-selectbox--labelOnTopWrapper',
+  searchBox: 'bs-selectbox--searchBox',
+  searchInput: 'bs-selectbox--searchInput',
+  searchIcon: 'bs-selectbox--searchIcon',
+  emptyState: 'bs-selectbox--emptyState',
+  optionSelected: 'bs-selectbox--optionSelected',
+  dropdownScroll: 'bs-selectbox--dropdownScroll',
 };
 
-export interface SelectboxProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface SelectboxProps<T = string>
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'onBlur'> {
   label?: string;
-  options: string[];
-  onChange?: (option: string) => void;
+  options: T[];
+  value?: T | null;
+  onChange?: (option: T) => void;
+  onBlur?: (option: T | null) => void;
+  getOptionLabel?: (option: T) => string;
+  getOptionKey?: (option: T, index?: number) => string | number;
   size?: 'small' | 'medium' | 'large';
   icon?: boolean;
   iconName?: IconName;
   labelInside?: boolean;
 }
 
-export const Selectbox = ({
+export function Selectbox<T = string>({
   label,
   options = [],
+  value,
   onChange,
+  onBlur,
+  getOptionLabel = defaultGetOptionLabel,
+  getOptionKey = defaultGetOptionKey,
   size = 'medium',
   icon = false,
   iconName = 'search',
   labelInside = false,
   className,
   ...props
-}: SelectboxProps) => {
+}: SelectboxProps<T>) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(options[0] || '');
+  const [internalSelected, setInternalSelected] = useState<T | null>(options[0] ?? null);
+  const isControlled = value !== undefined;
+  const selected = isControlled ? value : internalSelected;
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         setOpen(false);
+        onBlur?.(selected);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [onBlur, selected]);
 
-  const handleSelect = (option: string) => {
-    setSelected(option);
+  const handleSelect = (option: T) => {
+    if (!isControlled) {
+      setInternalSelected(option);
+    }
     setOpen(false);
     onChange?.(option);
   };
@@ -113,11 +127,14 @@ export const Selectbox = ({
           }}
         >
           {labelInside && label && (
-            <span className="bs-selectbox--labelInside" style={{ color: 'var(--text-muted)', marginRight: '6px' }}>
+            <span
+              className="bs-selectbox--labelInside"
+              style={{ color: 'var(--text-muted)', marginRight: '6px' }}
+            >
               {label}:
             </span>
           )}
-          {selected}
+          {selected != null ? getOptionLabel(selected) : ''}
           <span className={styles.arrow}>
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>
@@ -126,12 +143,16 @@ export const Selectbox = ({
       {open && (
         <ul className={styles.dropdown}>
           {options.map((option, idx) => (
-            <li key={idx} className={styles.option} onClick={() => handleSelect(option)}>
-              {option}
+            <li
+              key={getOptionKey(option, idx)}
+              className={styles.option}
+              onClick={() => handleSelect(option)}
+            >
+              {getOptionLabel(option)}
             </li>
           ))}
         </ul>
       )}
     </div>
   );
-};
+}

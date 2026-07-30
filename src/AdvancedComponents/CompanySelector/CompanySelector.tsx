@@ -200,7 +200,7 @@ export const CompanySelector = ({
               type="text"
               placeholder="Search companies..."
               value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
+              onChange={setSearchQuery}
               icon={true}
               iconName="search"
             />

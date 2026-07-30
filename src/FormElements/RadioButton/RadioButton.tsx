@@ -2,17 +2,20 @@ import React from 'react';
 import './RadioButton.css';
 
 const styles: Record<string, string> = {
-  wrapper: "bs-radio-button--wrapper",
-  input: "bs-radio-button--input",
-  custom: "bs-radio-button--custom",
-  label: "bs-radio-button--label",
+  wrapper: 'bs-radio-button--wrapper',
+  input: 'bs-radio-button--input',
+  custom: 'bs-radio-button--custom',
+  label: 'bs-radio-button--label',
 };
 
 export interface RadioButtonProps
-  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
+  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange' | 'onBlur'> {
   label: string;
   checked: boolean;
+  /** Called with this radio's `value` when selected. */
   onChange: (value: string) => void;
+  /** Called with this radio's `value` on blur. */
+  onBlur?: (value: string) => void;
   name: string;
   value: string;
 }
@@ -21,6 +24,7 @@ export const RadioButton = ({
   label,
   checked,
   onChange,
+  onBlur,
   name,
   value,
   className,
@@ -32,6 +36,7 @@ export const RadioButton = ({
       className={styles.input}
       checked={checked}
       onChange={(e) => onChange(e.target.value)}
+      onBlur={() => onBlur?.(value)}
       name={name}
       value={value}
     />

@@ -4,6 +4,7 @@ import '../Selectbox/Selectbox.css';
 import { Checkbox } from '../Checkbox';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
+import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
 
 const styles: Record<string, string> = {
   wrapper: "bs-selectbox--wrapper",
@@ -30,11 +31,14 @@ const styles: Record<string, string> = {
   dropdownScroll: "bs-selectbox--dropdownScroll",
 };
 
-export interface MultiSelectboxProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-  options: string[];
-  selected?: string[];
-  onChange: (selected: string[]) => void;
+export interface MultiSelectboxProps<T = string>
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'onBlur'> {
+  options: T[];
+  selected?: T[];
+  onChange: (selected: T[]) => void;
+  onBlur?: (selected: T[]) => void;
+  getOptionLabel?: (option: T) => string;
+  getOptionKey?: (option: T, index?: number) => string | number;
   label?: string;
   placeholder?: string;
   inForm?: boolean;
@@ -45,10 +49,13 @@ export interface MultiSelectboxProps
   size?: 'small' | 'medium' | 'large';
 }
 
-export const MultiSelectbox = ({
+export function MultiSelectbox<T = string>({
   options = [],
   selected = [],
   onChange,
+  onBlur,
+  getOptionLabel = defaultGetOptionLabel,
+  getOptionKey = defaultGetOptionKey,
   label,
   placeholder = 'Select...',
   inForm = false,
@@ -59,21 +66,26 @@ export const MultiSelectbox = ({
   size = 'medium',
   className,
   ...props
-}: MultiSelectboxProps) => {
+}: MultiSelectboxProps<T>) {
   const [open, setOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(selected.length);
   const ref = useRef<HTMLDivElement>(null);
   const tagsContainerRef = useRef<HTMLDivElement>(null);
 
+  const resolveKey = (option: T, index = 0) => getOptionKey(option, index);
+  const isSelected = (option: T) =>
+    selected.some((item, index) => resolveKey(item, index) === resolveKey(option));
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         setOpen(false);
+        onBlur?.(selected);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [onBlur, selected]);
 
   useEffect(() => {
     if (selected.length === 0) {
@@ -165,7 +177,7 @@ export const MultiSelectbox = ({
           removeBtn.appendChild(svg);
 
           tagSpan.appendChild(removeBtn);
-          tagSpan.appendChild(document.createTextNode(option));
+          tagSpan.appendChild(document.createTextNode(getOptionLabel(option)));
           tagWrapper.appendChild(tagSpan);
           measureContainer.appendChild(tagWrapper);
 
@@ -209,16 +221,16 @@ export const MultiSelectbox = ({
     };
   }, [selected, size, icon, labelInside, label]);
 
-  const handleToggle = (option: string) => {
-    if (selected.includes(option)) {
-      onChange(selected.filter((item) => item !== option));
+  const handleToggle = (option: T) => {
+    if (isSelected(option)) {
+      onChange(selected.filter((item) => resolveKey(item) !== resolveKey(option)));
     } else {
       onChange([...selected, option]);
     }
   };
 
-  const handleRemove = (option: string) => {
-    onChange(selected.filter((item) => item !== option));
+  const handleRemove = (option: T) => {
+    onChange(selected.filter((item) => resolveKey(item) !== resolveKey(option)));
   };
 
   const getSelectSizeClass = () => {
@@ -295,8 +307,12 @@ export const MultiSelectbox = ({
                 alignItems: 'center',
               }}
             >
-              {selected.slice(0, visibleCount).map((option) => (
-                <RemovableTag key={option} label={option} onRemove={() => handleRemove(option)} />
+              {selected.slice(0, visibleCount).map((option, index) => (
+                <RemovableTag
+                  key={resolveKey(option, index)}
+                  label={getOptionLabel(option)}
+                  onRemove={() => handleRemove(option)}
+                />
               ))}
               {visibleCount < selected.length && (
                 <Tag label={`+${selected.length - visibleCount}`} variant="neutral" />
@@ -311,10 +327,10 @@ export const MultiSelectbox = ({
       {open && (
         <ul className={styles.dropdown} style={{ maxHeight: 220, overflowY: 'auto' }}>
           {options.map((option, idx) => (
-            <li key={idx} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
+            <li key={resolveKey(option, idx)} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
               <Checkbox
-                label={option}
-                checked={selected.includes(option)}
+                label={getOptionLabel(option)}
+                checked={isSelected(option)}
                 onChange={() => handleToggle(option)}
                 inForm={false}
               />
@@ -324,4 +340,4 @@ export const MultiSelectbox = ({
       )}
     </div>
   );
-};
+}
