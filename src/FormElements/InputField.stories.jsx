@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import InputField from './InputField';
-import TextArea from './TextArea';
+import { InputField } from './InputField';
+import { TextArea } from './TextArea';
 
 export default {
   title: 'Form Elements/InputField',

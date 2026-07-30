@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import TabsSecondary from './TabsSecondary';
-import Icon from '../Icons/Icon';
+import { TabsSecondary } from './TabsSecondary';
+import { Icon } from '../Icons/Icon';
 
 export default {
   title: 'Navigation/TabsSecondary',

@@ -1,5 +1,5 @@
 import React from 'react';
-import ColorPalette, { primitiveColors, semanticColors } from './ColorPalette';
+import { ColorPalette, primitiveColors, semanticColors } from './ColorPalette';
 
 export default {
   title: 'Colors & Styles/ColorPalette',

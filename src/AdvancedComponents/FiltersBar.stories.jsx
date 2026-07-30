@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import FiltersBar from './FiltersBar';
-import Selectbox from '../FormElements/Selectbox';
+import { FiltersBar } from './FiltersBar';
+import { Selectbox } from '../FormElements/Selectbox';
 
 export default {
   title: 'Advanced components/FiltersBar',

@@ -7,14 +7,16 @@
   "repository": "dimitrls/brandswap-ds",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
-  "types": "index.d.ts",
-  "source": "src/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/bundle.js",
   "engines": {
     "node": ">=16"
   },
   "scripts": {
-    "build": "microbundle-crl --no-compress --format modern,cjs",
-    "start": "microbundle-crl watch --no-compress --format modern,cjs",
+    "build:js": "tsup",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build": "run-s build:js build:types",
+    "start": "tsup --watch",
     "prepare": "run-s build",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
@@ -37,6 +39,8 @@
     "@storybook/react": "^8.6.12",
     "@storybook/react-vite": "^8.6.12",
     "@storybook/test": "^8.6.12",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
@@ -58,11 +62,11 @@
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
     "storybook": "^8.6.12",
+    "tsup": "^8.5.1",
     "typescript": "4.9.5"
   },
   "files": [
-    "dist",
-    "index.d.ts"
+    "dist"
   ],
   "eslintConfig": {
     "extends": [

@@ -1,5 +1,5 @@
 import React from 'react';
-import BodyText from './BodyText';
+import { BodyText } from './BodyText';
 
 export default {
   title: 'Typography/BodyText',

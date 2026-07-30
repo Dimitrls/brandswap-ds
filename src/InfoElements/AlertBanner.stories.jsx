@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AlertBanner from './AlertBanner';
+import { AlertBanner } from './AlertBanner';
 
 export default {
   title: 'Info Elements/AlertBanner',

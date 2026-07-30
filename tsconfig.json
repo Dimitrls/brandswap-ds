@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "ESNext",
+    "jsx": "react",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "types": ["react", "react-dom"]
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.stories.*", "src/**/*.test.*", "src/stories", "src/bundle.ts"]
+}

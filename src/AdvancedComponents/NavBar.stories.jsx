@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import NavBar from './NavBar';
-import Icon from '../Icons/Icon';
+import { NavBar } from './NavBar';
+import { Icon } from '../Icons/Icon';
 
 export default {
   title: 'Advanced components/NavBar',

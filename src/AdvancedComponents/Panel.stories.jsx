@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import Panel from './Panel';
-import Icon from '../Icons/Icon';
+import { Panel } from './Panel';
+import { Icon } from '../Icons/Icon';
 import { Button } from '../Buttons/Button';
 
 // Decorator to set background for Panel stories

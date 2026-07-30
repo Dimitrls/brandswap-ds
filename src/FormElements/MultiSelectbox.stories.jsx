@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import MultiSelectbox from './MultiSelectbox';
+import { MultiSelectbox } from './MultiSelectbox';
 
 export default {
   title: 'Form elements/MultiSelectbox',

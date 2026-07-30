@@ -1,5 +1,5 @@
 import React from 'react';
-import Selectbox from './Selectbox';
+import { Selectbox } from './Selectbox';
 
 export default {
   title: 'Form elements/Selectbox',

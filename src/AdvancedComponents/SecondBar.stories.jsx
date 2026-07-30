@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SecondBar from './SecondBar';
+import { SecondBar } from './SecondBar';
 
 export default {
   title: 'Advanced components/SecondBar',

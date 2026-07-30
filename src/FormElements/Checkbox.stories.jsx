@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Checkbox from './Checkbox';
+import { Checkbox } from './Checkbox';
 
 export default {
   title: 'Form elements/Checkbox',

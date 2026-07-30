@@ -1,0 +1,8 @@
+import{R as e}from"./index-C5e9SFkp.js";const c="_h1_1hadp_1",g="_h2_1hadp_2",m="_h3_1hadp_3",H="_h4_1hadp_4",h="_h5_1hadp_5",p="_h6_1hadp_6",_={h1:c,h2:g,h3:m,h4:H,h5:h,h6:p},a=({level:l=1,children:r,...s})=>{const o=_[`h${l}`];return e.createElement(`h${l}`,{className:o,...s},r)};a.__docgenInfo={description:"",methods:[],displayName:"Heading",props:{level:{required:!1,tsType:{name:"union",raw:"1 | 2 | 3 | 4 | 5 | 6",elements:[{name:"literal",value:"1"},{name:"literal",value:"2"},{name:"literal",value:"3"},{name:"literal",value:"4"},{name:"literal",value:"5"},{name:"literal",value:"6"}]},description:"",defaultValue:{value:"1",computed:!1}},children:{required:!0,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:""}}};const u={title:"Typography/Heading",component:a,tags:["autodocs"]},n=()=>e.createElement("div",null,e.createElement(a,{level:1},"Heading 1"),e.createElement(a,{level:2},"Heading 2"),e.createElement(a,{level:3},"Heading 3"),e.createElement(a,{level:4},"Heading 4"),e.createElement(a,{level:5},"Heading 5"),e.createElement(a,{level:6},"Heading 6"));n.__docgenInfo={description:"",methods:[],displayName:"AllHeadings"};var t,d,i;n.parameters={...n.parameters,docs:{...(t=n.parameters)==null?void 0:t.docs,source:{originalSource:`() => <div>
+    <Heading level={1}>Heading 1</Heading>
+    <Heading level={2}>Heading 2</Heading>
+    <Heading level={3}>Heading 3</Heading>
+    <Heading level={4}>Heading 4</Heading>
+    <Heading level={5}>Heading 5</Heading>
+    <Heading level={6}>Heading 6</Heading>
+  </div>`,...(i=(d=n.parameters)==null?void 0:d.docs)==null?void 0:i.source}}};const E=["AllHeadings"];export{n as AllHeadings,E as __namedExportsOrder,u as default};

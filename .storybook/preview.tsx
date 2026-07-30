@@ -2,8 +2,8 @@ import type { Preview } from '@storybook/react';
 import React, { useEffect } from 'react';
 import { addons } from '@storybook/preview-api';
 import { create } from '@storybook/theming/create';
-import '../src/global.css';
-import '../src/Buttons/button.module.css';
+import '../src/styles/global.css';
+import '../src/Buttons/shared/button-base.css';
 
 const docsTheme = create({
   base: 'light',

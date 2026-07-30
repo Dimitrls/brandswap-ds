@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import RadioButton, { RadioButtonGroup } from './RadioButton';
+import { RadioButton, RadioButtonGroup } from './RadioButton';
 
 export default {
   title: 'Form elements/RadioButton',
