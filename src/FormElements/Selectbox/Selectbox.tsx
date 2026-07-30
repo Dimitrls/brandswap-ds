@@ -30,12 +30,11 @@ const styles: Record<string, string> = {
 };
 
 export interface SelectboxProps<T = string>
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'onBlur'> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   label?: string;
   options: T[];
   value?: T | null;
   onChange?: (option: T) => void;
-  onBlur?: (option: T | null) => void;
   getOptionLabel?: (option: T) => string;
   getOptionKey?: (option: T, index?: number) => string | number;
   size?: 'small' | 'medium' | 'large';
@@ -49,7 +48,6 @@ export function Selectbox<T = string>({
   options = [],
   value,
   onChange,
-  onBlur,
   getOptionLabel = defaultGetOptionLabel,
   getOptionKey = defaultGetOptionKey,
   size = 'medium',
@@ -69,12 +67,11 @@ export function Selectbox<T = string>({
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         setOpen(false);
-        onBlur?.(selected);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onBlur, selected]);
+  }, []);
 
   const handleSelect = (option: T) => {
     if (!isControlled) {

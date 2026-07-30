@@ -10,13 +10,11 @@ const styles: Record<string, string> = {
 };
 
 export interface CheckboxProps
-  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange' | 'onBlur'> {
+  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
   label: string;
   checked: boolean;
   /** Called with the next checked state. */
   onChange: (checked: boolean) => void;
-  /** Called with the current checked state on blur. */
-  onBlur?: (checked: boolean) => void;
   inForm?: boolean;
 }
 
@@ -24,7 +22,6 @@ export const Checkbox = ({
   label,
   checked,
   onChange,
-  onBlur,
   inForm = false,
   className,
   ...props
@@ -38,7 +35,6 @@ export const Checkbox = ({
       className={styles.input}
       checked={checked}
       onChange={(e) => onChange(e.target.checked)}
-      onBlur={() => onBlur?.(checked)}
     />
     <span className={styles.custom} />
     <span className={styles.label}>{label}</span>

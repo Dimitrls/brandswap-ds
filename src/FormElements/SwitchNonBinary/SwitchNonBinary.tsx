@@ -10,12 +10,11 @@ const styles: Record<string, string> = {
 };
 
 export interface SwitchNonBinaryProps<T = string>
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'onBlur'> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   options: T[];
   value: T;
   /** Called with the selected option (same type as `options` items). */
   onChange: (value: T) => void;
-  onBlur?: (value: T) => void;
   getOptionLabel?: (option: T) => string;
   getOptionKey?: (option: T, index?: number) => string | number;
 }
@@ -24,7 +23,6 @@ export function SwitchNonBinary<T = string>({
   options,
   value,
   onChange,
-  onBlur,
   getOptionLabel = defaultGetOptionLabel,
   getOptionKey = defaultGetOptionKey,
   className,
@@ -33,11 +31,7 @@ export function SwitchNonBinary<T = string>({
   const selectedKey = getOptionKey(value);
 
   return (
-    <div
-      className={[styles.switchNonBinary, className].filter(Boolean).join(' ')}
-      onBlur={() => onBlur?.(value)}
-      {...props}
-    >
+    <div className={[styles.switchNonBinary, className].filter(Boolean).join(' ')} {...props}>
       {options.map((option, index) => {
         const key = getOptionKey(option, index);
         const selected = key === selectedKey;

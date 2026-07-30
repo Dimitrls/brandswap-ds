@@ -9,13 +9,11 @@ const styles: Record<string, string> = {
 };
 
 export interface RadioButtonProps
-  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange' | 'onBlur'> {
+  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
   label: string;
   checked: boolean;
   /** Called with this radio's `value` when selected. */
   onChange: (value: string) => void;
-  /** Called with this radio's `value` on blur. */
-  onBlur?: (value: string) => void;
   name: string;
   value: string;
 }
@@ -24,7 +22,6 @@ export const RadioButton = ({
   label,
   checked,
   onChange,
-  onBlur,
   name,
   value,
   className,
@@ -36,7 +33,6 @@ export const RadioButton = ({
       className={styles.input}
       checked={checked}
       onChange={(e) => onChange(e.target.value)}
-      onBlur={() => onBlur?.(value)}
       name={name}
       value={value}
     />

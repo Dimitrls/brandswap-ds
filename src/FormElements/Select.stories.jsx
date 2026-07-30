@@ -157,9 +157,6 @@ export const ObjectOptions = () => {
           // option is { id, name } | null — same type as options items
           setValue(option);
         }}
-        onBlur={(option) => {
-          console.log('blur value', option);
-        }}
         placeholder="Choose..."
       />
       <Select

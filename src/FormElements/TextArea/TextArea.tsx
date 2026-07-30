@@ -39,17 +39,12 @@ const TOOLBAR_CONTROLS: Array<{
 ];
 
 export interface TextAreaProps
-  extends Omit<
-    React.HTMLAttributes<HTMLDivElement>,
-    'onChange' | 'onBlur' | 'defaultValue'
-  > {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
   label: string;
   value?: string;
   defaultValue?: string;
   /** Called with the textarea's current string value. */
   onChange?: (value: string) => void;
-  /** Called with the textarea's current string value on blur. */
-  onBlur?: (value: string) => void;
   placeholder?: string;
   rows?: number;
   showToolbar?: boolean;
@@ -62,7 +57,6 @@ export const TextArea = ({
   value,
   defaultValue = '',
   onChange,
-  onBlur,
   placeholder,
   rows = 5,
   showToolbar = false,
@@ -165,7 +159,6 @@ export const TextArea = ({
         className={`${styles['bs-textarea']}${warning ? ` ${styles['bs-textarea--warning']}` : ''}`}
         value={currentValue}
         onChange={handleChange}
-        onBlur={() => onBlur?.(currentValue)}
         onSelect={handleSelect}
         placeholder={placeholder}
         rows={rows}

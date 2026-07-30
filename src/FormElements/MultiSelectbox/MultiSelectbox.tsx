@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import '../Selectbox/Selectbox.css';
 
 import { Checkbox } from '../Checkbox';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
 import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
+import { useVisibleTagCount } from '../useVisibleTagCount';
 
 const styles: Record<string, string> = {
   wrapper: "bs-selectbox--wrapper",
@@ -32,11 +33,10 @@ const styles: Record<string, string> = {
 };
 
 export interface MultiSelectboxProps<T = string>
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'onBlur'> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   options: T[];
   selected?: T[];
   onChange: (selected: T[]) => void;
-  onBlur?: (selected: T[]) => void;
   getOptionLabel?: (option: T) => string;
   getOptionKey?: (option: T, index?: number) => string | number;
   label?: string;
@@ -53,7 +53,6 @@ export function MultiSelectbox<T = string>({
   options = [],
   selected = [],
   onChange,
-  onBlur,
   getOptionLabel = defaultGetOptionLabel,
   getOptionKey = defaultGetOptionKey,
   label,
@@ -68,7 +67,6 @@ export function MultiSelectbox<T = string>({
   ...props
 }: MultiSelectboxProps<T>) {
   const [open, setOpen] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(selected.length);
   const ref = useRef<HTMLDivElement>(null);
   const tagsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -76,150 +74,33 @@ export function MultiSelectbox<T = string>({
   const isSelected = (option: T) =>
     selected.some((item, index) => resolveKey(item, index) === resolveKey(option));
 
+  const selectedKey = selected.map((option, index) => resolveKey(option, index)).join('\0');
+  const selectedLabels = useMemo(
+    () => selected.map((option) => getOptionLabel(option)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedKey, getOptionLabel]
+  );
+
+  const visibleCount = useVisibleTagCount(tagsContainerRef, {
+    enabled: selected.length > 0,
+    selectedCount: selected.length,
+    selectedKey,
+    labels: selectedLabels,
+    size,
+    icon,
+    labelInside,
+    label,
+  });
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         setOpen(false);
-        onBlur?.(selected);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onBlur, selected]);
-
-  useEffect(() => {
-    if (selected.length === 0) {
-      setVisibleCount(0);
-      return;
-    }
-
-    const selectElement = tagsContainerRef.current?.parentElement;
-    if (!selectElement) {
-      setVisibleCount(selected.length);
-      return;
-    }
-
-    const calculateVisibleCount = () => {
-      const selectRect = selectElement.getBoundingClientRect();
-      if (selectRect.width === 0) {
-        setVisibleCount(selected.length);
-        return;
-      }
-
-      const arrowWidth = 32;
-      const padding = icon
-        ? size === 'small'
-          ? 36
-          : size === 'large'
-            ? 44
-            : 40
-        : size === 'small'
-          ? 8
-          : size === 'large'
-            ? 16
-            : 12;
-      const gap = 6;
-      const labelWidth = labelInside && label ? 50 : 0;
-      const usableWidth = selectRect.width - arrowWidth - padding - labelWidth;
-
-      if (usableWidth <= 0) {
-        setVisibleCount(0);
-        return;
-      }
-
-      const measureContainer = document.createElement('div');
-      measureContainer.style.position = 'absolute';
-      measureContainer.style.visibility = 'hidden';
-      measureContainer.style.display = 'flex';
-      measureContainer.style.gap = `${gap}px`;
-      measureContainer.style.flexWrap = 'nowrap';
-      measureContainer.style.width = 'auto';
-      document.body.appendChild(measureContainer);
-
-      try {
-        const maxOverflow = selected.length;
-        const overflowTagSpan = document.createElement('span');
-        overflowTagSpan.className = 'bs-tag bs-tag--neutral';
-        overflowTagSpan.textContent = `+${maxOverflow}`;
-        overflowTagSpan.style.display = 'inline-block';
-        measureContainer.appendChild(overflowTagSpan);
-        const overflowTagWidth = overflowTagSpan.offsetWidth;
-        overflowTagSpan.remove();
-
-        const tagWidths: number[] = [];
-        selected.forEach((option) => {
-          const tagWrapper = document.createElement('div');
-          tagWrapper.style.display = 'inline-flex';
-          tagWrapper.style.alignItems = 'center';
-          tagWrapper.style.gap = '6px';
-
-          const tagSpan = document.createElement('span');
-          tagSpan.className = 'bs-tag bs-tag--neutral bs-tag--removable';
-          tagSpan.style.display = 'inline-flex';
-          tagSpan.style.alignItems = 'center';
-          tagSpan.style.gap = '6px';
-
-          const removeBtn = document.createElement('button');
-          removeBtn.className = 'bs-tag__remove-btn';
-          removeBtn.style.cssText =
-            'background: none; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; width: 16px; height: 16px;';
-
-          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('width', '16');
-          svg.setAttribute('height', '16');
-          svg.setAttribute('viewBox', '0 0 16 16');
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          path.setAttribute('d', 'M12 4L4 12M4 4l8 8');
-          path.setAttribute('stroke', 'currentColor');
-          path.setAttribute('stroke-width', '1.5');
-          path.setAttribute('fill', 'none');
-          svg.appendChild(path);
-          removeBtn.appendChild(svg);
-
-          tagSpan.appendChild(removeBtn);
-          tagSpan.appendChild(document.createTextNode(getOptionLabel(option)));
-          tagWrapper.appendChild(tagSpan);
-          measureContainer.appendChild(tagWrapper);
-
-          tagWidths.push(tagWrapper.offsetWidth);
-          tagWrapper.remove();
-        });
-
-        let totalWidth = 0;
-        let count = 0;
-        for (let i = 0; i < tagWidths.length; i++) {
-          const tagWidth = tagWidths[i];
-          const widthWithOverflow = totalWidth + tagWidth + (count > 0 ? gap : 0) + overflowTagWidth + gap;
-
-          if (widthWithOverflow <= usableWidth || count === 0) {
-            totalWidth += tagWidth + (count > 0 ? gap : 0);
-            count++;
-          } else {
-            break;
-          }
-        }
-
-        setVisibleCount(Math.min(count, selected.length));
-      } finally {
-        document.body.removeChild(measureContainer);
-      }
-    };
-
-    const rafId = requestAnimationFrame(() => {
-      calculateVisibleCount();
-    });
-
-    const resizeObserver = new ResizeObserver(() => {
-      calculateVisibleCount();
-    });
-
-    resizeObserver.observe(selectElement);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      resizeObserver.disconnect();
-    };
-  }, [selected, size, icon, labelInside, label]);
+  }, []);
 
   const handleToggle = (option: T) => {
     if (isSelected(option)) {

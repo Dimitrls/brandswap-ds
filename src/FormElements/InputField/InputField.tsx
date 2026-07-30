@@ -27,16 +27,11 @@ const styles: Record<string, string> = {
 };
 
 export interface InputFieldProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    'size' | 'prefix' | 'onChange' | 'onBlur'
-  > {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'onChange'> {
   label?: string;
   value?: string | number;
   /** Called with the input's current string value (Ant Design–style value callback). */
   onChange: (value: string) => void;
-  /** Called with the input's current string value when the field blurs. */
-  onBlur?: (value: string) => void;
   placeholder?: string;
   type?: string;
   size?: 'small' | 'medium' | 'large';
@@ -56,7 +51,6 @@ export const InputField = ({
   label,
   value,
   onChange,
-  onBlur,
   placeholder,
   type = 'text',
   size = 'medium',
@@ -146,7 +140,6 @@ export const InputField = ({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onBlur={() => onBlur?.(currentValue)}
           placeholder={placeholder}
           min={min}
           max={max}

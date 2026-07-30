@@ -13,13 +13,11 @@ const styles: Record<string, string> = {
 };
 
 export interface SwitchProps
-  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange' | 'onBlur'> {
+  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
   label: string;
   checked: boolean;
   /** Called with the next checked state. */
   onChange: (checked: boolean) => void;
-  /** Called with the current checked state on blur. */
-  onBlur?: (checked: boolean) => void;
   inForm?: boolean;
   warningMessage?: string;
   labelOnTop?: boolean;
@@ -29,7 +27,6 @@ export const Switch = ({
   label,
   checked,
   onChange,
-  onBlur,
   inForm = false,
   warningMessage,
   labelOnTop = false,
@@ -51,7 +48,6 @@ export const Switch = ({
         className={styles.input}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        onBlur={() => onBlur?.(checked)}
       />
       <span className={styles.slider} />
       {inForm && warningMessage && <span className={styles.warning}>{warningMessage}</span>}
