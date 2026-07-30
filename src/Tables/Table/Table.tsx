@@ -10,7 +10,8 @@ export interface TableColumn {
   sortable?: boolean;
 }
 
-export interface TableProps<T extends Record<string, React.ReactNode> = Record<string, React.ReactNode>> {
+export interface TableProps<T extends Record<string, React.ReactNode> = Record<string, React.ReactNode>>
+  extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   pagination?: boolean;
   tableActions?: boolean;
@@ -46,6 +47,8 @@ export function Table<T extends Record<string, React.ReactNode>>({
   onPageChange,
   renderRowActions,
   renderExpandedRow,
+  className,
+  ...props
 }: TableProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
@@ -82,7 +85,7 @@ export function Table<T extends Record<string, React.ReactNode>>({
   };
 
   return (
-    <div className={styles.tableWrapper}>
+    <div className={[styles.tableWrapper, className].filter(Boolean).join(' ')} {...props}>
       {title && <div className={styles.title}>{title}</div>}
       {tableActions && (
         <div className={styles.tableActions} ref={actionsMenuRef}>

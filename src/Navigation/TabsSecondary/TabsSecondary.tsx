@@ -7,15 +7,22 @@ export interface TabSecondaryOption {
   value: string;
 }
 
-export interface TabsSecondaryProps {
+export interface TabsSecondaryProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   options: TabSecondaryOption[];
   value: string;
   onChange: (value: string) => void;
 }
 
-export const TabsSecondary = ({ options, value, onChange }: TabsSecondaryProps) => {
+export const TabsSecondary = ({
+  options,
+  value,
+  onChange,
+  className,
+  ...props
+}: TabsSecondaryProps) => {
   return (
-    <div className={styles.tabsSecondary}>
+    <div className={[styles.tabsSecondary, className].filter(Boolean).join(' ')} {...props}>
       {options.map(option => (
         <button
           key={option.value}

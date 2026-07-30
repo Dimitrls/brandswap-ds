@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './Switch.module.css';
 
-export interface SwitchProps {
+export interface SwitchProps
+  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
   label: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -17,6 +18,8 @@ export const Switch = ({
   inForm = false,
   warningMessage,
   labelOnTop = false,
+  className,
+  ...props
 }: SwitchProps) => {
   let wrapperClass = styles.wrapper;
   if (labelOnTop) {
@@ -26,7 +29,7 @@ export const Switch = ({
   }
 
   return (
-    <label className={wrapperClass}>
+    <label className={[wrapperClass, className].filter(Boolean).join(' ')} {...props}>
       <span className={styles.label}>{label}</span>
       <input
         type="checkbox"

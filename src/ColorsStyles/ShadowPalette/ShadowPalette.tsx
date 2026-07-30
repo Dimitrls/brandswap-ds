@@ -10,8 +10,14 @@ const shadows = [
   { name: 'shadow-diffuse', varName: '--shadow-diffuse' },
 ];
 
-export const ShadowPalette = () => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 32, padding: 32 }}>
+export interface ShadowPaletteProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export const ShadowPalette = ({ className, style, ...props }: ShadowPaletteProps) => (
+  <div
+    className={className}
+    style={{ display: 'flex', flexDirection: 'column', gap: 32, padding: 32, ...style }}
+    {...props}
+  >
     {shadows.map(({ name, varName }) => (
       <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
         <div

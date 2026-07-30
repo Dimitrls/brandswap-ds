@@ -9,11 +9,11 @@ export interface BreadcrumbItem {
   dropdownItems?: string[];
 }
 
-export interface BreadcrumbsProps {
+export interface BreadcrumbsProps extends React.HTMLAttributes<HTMLElement> {
   items: BreadcrumbItem[];
 }
 
-export const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
+export const Breadcrumbs = ({ items, className, ...props }: BreadcrumbsProps) => {
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const dropdownRefs = useRef<(HTMLLIElement | null)[]>([]);
 
@@ -38,7 +38,11 @@ export const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
   }, [openDropdown]);
 
   return (
-    <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
+    <nav
+      className={[styles.breadcrumbs, className].filter(Boolean).join(' ')}
+      aria-label="Breadcrumb"
+      {...props}
+    >
       <ol className={styles.list}>
         {items.map((item, idx) => (
           <li key={item.label} className={styles.item} ref={el => (dropdownRefs.current[idx] = el)}>

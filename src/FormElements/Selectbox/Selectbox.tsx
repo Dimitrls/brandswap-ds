@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from './Selectbox.module.css';
 import { Icon, IconName } from '../../Icons/Icon';
 
-export interface SelectboxProps {
+export interface SelectboxProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   label?: string;
   options: string[];
   onChange?: (option: string) => void;
@@ -20,6 +21,8 @@ export const Selectbox = ({
   icon = false,
   iconName = 'search',
   labelInside = false,
+  className,
+  ...props
 }: SelectboxProps) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(options[0] || '');
@@ -54,7 +57,7 @@ export const Selectbox = ({
   };
 
   return (
-    <div className={styles.wrapper} ref={ref}>
+    <div className={[styles.wrapper, className].filter(Boolean).join(' ')} ref={ref} {...props}>
       {label && !labelInside && (
         <label className={`${styles.label} ${getLabelSizeClass()}`}>{label}</label>
       )}

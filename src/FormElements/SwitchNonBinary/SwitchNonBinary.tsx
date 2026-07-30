@@ -1,14 +1,21 @@
 import React from 'react';
 import styles from './SwitchNonBinary.module.css';
 
-export interface SwitchNonBinaryProps {
+export interface SwitchNonBinaryProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   options: string[];
   value: string;
   onChange: (value: string) => void;
 }
 
-export const SwitchNonBinary = ({ options, value, onChange }: SwitchNonBinaryProps) => (
-  <div className={styles.switchNonBinary}>
+export const SwitchNonBinary = ({
+  options,
+  value,
+  onChange,
+  className,
+  ...props
+}: SwitchNonBinaryProps) => (
+  <div className={[styles.switchNonBinary, className].filter(Boolean).join(' ')} {...props}>
     {options.map((option) => (
       <button
         key={option}

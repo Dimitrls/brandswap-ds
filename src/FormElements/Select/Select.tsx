@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useId } from 'react';
 import styles from '../Selectbox/Selectbox.module.css';
 import { Checkbox } from '../Checkbox';
+import { RadioButton } from '../RadioButton';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
 
-export interface MultiSelectboxProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export type SelectOptionVariant = 'default' | 'checkbox' | 'radio';
+
+type SelectSharedProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> & {
   options: string[];
-  selected?: string[];
-  onChange: (selected: string[]) => void;
   label?: string;
   placeholder?: string;
   inForm?: boolean;
@@ -17,32 +17,82 @@ export interface MultiSelectboxProps
   icon?: boolean;
   iconName?: IconName;
   size?: 'small' | 'medium' | 'large';
+  /** How options are rendered in the dropdown */
+  optionVariant?: SelectOptionVariant;
+  /** Show a search input inside the dropdown */
+  searchable?: boolean;
+  searchPlaceholder?: string;
+};
+
+export type SelectSingleProps = SelectSharedProps & {
+  multiple?: false;
+  value?: string;
+  onChange: (value: string) => void;
+};
+
+export type SelectMultiProps = SelectSharedProps & {
+  multiple: true;
+  value?: string[];
+  onChange: (value: string[]) => void;
+};
+
+export type SelectProps = SelectSingleProps | SelectMultiProps;
+
+function isMulti(props: SelectProps): props is SelectMultiProps {
+  return props.multiple === true;
 }
 
-export const MultiSelectbox = ({
-  options = [],
-  selected = [],
-  onChange,
-  label,
-  placeholder = 'Select...',
-  inForm = false,
-  labelOnTop = false,
-  labelInside = false,
-  icon = false,
-  iconName = 'search',
-  size = 'medium',
-  className,
-  ...props
-}: MultiSelectboxProps) => {
+export const Select = (props: SelectProps) => {
+  const multiple = isMulti(props);
+  const {
+    options = [],
+    label,
+    placeholder = 'Select...',
+    inForm = false,
+    labelOnTop = false,
+    labelInside = false,
+    icon = false,
+    iconName = 'search',
+    size = 'medium',
+    optionVariant = 'default',
+    searchable = true,
+    searchPlaceholder = 'Search...',
+    className,
+    value,
+    onChange,
+    multiple: _multiple,
+    ...divProps
+  } = props;
+
+  const selectedValues: string[] = multiple
+    ? ((value as string[] | undefined) ?? [])
+    : value
+      ? [value as string]
+      : [];
+
+  const selectedKey = selectedValues.join('\0');
+
   const [open, setOpen] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(selected.length);
+  const [search, setSearch] = useState('');
+  const [visibleCount, setVisibleCount] = useState(selectedValues.length);
   const ref = useRef<HTMLDivElement>(null);
   const tagsContainerRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const radioGroupName = useId();
+
+  const filteredOptions = searchable
+    ? options.filter((option) => option.toLowerCase().includes(search.toLowerCase()))
+    : options;
+
+  // Radio only makes sense for single select; fall back to checkbox when multi
+  const resolvedVariant: SelectOptionVariant =
+    optionVariant === 'radio' && multiple ? 'checkbox' : optionVariant;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         setOpen(false);
+        setSearch('');
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -50,21 +100,27 @@ export const MultiSelectbox = ({
   }, []);
 
   useEffect(() => {
-    if (selected.length === 0) {
-      setVisibleCount(0);
+    if (open && searchable) {
+      searchInputRef.current?.focus();
+    }
+  }, [open, searchable]);
+
+  useEffect(() => {
+    if (!multiple || selectedValues.length === 0) {
+      setVisibleCount(selectedValues.length);
       return;
     }
 
     const selectElement = tagsContainerRef.current?.parentElement;
     if (!selectElement) {
-      setVisibleCount(selected.length);
+      setVisibleCount(selectedValues.length);
       return;
     }
 
     const calculateVisibleCount = () => {
       const selectRect = selectElement.getBoundingClientRect();
       if (selectRect.width === 0) {
-        setVisibleCount(selected.length);
+        setVisibleCount(selectedValues.length);
         return;
       }
 
@@ -99,17 +155,16 @@ export const MultiSelectbox = ({
       document.body.appendChild(measureContainer);
 
       try {
-        const maxOverflow = selected.length;
         const overflowTagSpan = document.createElement('span');
         overflowTagSpan.className = 'bs-tag bs-tag--neutral';
-        overflowTagSpan.textContent = `+${maxOverflow}`;
+        overflowTagSpan.textContent = `+${selectedValues.length}`;
         overflowTagSpan.style.display = 'inline-block';
         measureContainer.appendChild(overflowTagSpan);
         const overflowTagWidth = overflowTagSpan.offsetWidth;
         overflowTagSpan.remove();
 
         const tagWidths: number[] = [];
-        selected.forEach((option) => {
+        selectedValues.forEach((option) => {
           const tagWrapper = document.createElement('div');
           tagWrapper.style.display = 'inline-flex';
           tagWrapper.style.alignItems = 'center';
@@ -151,7 +206,8 @@ export const MultiSelectbox = ({
         let count = 0;
         for (let i = 0; i < tagWidths.length; i++) {
           const tagWidth = tagWidths[i];
-          const widthWithOverflow = totalWidth + tagWidth + (count > 0 ? gap : 0) + overflowTagWidth + gap;
+          const widthWithOverflow =
+            totalWidth + tagWidth + (count > 0 ? gap : 0) + overflowTagWidth + gap;
 
           if (widthWithOverflow <= usableWidth || count === 0) {
             totalWidth += tagWidth + (count > 0 ? gap : 0);
@@ -161,7 +217,7 @@ export const MultiSelectbox = ({
           }
         }
 
-        setVisibleCount(Math.min(count, selected.length));
+        setVisibleCount(Math.min(count, selectedValues.length));
       } finally {
         document.body.removeChild(measureContainer);
       }
@@ -181,18 +237,34 @@ export const MultiSelectbox = ({
       cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
     };
-  }, [selected, size, icon, labelInside, label]);
+    // selectedKey tracks value changes without depending on a new array each render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedKey, size, icon, labelInside, label, multiple]);
 
-  const handleToggle = (option: string) => {
-    if (selected.includes(option)) {
-      onChange(selected.filter((item) => item !== option));
+  const emitChange = (next: string[]) => {
+    if (multiple) {
+      (onChange as (value: string[]) => void)(next);
     } else {
-      onChange([...selected, option]);
+      (onChange as (value: string) => void)(next[0] ?? '');
+    }
+  };
+
+  const handleSelect = (option: string) => {
+    if (multiple) {
+      if (selectedValues.includes(option)) {
+        emitChange(selectedValues.filter((item) => item !== option));
+      } else {
+        emitChange([...selectedValues, option]);
+      }
+    } else {
+      emitChange([option]);
+      setOpen(false);
+      setSearch('');
     }
   };
 
   const handleRemove = (option: string) => {
-    onChange(selected.filter((item) => item !== option));
+    emitChange(selectedValues.filter((item) => item !== option));
   };
 
   const getSelectSizeClass = () => {
@@ -214,8 +286,89 @@ export const MultiSelectbox = ({
     wrapperClass = styles.wrapperInForm;
   }
 
+  const displayValue = (() => {
+    if (selectedValues.length === 0) {
+      return <span className={styles.placeholder}>{placeholder}</span>;
+    }
+
+    if (multiple) {
+      return (
+        <div
+          ref={tagsContainerRef}
+          style={{
+            display: 'flex',
+            flexWrap: 'nowrap',
+            gap: 6,
+            overflow: 'hidden',
+            minWidth: 0,
+            flex: 1,
+            alignItems: 'center',
+          }}
+        >
+          {selectedValues.slice(0, visibleCount).map((option) => (
+            <RemovableTag key={option} label={option} onRemove={() => handleRemove(option)} />
+          ))}
+          {visibleCount < selectedValues.length && (
+            <Tag label={`+${selectedValues.length - visibleCount}`} variant="neutral" />
+          )}
+        </div>
+      );
+    }
+
+    return selectedValues[0];
+  })();
+
+  const renderOption = (option: string) => {
+    const isSelected = selectedValues.includes(option);
+
+    if (resolvedVariant === 'checkbox') {
+      return (
+        <li key={option} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
+          <Checkbox
+            label={option}
+            checked={isSelected}
+            onChange={() => handleSelect(option)}
+            inForm={false}
+          />
+        </li>
+      );
+    }
+
+    if (resolvedVariant === 'radio') {
+      return (
+        <li key={option} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
+          <RadioButton
+            label={option}
+            checked={isSelected}
+            onChange={() => handleSelect(option)}
+            name={radioGroupName}
+            value={option}
+          />
+        </li>
+      );
+    }
+
+    return (
+      <li
+        key={option}
+        className={[styles.option, isSelected ? styles.optionSelected : '']
+          .filter(Boolean)
+          .join(' ')}
+        onClick={() => handleSelect(option)}
+        role="option"
+        aria-selected={isSelected}
+      >
+        {option}
+      </li>
+    );
+  };
+
   return (
-    <div className={[wrapperClass, className].filter(Boolean).join(' ')} ref={ref} {...props}>
+    <div
+      className={[wrapperClass, className].filter(Boolean).join(' ')}
+      ref={ref}
+      {...divProps}
+    >
       {!labelInside && labelOnTop ? (
         <span className={`${styles.label} ${getLabelSizeClass()}`} style={{ marginBottom: 4 }}>
           {label}
@@ -245,6 +398,9 @@ export const MultiSelectbox = ({
           className={`${styles.select} ${getSelectSizeClass()}`}
           onClick={() => setOpen(!open)}
           tabIndex={0}
+          role="combobox"
+          aria-expanded={open}
+          aria-haspopup="listbox"
           style={{
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
@@ -254,47 +410,42 @@ export const MultiSelectbox = ({
               {label}:
             </span>
           )}
-          {selected.length === 0 ? (
-            <span className={styles.placeholder}>{placeholder}</span>
-          ) : (
-            <div
-              ref={tagsContainerRef}
-              style={{
-                display: 'flex',
-                flexWrap: 'nowrap',
-                gap: 6,
-                overflow: 'hidden',
-                minWidth: 0,
-                flex: 1,
-                alignItems: 'center',
-              }}
-            >
-              {selected.slice(0, visibleCount).map((option) => (
-                <RemovableTag key={option} label={option} onRemove={() => handleRemove(option)} />
-              ))}
-              {visibleCount < selected.length && (
-                <Tag label={`+${selected.length - visibleCount}`} variant="neutral" />
-              )}
-            </div>
-          )}
+          {displayValue}
           <span className={styles.arrow}>
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>
         </div>
       </div>
       {open && (
-        <ul className={styles.dropdown} style={{ maxHeight: 220, overflowY: 'auto' }}>
-          {options.map((option, idx) => (
-            <li key={idx} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
-              <Checkbox
-                label={option}
-                checked={selected.includes(option)}
-                onChange={() => handleToggle(option)}
-                inForm={false}
+        <div className={styles.dropdown} role="listbox">
+          {searchable && (
+            <div
+              className={styles.searchBox}
+              style={{ position: 'relative' }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className={styles.searchIcon}>
+                <Icon name="search" size={16} />
+              </span>
+              <input
+                ref={searchInputRef}
+                type="text"
+                className={styles.searchInput}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={searchPlaceholder}
+                aria-label={searchPlaceholder}
               />
-            </li>
-          ))}
-        </ul>
+            </div>
+          )}
+          <ul className={styles.dropdownScroll} style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+            {filteredOptions.length === 0 ? (
+              <li className={styles.emptyState}>No results</li>
+            ) : (
+              filteredOptions.map(renderOption)
+            )}
+          </ul>
+        </div>
       )}
     </div>
   );

@@ -26,7 +26,7 @@ const TOOLBAR_CONTROLS: Array<{
   { type: 'ol', icon: <Icon name="list-numbers" size={16} />, ariaLabel: 'Numbered list' },
 ];
 
-export interface TextAreaProps {
+export interface TextAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   showToolbar?: boolean;
   warning?: boolean;
@@ -38,6 +38,8 @@ export const TextArea = ({
   showToolbar = false,
   warning = false,
   warningMessage = '',
+  className,
+  ...props
 }: TextAreaProps) => {
   const [value, setValue] = useState('');
   const [selection, setSelection] = useState({ start: 0, end: 0 });
@@ -72,7 +74,10 @@ export const TextArea = ({
   };
 
   return (
-    <div className={styles['bs-textarea-wrapper']}>
+    <div
+      className={[styles['bs-textarea-wrapper'], className].filter(Boolean).join(' ')}
+      {...props}
+    >
       <label className={styles['bs-textarea-label']}>{label}</label>
       {showToolbar && (
         <div className={styles['bs-textarea-toolbar']}>

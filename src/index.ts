@@ -55,6 +55,13 @@ export { Switch } from './FormElements/Switch';
 export type { SwitchProps } from './FormElements/Switch';
 export { Selectbox } from './FormElements/Selectbox';
 export type { SelectboxProps } from './FormElements/Selectbox';
+export { Select } from './FormElements/Select';
+export type {
+  SelectProps,
+  SelectSingleProps,
+  SelectMultiProps,
+  SelectOptionVariant,
+} from './FormElements/Select';
 export { RadioButton, RadioButtonGroup } from './FormElements/RadioButton';
 export type { RadioButtonProps, RadioButtonGroupProps } from './FormElements/RadioButton';
 export { MultiSelectbox } from './FormElements/MultiSelectbox';

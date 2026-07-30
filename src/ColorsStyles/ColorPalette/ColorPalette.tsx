@@ -102,13 +102,23 @@ const swatchStyle: React.CSSProperties = {
   marginBottom: 8,
 };
 
-export interface ColorPaletteProps {
+export interface ColorPaletteProps extends React.HTMLAttributes<HTMLDivElement> {
   colors: ColorToken[];
   columns?: string;
 }
 
-export const ColorPalette = ({ colors, columns = 'repeat(auto-fit, minmax(160px, 1fr))' }: ColorPaletteProps) => (
-  <div style={{ display: 'grid', gridTemplateColumns: columns, gap: 24 }}>
+export const ColorPalette = ({
+  colors,
+  columns = 'repeat(auto-fit, minmax(160px, 1fr))',
+  className,
+  style,
+  ...props
+}: ColorPaletteProps) => (
+  <div
+    className={className}
+    style={{ display: 'grid', gridTemplateColumns: columns, gap: 24, ...style }}
+    {...props}
+  >
     {colors.map(color => (
       <div key={color.token} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <div style={{ ...swatchStyle, background: color.value }} />

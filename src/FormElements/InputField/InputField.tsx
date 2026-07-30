@@ -3,7 +3,7 @@ import styles from './InputField.module.css';
 import { Icon, IconName } from '../../Icons/Icon';
 
 export interface InputFieldProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'onChange'> {
   label?: string;
   value?: string | number;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -18,6 +18,8 @@ export interface InputFieldProps
   showArrows?: boolean;
   icon?: boolean;
   iconName?: IconName;
+  /** Additional class names for the outer wrapper */
+  wrapperClassName?: string;
 }
 
 export const InputField = ({
@@ -38,6 +40,8 @@ export const InputField = ({
   min,
   max,
   step = 1,
+  className,
+  wrapperClassName,
   ...props
 }: InputFieldProps) => {
   const handleIncrement = () => {
@@ -81,7 +85,10 @@ export const InputField = ({
   const { style: propsStyle, ...restProps } = props;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, position: 'relative' }}>
+    <div
+      className={wrapperClassName}
+      style={{ display: 'flex', flexDirection: 'column', gap: 4, position: 'relative' }}
+    >
       {label && <label className={`${styles.label} ${getLabelSizeClass()}`}>{label}</label>}
       <div className={styles.inputWrapper} style={{ position: 'relative' }}>
         {prefix && <span className={`${styles.prefix} ${getPrefixSizeClass()}`}>{prefix}</span>}
@@ -110,7 +117,7 @@ export const InputField = ({
           min={min}
           max={max}
           step={step}
-          className={[styles.input, getInputSizeClass(), warning ? styles.inputWarning : '']
+          className={[styles.input, getInputSizeClass(), warning ? styles.inputWarning : '', className]
             .filter(Boolean)
             .join(' ')}
           style={{

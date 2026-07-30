@@ -22,6 +22,7 @@ export { TextArea } from './FormElements/TextArea';
 export { SwitchNonBinary } from './FormElements/SwitchNonBinary';
 export { Switch } from './FormElements/Switch';
 export { Selectbox } from './FormElements/Selectbox';
+export { Select } from './FormElements/Select';
 export { RadioButton, RadioButtonGroup } from './FormElements/RadioButton';
 export { MultiSelectbox } from './FormElements/MultiSelectbox';
 export { InputField } from './FormElements/InputField';

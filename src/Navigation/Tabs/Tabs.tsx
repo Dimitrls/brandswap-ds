@@ -7,15 +7,16 @@ export interface TabOption {
   value: string;
 }
 
-export interface TabsProps {
+export interface TabsProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   options: TabOption[];
   value: string;
   onChange: (value: string) => void;
 }
 
-export const Tabs = ({ options, value, onChange }: TabsProps) => {
+export const Tabs = ({ options, value, onChange, className, ...props }: TabsProps) => {
   return (
-    <div className={styles.tabs}>
+    <div className={[styles.tabs, className].filter(Boolean).join(' ')} {...props}>
       {options.map(option => (
         <button
           key={option.value}

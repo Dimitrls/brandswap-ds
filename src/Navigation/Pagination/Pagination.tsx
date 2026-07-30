@@ -2,13 +2,20 @@ import React from 'react';
 import { Icon } from '../../Icons/Icon';
 import styles from './Pagination.module.css';
 
-export interface PaginationProps {
+export interface PaginationProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   totalPages: number;
   currentPage: number;
   onChange: (page: number) => void;
 }
 
-export const Pagination = ({ totalPages, currentPage, onChange }: PaginationProps) => {
+export const Pagination = ({
+  totalPages,
+  currentPage,
+  onChange,
+  className,
+  ...props
+}: PaginationProps) => {
   if (totalPages <= 1) return null;
 
   const pages: (number | 'ellipsis-left' | 'ellipsis-right')[] = [];
@@ -46,7 +53,7 @@ export const Pagination = ({ totalPages, currentPage, onChange }: PaginationProp
   }
 
   return (
-    <div className={styles.pagination}>
+    <div className={[styles.pagination, className].filter(Boolean).join(' ')} {...props}>
       <button
         className={styles.arrow}
         onClick={() => onChange(Math.max(1, currentPage - 1))}

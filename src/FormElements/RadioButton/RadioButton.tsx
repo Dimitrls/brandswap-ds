@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './RadioButton.module.css';
 
-export interface RadioButtonProps {
+export interface RadioButtonProps
+  extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
   label: string;
   checked: boolean;
   onChange: (value: string) => void;
@@ -9,8 +10,16 @@ export interface RadioButtonProps {
   value: string;
 }
 
-export const RadioButton = ({ label, checked, onChange, name, value }: RadioButtonProps) => (
-  <label className={styles.wrapper}>
+export const RadioButton = ({
+  label,
+  checked,
+  onChange,
+  name,
+  value,
+  className,
+  ...props
+}: RadioButtonProps) => (
+  <label className={[styles.wrapper, className].filter(Boolean).join(' ')} {...props}>
     <input
       type="radio"
       className={styles.input}

@@ -2,13 +2,20 @@ import React, { useRef, useState } from 'react';
 import styles from './Uploader.module.css';
 import { Button } from '../../Buttons/Button';
 
-export interface UploaderProps {
+export interface UploaderProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   label?: string;
   onChange?: (file: File | undefined) => void;
   size?: 'default' | 'small';
 }
 
-export const Uploader = ({ label = 'Upload file', onChange, size = 'default' }: UploaderProps) => {
+export const Uploader = ({
+  label = 'Upload file',
+  onChange,
+  size = 'default',
+  className,
+  ...props
+}: UploaderProps) => {
   const [fileName, setFileName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const isSmall = size === 'small';
@@ -44,7 +51,10 @@ export const Uploader = ({ label = 'Upload file', onChange, size = 'default' }: 
   const buttonSize = isSmall ? 'small' : 'medium';
 
   return (
-    <div className={styles['bs-uploader-wrapper']}>
+    <div
+      className={[styles['bs-uploader-wrapper'], className].filter(Boolean).join(' ')}
+      {...props}
+    >
       <label className={labelClass}>{label}</label>
       <div className={inputRowClass}>
         <Button
