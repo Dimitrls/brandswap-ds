@@ -1,0 +1,100 @@
+.bs-breadcrumbs--breadcrumbs {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+.bs-breadcrumbs--list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bs-breadcrumbs--item {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.bs-breadcrumbs--button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: var(--font-h4, 17px);
+  font-weight: var(--font-weight-bold);
+  font-size: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+.bs-breadcrumbs--button[aria-current='page'], .bs-breadcrumbs--button:disabled {
+  color: var(--text-default);
+  cursor: default;
+}
+
+.bs-breadcrumbs--buttonHasDropdown {
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    height: 36px;
+    padding: 0 6px 0 12px;
+}
+
+.bs-breadcrumbs--dropdownIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-weak);
+}
+
+.bs-breadcrumbs--separator {
+  width: 24px;
+  height: 24px;
+  color: var(--text-muted);
+}
+
+.bs-breadcrumbs--dropdownChevron {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+.bs-breadcrumbs--dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    font-size: var(--font-body);
+    border-radius: 6px;
+    box-shadow: var(--shadow-diffuse);
+    z-index: 10;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    .bs-breadcrumbs--option:has(input) {
+      padding: 0;
+      label {
+        width: 100%;
+        padding: 8px;
+      }
+    }
+}
+
+.bs-breadcrumbs--dropdownMenuItem {
+    height: 36px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+    box-sizing: border-box;
+    &:hover {
+      background: var(--primary-10, #3AB78F1a);
+    }
+}
+

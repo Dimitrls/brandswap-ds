@@ -1,5 +1,12 @@
 import React from 'react';
-import styles from './TabsSecondary.module.css';
+import './TabsSecondary.css';
+
+const styles: Record<string, string> = {
+  tabsSecondary: "bs-tabs-secondary--tabsSecondary",
+  tab: "bs-tabs-secondary--tab",
+  selected: "bs-tabs-secondary--selected",
+  icon: "bs-tabs-secondary--icon",
+};
 
 export interface TabSecondaryOption {
   label: string;

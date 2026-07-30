@@ -1,5 +1,14 @@
 import React from 'react';
-import styles from './BodyText.module.css';
+import './BodyText.css';
+
+const styles: Record<string, string> = {
+  body: "bs-body-text--body",
+  bodyLarge: "bs-body-text--bodyLarge",
+  bodySmall: "bs-body-text--bodySmall",
+  bodyLight: "bs-body-text--bodyLight",
+  bodyLargeLight: "bs-body-text--bodyLargeLight",
+  bodySmallLight: "bs-body-text--bodySmallLight",
+};
 
 export type BodyTextVariant =
   | 'default'

@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import styles from './SecondBar.module.css';
+import './SecondBar.css';
+
 import { Tabs, TabOption } from '../../Navigation/Tabs';
 import { Button } from '../../Buttons/Button';
 import type { IconName } from '../../Icons/Icon';
+
+const styles: Record<string, string> = {
+  secondBar: "bs-second-bar--secondBar",
+  secondBar__tabs: "bs-second-bar--secondBar__tabs",
+  secondBar__button: "bs-second-bar--secondBar__button",
+};
 
 export interface SecondBarProps extends React.HTMLAttributes<HTMLDivElement> {
   tabsOptions?: TabOption[];

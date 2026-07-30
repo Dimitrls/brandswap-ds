@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
-import styles from './TextArea.module.css';
+import './TextArea.css';
+
 import { Icon } from '../../Icons/Icon';
+
+const styles: Record<string, string> = {
+  "bs-textarea-wrapper": "bs-textarea--wrapper",
+  "bs-textarea-label": "bs-textarea--label",
+  "bs-textarea-toolbar": "bs-textarea--toolbar",
+  "bs-textarea": "bs-textarea--root",
+  "bs-textarea-toolbar-btn": "bs-textarea--toolbar-btn",
+  "bs-textarea--warning": "bs-textarea--warning",
+  "bs-textarea-warning-text": "bs-textarea--warning-text",
+  "bs-textarea-style-select": "bs-textarea--style-select",
+};
 
 const STYLE_OPTIONS = [
   { value: 'paragraph', label: 'Paragraph' },

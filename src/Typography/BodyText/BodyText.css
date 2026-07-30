@@ -1,0 +1,36 @@
+.bs-body-text--body {
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-regular);
+  line-height: 150%;
+  color: var(--text-default));
+}
+.bs-body-text--bodyLarge {
+  font-size: var(--font-body-large);
+  font-weight: var(--font-weight-regular);
+  line-height: 150%;
+  color: var(--text-default));
+}
+.bs-body-text--bodySmall {
+  font-size: var(--font-body-small);
+  font-weight: var(--font-weight-regular);
+  line-height: 150%;
+  color: var(--text-default));
+}
+.bs-body-text--bodyLight {
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-light);
+  line-height: 150%;
+  color: var(--text-muted);
+}
+.bs-body-text--bodyLargeLight {
+  font-size: var(--font-body-large);
+  font-weight: var(--font-weight-light);
+  line-height: 150%;
+  color: var(--text-muted);
+}
+.bs-body-text--bodySmallLight {
+  font-size: var(--font-body-small);
+  font-weight: var(--font-weight-light);
+  line-height: 150%;
+  color: var(--text-muted);
+} 

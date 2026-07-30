@@ -1,5 +1,16 @@
 import React from 'react';
-import styles from './Panel.module.css';
+import './Panel.css';
+
+const styles: Record<string, string> = {
+  panel: "bs-panel--panel",
+  panel__header: "bs-panel--panel__header",
+  panel__headerContent: "bs-panel--panel__headerContent",
+  panel__icon: "bs-panel--panel__icon",
+  panel__title: "bs-panel--panel__title",
+  panel__description: "bs-panel--panel__description",
+  panel__body: "bs-panel--panel__body",
+  panel__footer: "bs-panel--panel__footer",
+};
 
 export interface PanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   children: React.ReactNode;

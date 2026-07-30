@@ -1,7 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styles from './Notifications.module.css';
+import './Notifications.css';
+
 import { Icon } from '../../Icons/Icon';
 import { Pagination } from '../../Navigation/Pagination';
+
+const styles: Record<string, string> = {
+  notifications: "bs-notifications--notifications",
+  notifications__button: "bs-notifications--notifications__button",
+  notifications__badge: "bs-notifications--notifications__badge",
+  notifications__dropdown: "bs-notifications--notifications__dropdown",
+  notifications__title: "bs-notifications--notifications__title",
+  notifications__list: "bs-notifications--notifications__list",
+  notifications__empty: "bs-notifications--notifications__empty",
+  notifications__item: "bs-notifications--notifications__item",
+  notifications__itemUnread: "bs-notifications--notifications__itemUnread",
+  notifications__itemContent: "bs-notifications--notifications__itemContent",
+  notifications__itemMessage: "bs-notifications--notifications__itemMessage",
+  notifications__itemTimestamp: "bs-notifications--notifications__itemTimestamp",
+  notifications__pagination: "bs-notifications--notifications__pagination",
+};
 
 export interface NotificationItem {
   id: string;

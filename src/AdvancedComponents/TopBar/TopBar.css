@@ -1,0 +1,25 @@
+.bs-top-bar--topBar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 20px;
+  background: var(--bg-default);
+  border-bottom: 1px solid var(--border-default);
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.bs-top-bar--topBar__left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.bs-top-bar--topBar__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+

@@ -1,5 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styles from './Avatar.module.css';
+import './Avatar.css';
+
+const styles: Record<string, string> = {
+  avatar: "bs-avatar--avatar",
+  avatar__button: "bs-avatar--avatar__button",
+  avatar__initials: "bs-avatar--avatar__initials",
+  avatar__dropdown: "bs-avatar--avatar__dropdown",
+  avatar__userInfo: "bs-avatar--avatar__userInfo",
+  avatar__userName: "bs-avatar--avatar__userName",
+  avatar__userEmail: "bs-avatar--avatar__userEmail",
+  avatar__menu: "bs-avatar--avatar__menu",
+  avatar__menuItem: "bs-avatar--avatar__menuItem",
+};
 
 export interface AvatarUser {
   name: string;

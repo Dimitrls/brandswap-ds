@@ -1,0 +1,63 @@
+.bs-uploader--wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bs-uploader--label {
+  font-size: var(--font-body);
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+.bs-uploader--label--small {
+  font-size: var(--font-body-small);
+}
+
+.bs-uploader--input-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border: 2px dashed var(--border-default);
+  background-color: var(--bg-xlight);
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.bs-uploader--input-row--small {
+  flex-direction: row;
+  padding: 8px;
+  gap: 4px;
+}
+
+.bs-uploader--button {
+  background: var(--primary, #3AB78F);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 16px;
+  font-size: var(--font-body-small);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.bs-uploader--button:hover {
+  background: var(--primary-dark, #2e9c77);
+}
+
+.bs-uploader--filename {
+  font-size: var(--font-body-small);
+  color: var(--text-muted);
+}
+
+.bs-uploader--filename--small {
+  font-size: var(--font-body-small);
+  line-height: 16px;
+}
+
+.bs-uploader--input {
+  display: none;
+} 

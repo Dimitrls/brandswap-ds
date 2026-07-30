@@ -1,10 +1,20 @@
 import React from 'react';
-import styles from './FiltersBar.module.css';
+import './FiltersBar.css';
+
 import { IconName } from '../../Icons/Icon';
 import { InputField } from '../../FormElements/InputField';
 import { Button } from '../../Buttons/Button';
 import { Selectbox } from '../../FormElements/Selectbox';
 import { MultiSelectbox } from '../../FormElements/MultiSelectbox';
+
+const styles: Record<string, string> = {
+  filtersBar: "bs-filters-bar--filtersBar",
+  filtersBar__searchbox: "bs-filters-bar--filtersBar__searchbox",
+  filtersBar__filters: "bs-filters-bar--filtersBar__filters",
+  filtersBar__button: "bs-filters-bar--filtersBar__button",
+  filtersBarWithLabels: "bs-filters-bar--filtersBarWithLabels",
+  labelInside: "bs-filters-bar--labelInside",
+};
 
 interface BaseFilterProps {
   label?: string;

@@ -1,5 +1,11 @@
 import React from 'react';
-import styles from './SwitchNonBinary.module.css';
+import './SwitchNonBinary.css';
+
+const styles: Record<string, string> = {
+  switchNonBinary: "bs-switch-non-binary--switchNonBinary",
+  tab: "bs-switch-non-binary--tab",
+  selected: "bs-switch-non-binary--selected",
+};
 
 export interface SwitchNonBinaryProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {

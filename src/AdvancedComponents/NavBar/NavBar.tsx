@@ -1,7 +1,24 @@
 import React from 'react';
-import styles from './NavBar.module.css';
+import './NavBar.css';
+
 import { Icon } from '../../Icons/Icon';
 import { Logo } from '../../Icons/Logo';
+
+const styles: Record<string, string> = {
+  navBar: "bs-nav-bar--navBar",
+  "navBar--expanded": "bs-nav-bar--navBar--expanded",
+  "navBar--collapsed": "bs-nav-bar--navBar--collapsed",
+  navBar__header: "bs-nav-bar--navBar__header",
+  navBar__logo: "bs-nav-bar--navBar__logo",
+  navBar__toggle: "bs-nav-bar--navBar__toggle",
+  navBar__items: "bs-nav-bar--navBar__items",
+  navBar__item: "bs-nav-bar--navBar__item",
+  "navBar__item--active": "bs-nav-bar--navBar__item--active",
+  navBar__icon: "bs-nav-bar--navBar__icon",
+  navBar__label: "bs-nav-bar--navBar__label",
+  navBar__badge: "bs-nav-bar--navBar__badge",
+  navBar__footer: "bs-nav-bar--navBar__footer",
+};
 
 export interface NavBarItem {
   id: string;

@@ -1,6 +1,30 @@
 import React from 'react';
-import styles from './InputField.module.css';
+import './InputField.css';
+
 import { Icon, IconName } from '../../Icons/Icon';
+
+const styles: Record<string, string> = {
+  input: "bs-input-field--input",
+  suffix: "bs-input-field--suffix",
+  "input-wrapper": "bs-input-field--input-wrapper",
+  label: "bs-input-field--label",
+  inputSmall: "bs-input-field--inputSmall",
+  inputMedium: "bs-input-field--inputMedium",
+  inputLarge: "bs-input-field--inputLarge",
+  labelSmall: "bs-input-field--labelSmall",
+  labelMedium: "bs-input-field--labelMedium",
+  labelLarge: "bs-input-field--labelLarge",
+  inputWarning: "bs-input-field--inputWarning",
+  warningMessage: "bs-input-field--warningMessage",
+  inputWrapper: "bs-input-field--inputWrapper",
+  prefix: "bs-input-field--prefix",
+  prefixSmall: "bs-input-field--prefixSmall",
+  prefixMedium: "bs-input-field--prefixMedium",
+  prefixLarge: "bs-input-field--prefixLarge",
+  suffixSmall: "bs-input-field--suffixSmall",
+  suffixMedium: "bs-input-field--suffixMedium",
+  suffixLarge: "bs-input-field--suffixLarge",
+};
 
 export interface InputFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'onChange'> {

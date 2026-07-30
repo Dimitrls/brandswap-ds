@@ -73,6 +73,10 @@ const applyTheme = (theme: 'light' | 'dark') => {
   const rootStyles = getComputedStyle(document.documentElement);
   const backgroundColor = rootStyles.getPropertyValue('--bg-default') || '#ffffff';
   document.body.style.backgroundColor = backgroundColor.trim();
+  document.body.style.color =
+    rootStyles.getPropertyValue('--text-default').trim() || '#161616';
+  document.body.style.fontFamily = "'Poppins', sans-serif";
+  document.body.style.margin = '0';
 };
 
 const startDocsBackgroundObserver = () => {

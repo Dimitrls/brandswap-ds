@@ -1,5 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import styles from './Tooltip.module.css';
+import './Tooltip.css';
+
+const styles: Record<string, string> = {
+  tooltip: "bs-tooltip--tooltip",
+  tooltip__bubble: "bs-tooltip--tooltip__bubble",
+  "tooltip--top": "bs-tooltip--tooltip--top",
+  "tooltip--bottom": "bs-tooltip--tooltip--bottom",
+  "tooltip--left": "bs-tooltip--tooltip--left",
+  "tooltip--right": "bs-tooltip--tooltip--right",
+};
 
 export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 

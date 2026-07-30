@@ -1,5 +1,16 @@
 import React from 'react';
-import styles from './Switch.module.css';
+import './Switch.css';
+
+const styles: Record<string, string> = {
+  wrapper: "bs-switch--wrapper",
+  input: "bs-switch--input",
+  slider: "bs-switch--slider",
+  label: "bs-switch--label",
+  wrapperInForm: "bs-switch--wrapperInForm",
+  warning: "bs-switch--warning",
+  wrapperInFormWarning: "bs-switch--wrapperInFormWarning",
+  labelOnTopWrapper: "bs-switch--labelOnTopWrapper",
+};
 
 export interface SwitchProps
   extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {

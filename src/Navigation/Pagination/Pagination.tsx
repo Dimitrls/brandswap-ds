@@ -1,6 +1,14 @@
 import React from 'react';
 import { Icon } from '../../Icons/Icon';
-import styles from './Pagination.module.css';
+import './Pagination.css';
+
+const styles: Record<string, string> = {
+  pagination: "bs-pagination--pagination",
+  arrow: "bs-pagination--arrow",
+  page: "bs-pagination--page",
+  active: "bs-pagination--active",
+  ellipsis: "bs-pagination--ellipsis",
+};
 
 export interface PaginationProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {

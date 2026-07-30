@@ -1,53 +1,53 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-body, html, #root, * {
-  font-family: 'Poppins', sans-serif;
-}
-
+/*
+ * Design tokens only. Avoid element/universal selectors — they leak into host
+ * apps that import brandswap-ds/dist/index.css.
+ */
 :root,
 [data-theme='light'] {
   /* Primitive colors */
-  --white: #FFFFFF;
-  --white-75: #FFFFFFbf;
-  --white-50: #FFFFFF80;
-  --white-25: #FFFFFF40;
-  --white-10: #FFFFFF1a;
+  --white: #ffffff;
+  --white-75: #ffffffbf;
+  --white-50: #ffffff80;
+  --white-25: #ffffff40;
+  --white-10: #ffffff1a;
   --black: #161616;
   --black-75: #161616bf;
   --black-50: #16161680;
   --black-25: #16161640;
   --black-10: #1616161a;
   --black-03: #16161608;
-  --grey050: #FAFAFA;
-  --grey075: #F5F5F5;
-  --grey1: #F2F2F2;
-  --grey150: #E0E1E8;
-  --grey2: #D3D5DD;
-  --grey3: #A0A2A7;
-  --grey4: #77787E;
+  --grey050: #fafafa;
+  --grey075: #f5f5f5;
+  --grey1: #f2f2f2;
+  --grey150: #e0e1e8;
+  --grey2: #d3d5dd;
+  --grey3: #a0a2a7;
+  --grey4: #77787e;
   --grey5: #343434;
-  --green: #3AB78F;
-  --green-75: #3AB78Fbf;
-  --green-50: #3AB78F80;
-  --green-25: #3AB78F40;
-  --green-10: #3AB78F1a;
-  --green-pseudo10: #EBF8F4;
-  --purple: #844AFF;
-  --purple-75: #844AFFbf;
-  --purple-50: #844AFF80;
-  --purple-25: #844AFF40;
-  --purple-10: #844AFF1a;
-  --yellow: #F2D42F;
-  --yellow-75: #F2D42Fbf;
-  --yellow-50: #F2D42F80;
-  --yellow-25: #F2D42F40;
-  --yellow-10: #F2D42F1a;
-  --yellow-dark: #B89C00;
-  --red: #FF3D60;
-  --red-75: #FF3D60bf;
-  --red-50: #FF3D6080;
-  --red-25: #FF3D6040;
-  --red-10: #FF3D601a;
+  --green: #3ab78f;
+  --green-75: #3ab78fbf;
+  --green-50: #3ab78f80;
+  --green-25: #3ab78f40;
+  --green-10: #3ab78f1a;
+  --green-pseudo10: #ebf8f4;
+  --purple: #844aff;
+  --purple-75: #844affbf;
+  --purple-50: #844aff80;
+  --purple-25: #844aff40;
+  --purple-10: #844aff1a;
+  --yellow: #f2d42f;
+  --yellow-75: #f2d42fbf;
+  --yellow-50: #f2d42f80;
+  --yellow-25: #f2d42f40;
+  --yellow-10: #f2d42f1a;
+  --yellow-dark: #b89c00;
+  --red: #ff3d60;
+  --red-75: #ff3d60bf;
+  --red-50: #ff3d6080;
+  --red-25: #ff3d6040;
+  --red-10: #ff3d601a;
   --shadow-tiny: 0px 2px 2px 0px rgba(0, 0, 0, 0.04);
   --shadow-sm: 0px 4px 4px 0px rgba(0, 0, 0, 0.08);
   --shadow-md: 0px 8px 8px 0px rgba(0, 0, 0, 0.08);
@@ -145,16 +145,6 @@ body, html, #root, * {
   --warning-10: #ff5c7a1a;
 }
 
-body {
-  margin: 0;
-  color: var(--text-default);
-  background-color: var(--bg-default);
-}
-
-.docs-story > * {
-  background: var(--bg-default) !important;
-}
-
 :root {
   /* Font sizes */
   --font-body: 14px;
@@ -172,4 +162,6 @@ body {
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 600;
-} 
+
+  --bs-font-family: 'Poppins', sans-serif;
+}

@@ -1,9 +1,16 @@
 import React from 'react';
-import styles from './TopBar.module.css';
+import './TopBar.css';
+
 import { Breadcrumbs, BreadcrumbItem } from '../../Navigation/Breadcrumbs';
 import { Notifications, NotificationItem } from '../Notifications';
 import { CompanySelector, Company } from '../CompanySelector';
 import { Avatar, AvatarUser } from '../Avatar';
+
+const styles: Record<string, string> = {
+  topBar: "bs-top-bar--topBar",
+  topBar__left: "bs-top-bar--topBar__left",
+  topBar__right: "bs-top-bar--topBar__right",
+};
 
 export interface TopBarProps extends React.HTMLAttributes<HTMLDivElement> {
   breadcrumbs?: BreadcrumbItem[];

@@ -1,9 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styles from './CompanySelector.module.css';
+import './CompanySelector.css';
+
 import { InputField } from '../../FormElements/InputField';
 import { TabsSecondary } from '../../Navigation/TabsSecondary';
 import { Pagination } from '../../Navigation/Pagination';
 import { Button } from '../../Buttons/Button';
+
+const styles: Record<string, string> = {
+  companySelector: "bs-company-selector--companySelector",
+  companySelector__button: "bs-company-selector--companySelector__button",
+  companySelector__selectedName: "bs-company-selector--companySelector__selectedName",
+  companySelector__typeBadges: "bs-company-selector--companySelector__typeBadges",
+  companySelector__typeButton: "bs-company-selector--companySelector__typeButton",
+  companySelector__typeButtonSelected: "bs-company-selector--companySelector__typeButtonSelected",
+  companySelector__dropdown: "bs-company-selector--companySelector__dropdown",
+  companySelector__tabs: "bs-company-selector--companySelector__tabs",
+  companySelector__tab: "bs-company-selector--companySelector__tab",
+  companySelector__tabActive: "bs-company-selector--companySelector__tabActive",
+  companySelector__search: "bs-company-selector--companySelector__search",
+  companySelector__list: "bs-company-selector--companySelector__list",
+  companySelector__empty: "bs-company-selector--companySelector__empty",
+  companySelector__pagination: "bs-company-selector--companySelector__pagination",
+  companySelector__buttonContainer: "bs-company-selector--companySelector__buttonContainer",
+  companySelector__item: "bs-company-selector--companySelector__item",
+  companySelector__itemLabel: "bs-company-selector--companySelector__itemLabel",
+  companySelector__radio: "bs-company-selector--companySelector__radio",
+  companySelector__radioCustom: "bs-company-selector--companySelector__radioCustom",
+  companySelector__itemContent: "bs-company-selector--companySelector__itemContent",
+  companySelector__itemName: "bs-company-selector--companySelector__itemName",
+  companySelector__itemType: "bs-company-selector--companySelector__itemType",
+};
 
 export type CompanyType = 'advertiser' | 'host' | 'both';
 

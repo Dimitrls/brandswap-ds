@@ -1,6 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Icon } from '../../Icons/Icon';
-import styles from './Breadcrumbs.module.css';
+import './Breadcrumbs.css';
+
+const styles: Record<string, string> = {
+  breadcrumbs: "bs-breadcrumbs--breadcrumbs",
+  list: "bs-breadcrumbs--list",
+  item: "bs-breadcrumbs--item",
+  button: "bs-breadcrumbs--button",
+  buttonHasDropdown: "bs-breadcrumbs--buttonHasDropdown",
+  dropdownIcon: "bs-breadcrumbs--dropdownIcon",
+  separator: "bs-breadcrumbs--separator",
+  dropdownChevron: "bs-breadcrumbs--dropdownChevron",
+  dropdownMenu: "bs-breadcrumbs--dropdownMenu",
+  option: "bs-breadcrumbs--option",
+  dropdownMenuItem: "bs-breadcrumbs--dropdownMenuItem",
+};
 
 export interface BreadcrumbItem {
   label: string;

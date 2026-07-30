@@ -1,5 +1,12 @@
 import React from 'react';
-import styles from './RadioButton.module.css';
+import './RadioButton.css';
+
+const styles: Record<string, string> = {
+  wrapper: "bs-radio-button--wrapper",
+  input: "bs-radio-button--input",
+  custom: "bs-radio-button--custom",
+  label: "bs-radio-button--label",
+};
 
 export interface RadioButtonProps
   extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {

@@ -1,5 +1,13 @@
 import React from 'react';
-import styles from './Checkbox.module.css';
+import './Checkbox.css';
+
+const styles: Record<string, string> = {
+  wrapper: "bs-checkbox--wrapper",
+  input: "bs-checkbox--input",
+  custom: "bs-checkbox--custom",
+  label: "bs-checkbox--label",
+  wrapperInForm: "bs-checkbox--wrapperInForm",
+};
 
 export interface CheckboxProps
   extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {

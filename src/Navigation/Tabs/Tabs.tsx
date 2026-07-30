@@ -1,5 +1,12 @@
 import React from 'react';
-import styles from './Tabs.module.css';
+import './Tabs.css';
+
+const styles: Record<string, string> = {
+  tabs: "bs-tabs--tabs",
+  tab: "bs-tabs--tab",
+  selected: "bs-tabs--selected",
+  icon: "bs-tabs--icon",
+};
 
 export interface TabOption {
   label: string;

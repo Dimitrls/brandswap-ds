@@ -1,7 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styles from './Table.module.css';
+import './Table.css';
+
 import { Pagination } from '../../Navigation/Pagination';
 import { Icon } from '../../Icons/Icon';
+
+const styles: Record<string, string> = {
+  tableWrapper: "bs-table--tableWrapper",
+  table: "bs-table--table",
+  title: "bs-table--title",
+  tableActions: "bs-table--tableActions",
+  "align-left": "bs-table--align-left",
+  "align-center": "bs-table--align-center",
+  "align-right": "bs-table--align-right",
+  sortIcon: "bs-table--sortIcon",
+  actionsCol: "bs-table--actionsCol",
+  expandCol: "bs-table--expandCol",
+  actionsOnHover: "bs-table--actionsOnHover",
+  expandedRow: "bs-table--expandedRow",
+  totalsRow: "bs-table--totalsRow",
+  tableActionsButton: "bs-table--tableActionsButton",
+  actionsDropdown: "bs-table--actionsDropdown",
+  actionsDropdownItem: "bs-table--actionsDropdownItem",
+};
 
 export interface TableColumn {
   key: string;

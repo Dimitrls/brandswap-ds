@@ -9,7 +9,7 @@ export default defineConfig({
       js: format === 'cjs' ? '.js' : '.modern.js',
     };
   },
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
   esbuildOptions(options) {
     options.jsx = 'automatic';
   },

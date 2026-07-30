@@ -1,6 +1,19 @@
 import React, { useRef, useState } from 'react';
-import styles from './Uploader.module.css';
+import './Uploader.css';
+
 import { Button } from '../../Buttons/Button';
+
+const styles: Record<string, string> = {
+  "bs-uploader-wrapper": "bs-uploader--wrapper",
+  "bs-uploader-label": "bs-uploader--label",
+  "bs-uploader-label--small": "bs-uploader--label--small",
+  "bs-uploader-input-row": "bs-uploader--input-row",
+  "bs-uploader-input-row--small": "bs-uploader--input-row--small",
+  "bs-uploader-button": "bs-uploader--button",
+  "bs-uploader-filename": "bs-uploader--filename",
+  "bs-uploader-filename--small": "bs-uploader--filename--small",
+  "bs-uploader-input": "bs-uploader--input",
+};
 
 export interface UploaderProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {

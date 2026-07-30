@@ -1,9 +1,35 @@
 import React, { useState, useRef, useEffect, useId } from 'react';
-import styles from '../Selectbox/Selectbox.module.css';
+import '../Selectbox/Selectbox.css';
+
 import { Checkbox } from '../Checkbox';
 import { RadioButton } from '../RadioButton';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
+
+const styles: Record<string, string> = {
+  wrapper: "bs-selectbox--wrapper",
+  label: "bs-selectbox--label",
+  labelSmall: "bs-selectbox--labelSmall",
+  labelMedium: "bs-selectbox--labelMedium",
+  labelLarge: "bs-selectbox--labelLarge",
+  selectWrapper: "bs-selectbox--selectWrapper",
+  select: "bs-selectbox--select",
+  selectSmall: "bs-selectbox--selectSmall",
+  selectMedium: "bs-selectbox--selectMedium",
+  selectLarge: "bs-selectbox--selectLarge",
+  arrow: "bs-selectbox--arrow",
+  dropdown: "bs-selectbox--dropdown",
+  option: "bs-selectbox--option",
+  placeholder: "bs-selectbox--placeholder",
+  wrapperInForm: "bs-selectbox--wrapperInForm",
+  labelOnTopWrapper: "bs-selectbox--labelOnTopWrapper",
+  searchBox: "bs-selectbox--searchBox",
+  searchInput: "bs-selectbox--searchInput",
+  searchIcon: "bs-selectbox--searchIcon",
+  emptyState: "bs-selectbox--emptyState",
+  optionSelected: "bs-selectbox--optionSelected",
+  dropdownScroll: "bs-selectbox--dropdownScroll",
+};
 
 export type SelectOptionVariant = 'default' | 'checkbox' | 'radio';
 
@@ -406,7 +432,7 @@ export const Select = (props: SelectProps) => {
           }}
         >
           {labelInside && label && (
-            <span className="labelInside" style={{ color: 'var(--text-muted)', marginRight: '6px' }}>
+            <span className="bs-selectbox--labelInside" style={{ color: 'var(--text-muted)', marginRight: '6px' }}>
               {label}:
             </span>
           )}
