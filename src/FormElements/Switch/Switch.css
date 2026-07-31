@@ -42,6 +42,11 @@
 .bs-switch--label {
     font-size: var(--font-body);
     color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
 }
 .bs-switch--wrapperInForm {
   display: flex;

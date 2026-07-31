@@ -31,7 +31,7 @@ const styles: Record<string, string> = {
 
 export interface SelectboxProps<T = string>
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-  label?: string;
+  label?: React.ReactNode;
   options: T[];
   value?: T | null;
   onChange?: (option: T) => void;

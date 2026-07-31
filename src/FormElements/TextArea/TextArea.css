@@ -10,6 +10,9 @@
   color: var(--text-muted);
   font-size: var(--font-body);
   font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .bs-textarea--toolbar {

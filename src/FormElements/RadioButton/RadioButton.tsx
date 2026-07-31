@@ -10,7 +10,7 @@ const styles: Record<string, string> = {
 
 export interface RadioButtonProps
   extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
-  label: string;
+  label: React.ReactNode;
   checked: boolean;
   /** Called with this radio's `value` when selected. */
   onChange: (value: string) => void;

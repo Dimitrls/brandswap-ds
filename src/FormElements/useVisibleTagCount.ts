@@ -12,7 +12,7 @@ export type VisibleTagMeasureOptions = {
   size?: 'small' | 'medium' | 'large';
   icon?: boolean;
   labelInside?: boolean;
-  label?: string;
+  label?: React.ReactNode;
 };
 
 /**

@@ -17,7 +17,7 @@ const styles: Record<string, string> = {
 
 export interface UploaderProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-  label?: string;
+  label?: React.ReactNode;
   onChange?: (file: File | undefined) => void;
   size?: 'default' | 'small';
 }

@@ -46,7 +46,7 @@ type SelectSharedProps<T> = Omit<
   getOptionLabel?: (option: T) => string;
   /** Resolve a stable key for comparison and React keys */
   getOptionKey?: (option: T, index?: number) => string | number;
-  label?: string;
+  label?: React.ReactNode;
   placeholder?: string;
   inForm?: boolean;
   labelOnTop?: boolean;

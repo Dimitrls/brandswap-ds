@@ -39,7 +39,7 @@ export interface MultiSelectboxProps<T = string>
   onChange: (selected: T[]) => void;
   getOptionLabel?: (option: T) => string;
   getOptionKey?: (option: T, index?: number) => string | number;
-  label?: string;
+  label?: React.ReactNode;
   placeholder?: string;
   inForm?: boolean;
   labelOnTop?: boolean;

@@ -32,18 +32,18 @@ const TOOLBAR_CONTROLS: Array<{
   icon: React.ReactNode;
   ariaLabel: string;
 }> = [
-  { type: 'bold', icon: <Icon name="bold" size={16} />, ariaLabel: 'Bold' },
-  { type: 'italic', icon: <Icon name="italic" size={16} />, ariaLabel: 'Italic' },
-  { type: 'ul', icon: <Icon name="list" size={16} />, ariaLabel: 'Bulleted list' },
-  { type: 'ol', icon: <Icon name="list-numbers" size={16} />, ariaLabel: 'Numbered list' },
-];
+    { type: 'bold', icon: <Icon name="bold" size={16} />, ariaLabel: 'Bold' },
+    { type: 'italic', icon: <Icon name="italic" size={16} />, ariaLabel: 'Italic' },
+    { type: 'ul', icon: <Icon name="list" size={16} />, ariaLabel: 'Bulleted list' },
+    { type: 'ol', icon: <Icon name="list-numbers" size={16} />, ariaLabel: 'Numbered list' },
+  ];
 
 export interface TextAreaProps
   extends Omit<
     React.HTMLAttributes<HTMLDivElement>,
     'onChange' | 'onBlur' | 'defaultValue'
   > {
-  label: string;
+  label: React.ReactNode;
   value?: string;
   defaultValue?: string;
   /** Called with the textarea's current string value. */

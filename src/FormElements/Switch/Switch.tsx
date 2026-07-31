@@ -14,7 +14,7 @@ const styles: Record<string, string> = {
 
 export interface SwitchProps
   extends Omit<React.LabelHTMLAttributes<HTMLLabelElement>, 'onChange'> {
-  label: string;
+  label: React.ReactNode;
   checked: boolean;
   /** Called with the next checked state. */
   onChange: (checked: boolean) => void;

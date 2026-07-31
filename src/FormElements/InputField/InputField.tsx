@@ -31,7 +31,7 @@ export interface InputFieldProps
     React.InputHTMLAttributes<HTMLInputElement>,
     'size' | 'prefix' | 'onChange' | 'onBlur'
   > {
-  label?: string;
+  label?: React.ReactNode;
   value?: string | number;
   /** Called with the input's current string value (Ant Design–style value callback). */
   onChange: (value: string) => void;
