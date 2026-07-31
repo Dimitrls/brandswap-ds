@@ -27,7 +27,10 @@ const styles: Record<string, string> = {
 };
 
 export interface InputFieldProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'onChange'> {
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'size' | 'prefix' | 'onChange' | 'onBlur'
+  > {
   label?: string;
   value?: string | number;
   /** Called with the input's current string value (Ant Design–style value callback). */

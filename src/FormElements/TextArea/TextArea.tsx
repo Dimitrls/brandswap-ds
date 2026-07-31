@@ -39,7 +39,10 @@ const TOOLBAR_CONTROLS: Array<{
 ];
 
 export interface TextAreaProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    'onChange' | 'onBlur' | 'defaultValue'
+  > {
   label: string;
   value?: string;
   defaultValue?: string;

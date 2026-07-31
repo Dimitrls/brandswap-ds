@@ -59,13 +59,13 @@ type SelectSharedProps<T> = Omit<
   searchPlaceholder?: string;
 };
 
-export type SelectSingleProps<T> = SelectSharedProps<T> & {
+export type SelectSingleProps<T = string> = SelectSharedProps<T> & {
   multiple?: false;
   value?: T | null;
   onChange: (value: T | null) => void;
 };
 
-export type SelectMultiProps<T> = SelectSharedProps<T> & {
+export type SelectMultiProps<T = string> = SelectSharedProps<T> & {
   multiple: true;
   value?: T[];
   onChange: (value: T[]) => void;
@@ -81,7 +81,10 @@ function isEmptyValue<T>(value: T | null | undefined): boolean {
   return value == null || value === ('' as unknown as T);
 }
 
-export function Select<T = string>(props: SelectProps<T>) {
+/** Multi overload first so `multiple` + `value: T[]` infers T from `options`, not from the array itself. */
+export function Select<T = string>(props: SelectMultiProps<T>): React.ReactElement;
+export function Select<T = string>(props: SelectSingleProps<T>): React.ReactElement;
+export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
   const multiple = isMulti(props);
   const {
     options = [],

@@ -18,6 +18,8 @@
   margin-right: 8px;
   display: inline-block;
   position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
   transition: background 0.2s;
 }
 .bs-checkbox--input:checked + .bs-checkbox--custom {
@@ -26,13 +28,15 @@
 .bs-checkbox--input:checked + .bs-checkbox--custom::after {
   content: '';
   position: absolute;
-  left: 5px;
-  top: 1px;
+  left: 50%;
+  top: 50%;
   width: 4px;
   height: 9px;
+  /* Border-trick checkmark needs content-box; host apps often set *::after { box-sizing: border-box }. */
+  box-sizing: content-box;
   border: solid #fff;
   border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  transform: translate(-50%, -60%) rotate(45deg);
 }
 .bs-checkbox--label {
   font-size: var(--font-body);
@@ -49,4 +53,4 @@
   box-sizing: border-box;
   position: relative;
   cursor: pointer;
-} 
+}
