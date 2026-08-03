@@ -6,6 +6,7 @@ const styles: Record<string, string> = {
   input: 'bs-radio-button--input',
   custom: 'bs-radio-button--custom',
   label: 'bs-radio-button--label',
+  disabled: 'bs-radio-button--disabled',
 };
 
 export interface RadioButtonProps
@@ -16,6 +17,7 @@ export interface RadioButtonProps
   onChange: (value: string) => void;
   name: string;
   value: string;
+  disabled?: boolean;
 }
 
 export const RadioButton = ({
@@ -24,14 +26,21 @@ export const RadioButton = ({
   onChange,
   name,
   value,
+  disabled = false,
   className,
   ...props
 }: RadioButtonProps) => (
-  <label className={[styles.wrapper, className].filter(Boolean).join(' ')} {...props}>
+  <label
+    className={[styles.wrapper, disabled ? styles.disabled : '', className]
+      .filter(Boolean)
+      .join(' ')}
+    {...props}
+  >
     <input
       type="radio"
       className={styles.input}
       checked={checked}
+      disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
       name={name}
       value={value}
@@ -44,25 +53,35 @@ export const RadioButton = ({
 export interface RadioButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   horizontal?: boolean;
+  disabled?: boolean;
 }
 
 export const RadioButtonGroup = ({
   children,
   horizontal = false,
+  disabled = false,
   className = '',
   style,
   ...props
 }: RadioButtonGroupProps) => (
   <div
-    className={className}
+    className={[className, disabled ? 'bs-radio-button-group--disabled' : '']
+      .filter(Boolean)
+      .join(' ')}
     style={{
       display: 'flex',
       flexDirection: horizontal ? 'row' : 'column',
       gap: '12px',
       ...style,
     }}
+    aria-disabled={disabled || undefined}
     {...props}
   >
-    {children}
+    {React.Children.map(children, (child) => {
+      if (!React.isValidElement(child) || !disabled) return child;
+      return React.cloneElement(child as React.ReactElement<{ disabled?: boolean }>, {
+        disabled: true,
+      });
+    })}
   </div>
 );

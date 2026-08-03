@@ -10,6 +10,7 @@ const styles: Record<string, string> = {
   warning: 'bs-switch--warning',
   wrapperInFormWarning: 'bs-switch--wrapperInFormWarning',
   labelOnTopWrapper: 'bs-switch--labelOnTopWrapper',
+  disabled: 'bs-switch--disabled',
 };
 
 export interface SwitchProps
@@ -21,6 +22,7 @@ export interface SwitchProps
   inForm?: boolean;
   warningMessage?: string;
   labelOnTop?: boolean;
+  disabled?: boolean;
 }
 
 export const Switch = ({
@@ -30,6 +32,7 @@ export const Switch = ({
   inForm = false,
   warningMessage,
   labelOnTop = false,
+  disabled = false,
   className,
   ...props
 }: SwitchProps) => {
@@ -41,12 +44,18 @@ export const Switch = ({
   }
 
   return (
-    <label className={[wrapperClass, className].filter(Boolean).join(' ')} {...props}>
+    <label
+      className={[wrapperClass, disabled ? styles.disabled : '', className]
+        .filter(Boolean)
+        .join(' ')}
+      {...props}
+    >
       <span className={styles.label}>{label}</span>
       <input
         type="checkbox"
         className={styles.input}
         checked={checked}
+        disabled={disabled}
         onChange={(e) => onChange(e.target.checked)}
       />
       <span className={styles.slider} />

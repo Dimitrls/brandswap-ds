@@ -25,5 +25,11 @@
 
 .bs-switch-non-binary--selected {
   background: var(--bg-default);
-  color: var(--text-default), #161616);
-} 
+  color: var(--text-default, #161616);
+}
+
+.bs-switch-non-binary--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}

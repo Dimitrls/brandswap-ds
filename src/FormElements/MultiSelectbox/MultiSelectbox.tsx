@@ -47,6 +47,7 @@ export interface MultiSelectboxProps<T = string>
   icon?: boolean;
   iconName?: IconName;
   size?: 'small' | 'medium' | 'large';
+  disabled?: boolean;
 }
 
 export function MultiSelectbox<T = string>({
@@ -63,6 +64,7 @@ export function MultiSelectbox<T = string>({
   icon = false,
   iconName = 'search',
   size = 'medium',
+  disabled = false,
   className,
   ...props
 }: MultiSelectboxProps<T>) {
@@ -103,6 +105,7 @@ export function MultiSelectbox<T = string>({
   }, []);
 
   const handleToggle = (option: T) => {
+    if (disabled) return;
     if (isSelected(option)) {
       onChange(selected.filter((item) => resolveKey(item) !== resolveKey(option)));
     } else {
@@ -111,6 +114,7 @@ export function MultiSelectbox<T = string>({
   };
 
   const handleRemove = (option: T) => {
+    if (disabled) return;
     onChange(selected.filter((item) => resolveKey(item) !== resolveKey(option)));
   };
 
@@ -134,7 +138,13 @@ export function MultiSelectbox<T = string>({
   }
 
   return (
-    <div className={[wrapperClass, className].filter(Boolean).join(' ')} ref={ref} {...props}>
+    <div
+      className={[wrapperClass, disabled ? 'bs-selectbox--disabled' : '', className]
+        .filter(Boolean)
+        .join(' ')}
+      ref={ref}
+      {...props}
+    >
       {!labelInside && labelOnTop ? (
         <span className={`${styles.label} ${getLabelSizeClass()}`} style={{ marginBottom: 4 }}>
           {label}
@@ -162,8 +172,11 @@ export function MultiSelectbox<T = string>({
         )}
         <div
           className={`${styles.select} ${getSelectSizeClass()}`}
-          onClick={() => setOpen(!open)}
-          tabIndex={0}
+          onClick={() => {
+            if (!disabled) setOpen(!open);
+          }}
+          tabIndex={disabled ? -1 : 0}
+          aria-disabled={disabled || undefined}
           style={{
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
@@ -205,7 +218,7 @@ export function MultiSelectbox<T = string>({
           </span>
         </div>
       </div>
-      {open && (
+      {open && !disabled && (
         <ul className={styles.dropdown} style={{ maxHeight: 220, overflowY: 'auto' }}>
           {options.map((option, idx) => (
             <li key={resolveKey(option, idx)} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
@@ -214,6 +227,7 @@ export function MultiSelectbox<T = string>({
                 checked={isSelected(option)}
                 onChange={() => handleToggle(option)}
                 inForm={false}
+                disabled={disabled}
               />
             </li>
           ))}

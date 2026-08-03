@@ -41,6 +41,7 @@ export interface SelectboxProps<T = string>
   icon?: boolean;
   iconName?: IconName;
   labelInside?: boolean;
+  disabled?: boolean;
 }
 
 export function Selectbox<T = string>({
@@ -54,6 +55,7 @@ export function Selectbox<T = string>({
   icon = false,
   iconName = 'search',
   labelInside = false,
+  disabled = false,
   className,
   ...props
 }: SelectboxProps<T>) {
@@ -74,6 +76,7 @@ export function Selectbox<T = string>({
   }, []);
 
   const handleSelect = (option: T) => {
+    if (disabled) return;
     if (!isControlled) {
       setInternalSelected(option);
     }
@@ -94,7 +97,13 @@ export function Selectbox<T = string>({
   };
 
   return (
-    <div className={[styles.wrapper, className].filter(Boolean).join(' ')} ref={ref} {...props}>
+    <div
+      className={[styles.wrapper, disabled ? 'bs-selectbox--disabled' : '', className]
+        .filter(Boolean)
+        .join(' ')}
+      ref={ref}
+      {...props}
+    >
       {label && !labelInside && (
         <label className={`${styles.label} ${getLabelSizeClass()}`}>{label}</label>
       )}
@@ -118,7 +127,10 @@ export function Selectbox<T = string>({
         )}
         <div
           className={`${styles.select} ${getSelectSizeClass()}`}
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            if (!disabled) setOpen(!open);
+          }}
+          aria-disabled={disabled || undefined}
           style={{
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
@@ -137,7 +149,7 @@ export function Selectbox<T = string>({
           </span>
         </div>
       </div>
-      {open && (
+      {open && !disabled && (
         <ul className={styles.dropdown}>
           {options.map((option, idx) => (
             <li

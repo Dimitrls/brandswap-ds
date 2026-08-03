@@ -53,6 +53,7 @@ export interface TextAreaProps
   showToolbar?: boolean;
   warning?: boolean;
   warningMessage?: string;
+  disabled?: boolean;
 }
 
 export const TextArea = ({
@@ -65,6 +66,7 @@ export const TextArea = ({
   showToolbar = false,
   warning = false,
   warningMessage = '',
+  disabled = false,
   className,
   ...props
 }: TextAreaProps) => {
@@ -76,6 +78,7 @@ export const TextArea = ({
   const currentValue = isControlled ? value : internalValue;
 
   const updateValue = (next: string) => {
+    if (disabled) return;
     if (!isControlled) {
       setInternalValue(next);
     }
@@ -92,6 +95,7 @@ export const TextArea = ({
   };
 
   const handleToolbarClick = (type: ToolbarControlType) => {
+    if (disabled) return;
     let newValue = currentValue;
     const { start, end } = selection;
     if (type === 'bold') {
@@ -122,12 +126,19 @@ export const TextArea = ({
   };
 
   const handleStyleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (disabled) return;
     setTextStyle(e.target.value);
   };
 
   return (
     <div
-      className={[styles['bs-textarea-wrapper'], className].filter(Boolean).join(' ')}
+      className={[
+        styles['bs-textarea-wrapper'],
+        disabled ? 'bs-textarea--disabled' : '',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       {...props}
     >
       <label className={styles['bs-textarea-label']}>{label}</label>
@@ -138,6 +149,7 @@ export const TextArea = ({
             value={textStyle}
             onChange={handleStyleChange}
             aria-label="Text style selector"
+            disabled={disabled}
           >
             {STYLE_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -152,6 +164,7 @@ export const TextArea = ({
               className={`${styles['bs-textarea-toolbar-btn']} ${styles[`bs-textarea-toolbar-btn--${control.type}`]}`}
               onClick={() => handleToolbarClick(control.type)}
               aria-label={control.ariaLabel}
+              disabled={disabled}
             >
               {control.icon}
             </button>
@@ -165,6 +178,7 @@ export const TextArea = ({
         onSelect={handleSelect}
         placeholder={placeholder}
         rows={rows}
+        disabled={disabled}
       />
       {warning && warningMessage && (
         <span className={styles['bs-textarea-warning-text']}>{warningMessage}</span>

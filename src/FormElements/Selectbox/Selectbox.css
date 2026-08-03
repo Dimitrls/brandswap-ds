@@ -5,6 +5,15 @@
   gap: 4px;
   width: 100%;
 }
+
+.bs-selectbox--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.bs-selectbox--disabled .bs-selectbox--select {
+  cursor: not-allowed;
+}
 .bs-selectbox--label { 
   font-size: var(--font-body);
   color: var(--text-muted);

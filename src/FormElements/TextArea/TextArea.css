@@ -6,6 +6,15 @@
   position: relative;
 }
 
+.bs-textarea--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.bs-textarea--disabled .bs-textarea--root {
+  cursor: not-allowed;
+}
+
 .bs-textarea--label {
   color: var(--text-muted);
   font-size: var(--font-body);

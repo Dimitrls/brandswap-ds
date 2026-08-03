@@ -46,6 +46,7 @@ export interface InputFieldProps
   showArrows?: boolean;
   icon?: boolean;
   iconName?: IconName;
+  disabled?: boolean;
   /** Additional class names for the outer wrapper */
   wrapperClassName?: string;
 }
@@ -65,6 +66,7 @@ export const InputField = ({
   showArrows = true,
   icon = false,
   iconName = 'search',
+  disabled = false,
   min,
   max,
   step = 1,
@@ -75,6 +77,7 @@ export const InputField = ({
   const currentValue = value === undefined || value === null ? '' : String(value);
 
   const handleIncrement = () => {
+    if (disabled) return;
     let newValue = currentValue === '' ? 0 : Number(currentValue);
     newValue += Number(step);
     if (typeof max !== 'undefined' && newValue > Number(max)) newValue = Number(max);
@@ -82,6 +85,7 @@ export const InputField = ({
   };
 
   const handleDecrement = () => {
+    if (disabled) return;
     let newValue = currentValue === '' ? 0 : Number(currentValue);
     newValue -= Number(step);
     if (typeof min !== 'undefined' && newValue < Number(min)) newValue = Number(min);
@@ -147,7 +151,14 @@ export const InputField = ({
           min={min}
           max={max}
           step={step}
-          className={[styles.input, getInputSizeClass(), warning ? styles.inputWarning : '', className]
+          disabled={disabled}
+          className={[
+            styles.input,
+            getInputSizeClass(),
+            warning ? styles.inputWarning : '',
+            disabled ? 'bs-input-field--inputDisabled' : '',
+            className,
+          ]
             .filter(Boolean)
             .join(' ')}
           style={{
@@ -156,7 +167,7 @@ export const InputField = ({
           }}
           {...restProps}
         />
-        {type === 'number' && showArrows && (
+        {type === 'number' && showArrows && !disabled && (
           <span
             style={{
               display: 'flex',

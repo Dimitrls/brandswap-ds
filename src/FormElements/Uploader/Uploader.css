@@ -26,8 +26,8 @@
   gap: 8px;
   border: 2px dashed var(--border-default);
   background-color: var(--bg-xlight);
-  border-radius: 6px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 24px;
   cursor: pointer;
 }
 
@@ -35,6 +35,12 @@
   flex-direction: row;
   padding: 8px;
   gap: 4px;
+}
+
+.bs-uploader--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .bs-uploader--button {
@@ -63,4 +69,4 @@
 
 .bs-uploader--input {
   display: none;
-} 
+}

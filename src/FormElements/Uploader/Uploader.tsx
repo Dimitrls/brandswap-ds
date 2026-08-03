@@ -20,12 +20,14 @@ export interface UploaderProps
   label?: React.ReactNode;
   onChange?: (file: File | undefined) => void;
   size?: 'default' | 'small';
+  disabled?: boolean;
 }
 
 export const Uploader = ({
   label = 'Upload file',
   onChange,
   size = 'default',
+  disabled = false,
   className,
   ...props
 }: UploaderProps) => {
@@ -34,12 +36,14 @@ export const Uploader = ({
   const isSmall = size === 'small';
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
     const next = e.target.files?.[0];
     setFileName(next ? next.name : '');
     onChange?.(next);
   };
 
   const handleButtonClick = () => {
+    if (disabled) return;
     inputRef.current?.click();
   };
 
@@ -52,6 +56,7 @@ export const Uploader = ({
   const inputRowClass = [
     styles['bs-uploader-input-row'],
     isSmall ? styles['bs-uploader-input-row--small'] : '',
+    disabled ? 'bs-uploader--disabled' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -76,6 +81,7 @@ export const Uploader = ({
           onClick={handleButtonClick}
           icon="upload"
           size={buttonSize}
+          disabled={disabled}
         />
         <span className={filenameClass}>{fileName || 'No file chosen'}</span>
         <input
@@ -84,6 +90,7 @@ export const Uploader = ({
           className={styles['bs-uploader-input']}
           onChange={handleFileChange}
           tabIndex={-1}
+          disabled={disabled}
         />
       </div>
     </div>

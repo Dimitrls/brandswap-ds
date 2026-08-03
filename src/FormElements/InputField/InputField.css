@@ -18,6 +18,13 @@
   outline: none;
 }
 
+.bs-input-field--inputDisabled,
+.bs-input-field--input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--bg2, #f0f0f0);
+}
+
 .bs-input-field--input::placeholder {
   color: var(--text-weak);
   opacity: 1;

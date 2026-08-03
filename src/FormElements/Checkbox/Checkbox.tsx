@@ -16,6 +16,7 @@ export interface CheckboxProps
   /** Called with the next checked state. */
   onChange: (checked: boolean) => void;
   inForm?: boolean;
+  disabled?: boolean;
 }
 
 export const Checkbox = ({
@@ -23,17 +24,25 @@ export const Checkbox = ({
   checked,
   onChange,
   inForm = false,
+  disabled = false,
   className,
   ...props
 }: CheckboxProps) => (
   <label
-    className={[inForm ? styles.wrapperInForm : styles.wrapper, className].filter(Boolean).join(' ')}
+    className={[
+      inForm ? styles.wrapperInForm : styles.wrapper,
+      disabled ? 'bs-checkbox--disabled' : '',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ')}
     {...props}
   >
     <input
       type="checkbox"
       className={styles.input}
       checked={checked}
+      disabled={disabled}
       onChange={(e) => onChange(e.target.checked)}
     />
     <span className={styles.custom} />

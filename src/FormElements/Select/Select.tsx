@@ -57,6 +57,7 @@ type SelectSharedProps<T> = Omit<
   optionVariant?: SelectOptionVariant;
   searchable?: boolean;
   searchPlaceholder?: string;
+  disabled?: boolean;
 };
 
 export type SelectSingleProps<T = string> = SelectSharedProps<T> & {
@@ -101,6 +102,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
     optionVariant = 'default',
     searchable = true,
     searchPlaceholder = 'Search...',
+    disabled = false,
     className,
     value,
     onChange,
@@ -188,6 +190,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
   };
 
   const handleSelect = (option: T) => {
+    if (disabled) return;
     if (multiple) {
       if (isSelected(option)) {
         emitChange(
@@ -203,6 +206,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
   };
 
   const handleRemove = (option: T) => {
+    if (disabled) return;
     emitChange(selectedValues.filter((item) => resolveKey(item) !== resolveKey(option)));
   };
 
@@ -278,6 +282,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
             checked={selected}
             onChange={() => handleSelect(option)}
             inForm={false}
+            disabled={disabled}
           />
         </li>
       );
@@ -296,6 +301,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
             onChange={() => handleSelect(option)}
             name={radioGroupName}
             value={String(optionKey)}
+            disabled={disabled}
           />
         </li>
       );
@@ -318,7 +324,13 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
 
   return (
     <div
-      className={[wrapperClass, className].filter(Boolean).join(' ')}
+      className={[
+        wrapperClass,
+        disabled ? 'bs-selectbox--disabled' : '',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       ref={ref}
       {...divProps}
     >
@@ -349,11 +361,14 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
         )}
         <div
           className={`${styles.select} ${getSelectSizeClass()}`}
-          onClick={() => setOpen(!open)}
-          tabIndex={0}
+          onClick={() => {
+            if (!disabled) setOpen(!open);
+          }}
+          tabIndex={disabled ? -1 : 0}
           role="combobox"
           aria-expanded={open}
           aria-haspopup="listbox"
+          aria-disabled={disabled || undefined}
           style={{
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
@@ -372,7 +387,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
           </span>
         </div>
       </div>
-      {open && (
+      {open && !disabled && (
         <div className={styles.dropdown} role="listbox">
           {searchable && (
             <div
