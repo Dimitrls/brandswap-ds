@@ -39,7 +39,7 @@ export interface MultiSelectboxFilter extends BaseFilterProps {
 
 export type FilterItem = SelectboxFilter | MultiSelectboxFilter;
 
-export interface FiltersBarProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface FiltersBarProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   children?: React.ReactNode;
   filters?: FilterItem[];
   className?: string;
@@ -65,6 +65,11 @@ export const FiltersBar = ({
   labels = true,
   ...props
 }: FiltersBarProps) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onApply?.();
+  };
+
   const renderFilter = (filter: FilterItem, index: number) => {
     if (filter.type === 'multiselectbox') {
       const { type: _type, selected, label, onChange, ...multiSelectProps } = filter;
@@ -95,11 +100,12 @@ export const FiltersBar = ({
   };
 
   return (
-    <div
+    <form
       className={[styles.filtersBar, labels && styles.filtersBarWithLabels, className]
         .filter(Boolean)
         .join(' ')}
       data-labels-enabled={labels ? 'true' : undefined}
+      onSubmit={handleSubmit}
       {...props}
     >
       {searchbox && (
@@ -122,13 +128,13 @@ export const FiltersBar = ({
       {onApply && (
         <div className={styles.filtersBar__button}>
           <Button
+            type="submit"
             variant="outline"
             size={labels ? 'large' : 'medium'}
             label={applyLabel}
-            onClick={onApply}
           />
         </div>
       )}
-    </div>
+    </form>
   );
 };
