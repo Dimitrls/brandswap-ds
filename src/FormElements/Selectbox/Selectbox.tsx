@@ -151,15 +151,19 @@ export function Selectbox<T = string>({
       </div>
       {open && !disabled && (
         <ul className={styles.dropdown}>
-          {options.map((option, idx) => (
-            <li
-              key={getOptionKey(option, idx)}
-              className={styles.option}
-              onClick={() => handleSelect(option)}
-            >
-              {getOptionLabel(option)}
-            </li>
-          ))}
+          {options.length === 0 ? (
+            <li className={styles.emptyState}>No data</li>
+          ) : (
+            options.map((option, idx) => (
+              <li
+                key={getOptionKey(option, idx)}
+                className={styles.option}
+                onClick={() => handleSelect(option)}
+              >
+                {getOptionLabel(option)}
+              </li>
+            ))
+          )}
         </ul>
       )}
     </div>

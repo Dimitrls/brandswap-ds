@@ -220,17 +220,25 @@ export function MultiSelectbox<T = string>({
       </div>
       {open && !disabled && (
         <ul className={styles.dropdown} style={{ maxHeight: 220, overflowY: 'auto' }}>
-          {options.map((option, idx) => (
-            <li key={resolveKey(option, idx)} className={styles.option} style={{ display: 'flex', alignItems: 'center' }}>
-              <Checkbox
-                label={getOptionLabel(option)}
-                checked={isSelected(option)}
-                onChange={() => handleToggle(option)}
-                inForm={false}
-                disabled={disabled}
-              />
-            </li>
-          ))}
+          {options.length === 0 ? (
+            <li className={styles.emptyState}>No data</li>
+          ) : (
+            options.map((option, idx) => (
+              <li
+                key={resolveKey(option, idx)}
+                className={styles.option}
+                style={{ display: 'flex', alignItems: 'center' }}
+              >
+                <Checkbox
+                  label={getOptionLabel(option)}
+                  checked={isSelected(option)}
+                  onChange={() => handleToggle(option)}
+                  inForm={false}
+                  disabled={disabled}
+                />
+              </li>
+            ))
+          )}
         </ul>
       )}
     </div>

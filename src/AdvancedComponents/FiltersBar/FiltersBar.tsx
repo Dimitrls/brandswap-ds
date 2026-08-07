@@ -23,6 +23,7 @@ interface BaseFilterProps {
   icon?: boolean;
   iconName?: IconName;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export interface SelectboxFilter extends BaseFilterProps {
@@ -44,9 +45,11 @@ export interface FiltersBarProps extends Omit<React.FormHTMLAttributes<HTMLFormE
   filters?: FilterItem[];
   className?: string;
   searchbox?: boolean;
+  hideSearch?: boolean;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   searchPlaceholder?: string;
+  searchDisabled?: boolean;
   onApply?: () => void;
   applyLabel?: string;
   labels?: boolean;
@@ -57,9 +60,11 @@ export const FiltersBar = ({
   filters,
   className,
   searchbox = false,
+  hideSearch = false,
   searchValue,
   onSearchChange,
   searchPlaceholder = 'Search...',
+  searchDisabled = false,
   onApply,
   applyLabel = 'Apply',
   labels = true,
@@ -69,6 +74,8 @@ export const FiltersBar = ({
     event.preventDefault();
     onApply?.();
   };
+
+  const showSearch = searchbox && !hideSearch;
 
   const renderFilter = (filter: FilterItem, index: number) => {
     if (filter.type === 'multiselectbox') {
@@ -108,7 +115,7 @@ export const FiltersBar = ({
       onSubmit={handleSubmit}
       {...props}
     >
-      {searchbox && (
+      {showSearch && (
         <div className={styles.filtersBar__searchbox}>
           <InputField
             type="text"
@@ -118,6 +125,7 @@ export const FiltersBar = ({
             size={labels ? 'large' : 'medium'}
             icon={true}
             iconName="search"
+            disabled={searchDisabled}
             style={{ width: '200px' }}
           />
         </div>

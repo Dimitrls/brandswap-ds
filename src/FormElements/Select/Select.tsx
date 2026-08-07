@@ -411,7 +411,9 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
           )}
           <ul className={styles.dropdownScroll} style={{ listStyle: 'none', margin: 0, padding: 0 }}>
             {filteredOptions.length === 0 ? (
-              <li className={styles.emptyState}>No results</li>
+              <li className={styles.emptyState}>
+                {options.length === 0 ? 'No data' : 'No results'}
+              </li>
             ) : (
               filteredOptions.map(renderOption)
             )}
