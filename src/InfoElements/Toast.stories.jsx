@@ -1,5 +1,6 @@
 import React from 'react';
-import { Toast } from './Toast';
+import { Toast, toast } from './Toast';
+import { Button } from '../Buttons/Button';
 
 export default {
   title: 'Info Elements/Toast',
@@ -17,7 +18,7 @@ export default {
   },
 };
 
-const Template = args => <Toast {...args} />;
+const Template = (args) => <Toast {...args} />;
 
 export const Success = Template.bind({});
 
@@ -45,3 +46,45 @@ Error.args = {
   dismissible: false,
 };
 
+export const ImperativeApi = () => (
+  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+    <Button
+      label="Success"
+      onClick={() => toast.success('Partnership updated successfully', 3)}
+    />
+    <Button
+      label="Error"
+      variant="outline-warning"
+      onClick={() => toast.error('Failed to load hosts', 3)}
+    />
+    <Button
+      label="Info / message"
+      variant="outline"
+      onClick={() => toast.message('Sync started', 2)}
+    />
+    <Button
+      label="Warning top-left"
+      variant="outline"
+      onClick={() =>
+        toast.warning({
+          message: 'Usage nearing limit',
+          position: 'top-left',
+          duration: 4,
+        })
+      }
+    />
+    <Button
+      label="Bottom-right"
+      variant="outline"
+      onClick={() =>
+        toast.open({
+          title: 'Saved',
+          message: 'Your changes were stored.',
+          variant: 'success',
+          position: 'bottom-right',
+          duration: 5,
+        })
+      }
+    />
+  </div>
+);

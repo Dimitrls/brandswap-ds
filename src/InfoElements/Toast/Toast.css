@@ -1,3 +1,63 @@
+.bs-toast--host {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.bs-toast--container {
+  position: fixed;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  pointer-events: none;
+  max-width: min(400px, calc(100vw - 32px));
+}
+
+.bs-toast--container--top-left {
+  top: 0;
+  left: 0;
+  align-items: flex-start;
+}
+
+.bs-toast--container--top-right {
+  top: 0;
+  right: 0;
+  align-items: flex-end;
+}
+
+.bs-toast--container--bottom-left {
+  bottom: 0;
+  left: 0;
+  align-items: flex-start;
+  flex-direction: column-reverse;
+}
+
+.bs-toast--container--bottom-right {
+  bottom: 0;
+  right: 0;
+  align-items: flex-end;
+  flex-direction: column-reverse;
+}
+
+.bs-toast--item {
+  pointer-events: auto;
+  animation: bs-toast-enter 0.2s ease-out;
+}
+
+@keyframes bs-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .bs-toast--toast {
   display: flex;
   align-items: flex-start;
@@ -101,4 +161,3 @@
 .bs-toast--toast--error {
   border-color: var(--warning);
 }
-

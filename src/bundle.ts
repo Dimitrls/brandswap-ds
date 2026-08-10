@@ -14,6 +14,7 @@ export { Pagination } from './Navigation/Pagination';
 export { Breadcrumbs } from './Navigation/Breadcrumbs';
 export { Tooltip } from './InfoElements/Tooltip';
 export { Toast } from './InfoElements/Toast';
+export { toast } from './InfoElements/Toast';
 export { AlertBanner } from './InfoElements/AlertBanner';
 export { Icon } from './Icons/Icon';
 export { Logo } from './Icons/Logo';

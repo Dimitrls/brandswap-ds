@@ -33,8 +33,14 @@ export type { BreadcrumbsProps, BreadcrumbItem } from './Navigation/Breadcrumbs'
 // Info Elements
 export { Tooltip } from './InfoElements/Tooltip';
 export type { TooltipProps } from './InfoElements/Tooltip';
-export { Toast } from './InfoElements/Toast';
-export type { ToastProps } from './InfoElements/Toast';
+export { Toast, toast } from './InfoElements/Toast';
+export type {
+  ToastProps,
+  ToastApi,
+  ToastConfigOptions,
+  ToastOpenOptions,
+  ToastPosition,
+} from './InfoElements/Toast';
 export { AlertBanner } from './InfoElements/AlertBanner';
 export type { AlertBannerProps } from './InfoElements/AlertBanner';
 
