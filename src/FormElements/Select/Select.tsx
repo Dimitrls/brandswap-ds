@@ -37,7 +37,7 @@ const styles: Record<string, string> = {
 
 export type SelectOptionVariant = 'default' | 'checkbox' | 'radio';
 
-type SelectSharedProps<T> = Omit<
+export type SelectSharedProps<T = string> = Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'onChange' | 'defaultValue'
 > & {

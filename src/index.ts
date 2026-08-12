@@ -66,6 +66,7 @@ export type {
   SelectProps,
   SelectSingleProps,
   SelectMultiProps,
+  SelectSharedProps,
   SelectOptionVariant,
 } from './FormElements/Select';
 export { RadioButton, RadioButtonGroup } from './FormElements/RadioButton';

@@ -3,5 +3,6 @@ export type {
   SelectProps,
   SelectSingleProps,
   SelectMultiProps,
+  SelectSharedProps,
   SelectOptionVariant,
 } from './Select';

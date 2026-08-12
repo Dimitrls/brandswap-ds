@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FiltersBar } from './FiltersBar';
-import { Selectbox } from '../FormElements/Selectbox';
+import { Select } from '../FormElements/Select';
 
 export default {
   title: 'Advanced components/FiltersBar',
@@ -13,10 +13,9 @@ export const Default = () => {
   const [status, setStatus] = useState('All Status');
   const [categories, setCategories] = useState([]);
   const [dateRange, setDateRange] = useState('All Dates');
-  
+
   const filters = [
     {
-      type: 'selectbox',
       options: ['All Status', 'Active', 'Inactive'],
       value: status,
       onChange: setStatus,
@@ -24,16 +23,15 @@ export const Default = () => {
       iconName: 'check',
     },
     {
-      type: 'multiselectbox',
+      multiple: true,
       options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
-      selected: categories,
+      value: categories,
       onChange: setCategories,
       placeholder: 'Select categories...',
       icon: true,
       iconName: 'coffee',
     },
     {
-      type: 'selectbox',
       options: ['All Dates', 'Today', 'This Week', 'This Month'],
       value: dateRange,
       onChange: setDateRange,
@@ -41,7 +39,7 @@ export const Default = () => {
       iconName: 'calendar',
     },
   ];
-  
+
   return (
     <FiltersBar
       labels={false}
@@ -62,15 +60,19 @@ export const WithoutSearchbox = () => {
       labels={false}
       onApply={() => console.log('Apply clicked')}
     >
-      <Selectbox
+      <Select
         options={['All Status', 'Active', 'Inactive']}
         icon={true}
         iconName="check"
+        searchable={false}
+        onChange={() => {}}
       />
-      <Selectbox
+      <Select
         options={['All Categories', 'Category 1', 'Category 2']}
         icon={true}
         iconName="coffee"
+        searchable={false}
+        onChange={() => {}}
       />
     </FiltersBar>
   );
@@ -81,10 +83,9 @@ export const WithLabels = () => {
   const [status, setStatus] = useState('All Status');
   const [categories, setCategories] = useState([]);
   const [dateRange, setDateRange] = useState('All Dates');
-  
+
   const filters = [
     {
-      type: 'selectbox',
       label: 'Status',
       options: ['All Status', 'Active', 'Inactive'],
       value: status,
@@ -93,17 +94,17 @@ export const WithLabels = () => {
       iconName: 'check',
     },
     {
-      type: 'multiselectbox',
+      multiple: true,
+      searchable: true,
       label: 'Categories',
       options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
-      selected: categories,
+      value: categories,
       onChange: setCategories,
       placeholder: 'Select categories...',
       icon: true,
       iconName: 'coffee',
     },
     {
-      type: 'selectbox',
       label: 'Date Range',
       options: ['All Dates', 'Today', 'This Week', 'This Month'],
       value: dateRange,
@@ -112,7 +113,7 @@ export const WithLabels = () => {
       iconName: 'calendar',
     },
   ];
-  
+
   return (
     <FiltersBar
       labels={true}

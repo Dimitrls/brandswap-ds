@@ -1,11 +1,14 @@
 import React from 'react';
 import './FiltersBar.css';
 
-import { IconName } from '../../Icons/Icon';
 import { InputField } from '../../FormElements/InputField';
 import { Button } from '../../Buttons/Button';
-import { Selectbox } from '../../FormElements/Selectbox';
-import { MultiSelectbox } from '../../FormElements/MultiSelectbox';
+import {
+  Select,
+  SelectMultiProps,
+  SelectSharedProps,
+  SelectSingleProps,
+} from '../../FormElements/Select';
 
 const styles: Record<string, string> = {
   filtersBar: "bs-filters-bar--filtersBar",
@@ -17,30 +20,23 @@ const styles: Record<string, string> = {
   bordered: "bs-filters-bar--bordered",
 };
 
-interface BaseFilterProps {
-  label?: string;
-  options: string[];
-  size?: 'small' | 'medium' | 'large';
-  icon?: boolean;
-  iconName?: IconName;
-  placeholder?: string;
-  disabled?: boolean;
-  dropdownMaxHeight?: number;
-}
+type FilterSelectFields<T> = Omit<
+  SelectSharedProps<T>,
+  keyof React.HTMLAttributes<HTMLDivElement> | 'inForm' | 'labelOnTop' | 'labelInside'
+> &
+  Pick<React.HTMLAttributes<HTMLDivElement>, 'className' | 'style'>;
 
-export interface SelectboxFilter extends BaseFilterProps {
-  type: 'selectbox';
-  value?: string;
-  onChange?: (value: string) => void;
-}
-
-export interface MultiSelectboxFilter extends BaseFilterProps {
-  type: 'multiselectbox';
-  selected?: string[];
-  onChange?: (selected: string[]) => void;
-}
-
-export type FilterItem = SelectboxFilter | MultiSelectboxFilter;
+export type FilterItem<T = string> =
+  | (FilterSelectFields<T> & {
+      multiple?: false;
+      value?: T | null;
+      onChange?: SelectSingleProps<T>['onChange'];
+    })
+  | (FilterSelectFields<T> & {
+      multiple: true;
+      value?: T[];
+      onChange?: SelectMultiProps<T>['onChange'];
+    });
 
 export interface FiltersBarProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   children?: React.ReactNode;
@@ -84,33 +80,32 @@ export const FiltersBar = ({
   const showSearch = searchbox && !hideSearch;
 
   const renderFilter = (filter: FilterItem, index: number) => {
-    if (filter.type === 'multiselectbox') {
-      const { type: _type, selected, label, onChange, dropdownMaxHeight: filterMaxHeight, ...multiSelectProps } = filter;
-      return (
-        <div key={index} data-filter-with-label={labels && label ? 'true' : undefined}>
-          <MultiSelectbox
-            selected={selected || []}
-            onChange={onChange ?? (() => {})}
-            {...(labels && label ? { label, labelInside: true } : {})}
-            {...multiSelectProps}
-            size={labels ? 'large' : 'medium'}
-            dropdownMaxHeight={filterMaxHeight ?? dropdownMaxHeight}
-          />
-        </div>
-      );
-    }
+    const { label, size, searchable = false, dropdownMaxHeight: filterMaxHeight } = filter;
+    const shared = {
+      ...(labels && label ? { label, labelInside: true as const } : {}),
+      size: size ?? (labels ? 'large' : 'medium'),
+      searchable,
+      dropdownMaxHeight: filterMaxHeight ?? dropdownMaxHeight,
+    };
 
-    const { type: _type, value, label, onChange, dropdownMaxHeight: filterMaxHeight, ...selectProps } = filter;
     return (
       <div key={index} data-filter-with-label={labels && label ? 'true' : undefined}>
-        <Selectbox
-          value={value}
-          onChange={onChange}
-          {...(labels && label ? { label, labelInside: true } : {})}
-          {...selectProps}
-          size={labels ? 'large' : 'medium'}
-          dropdownMaxHeight={filterMaxHeight ?? dropdownMaxHeight}
-        />
+        {filter.multiple === true ? (
+          <Select
+            {...filter}
+            {...shared}
+            multiple
+            optionVariant={filter.optionVariant ?? 'checkbox'}
+            onChange={filter.onChange ?? (() => {})}
+          />
+        ) : (
+          <Select
+            {...filter}
+            {...shared}
+            multiple={false}
+            onChange={filter.onChange ?? (() => {})}
+          />
+        )}
       </div>
     );
   };
