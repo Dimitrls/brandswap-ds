@@ -44,11 +44,13 @@
 .bs-filters-bar--filtersBarWithLabels
   .bs-filters-bar--filtersBar__filters
   [data-filter-with-label='true']
-  .bs-selectbox--select,
+  :not([role='listbox'])
+  > .bs-selectbox--select,
 [data-labels-enabled='true']
   .bs-filters-bar--filtersBar__filters
   [data-filter-with-label='true']
-  .bs-selectbox--select {
+  :not([role='listbox'])
+  > .bs-selectbox--select {
   height: 44px;
   padding: 4px 32px 4px 16px;
 }
