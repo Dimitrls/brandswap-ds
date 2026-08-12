@@ -4,7 +4,6 @@
   gap: 8px;
   padding: 4px;
   margin: 0;
-  background: var(--bg-default);
   border: 1px solid transparent;
   border-radius: 8px;
   width: fit-content;
@@ -28,31 +27,34 @@
   flex-shrink: 0;
   position: sticky;
   right: 0;
-  background: var(--bg-default);
   z-index: 1;
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -8px;
-    right: -4px;
-    height: 100%;
-    background: var(--bg-default);
-    z-index: -1;
-  }
 }
 
 /* Target labels inside select boxes when labels are enabled */
-.bs-filters-bar--filtersBarWithLabels .bs-filters-bar--filtersBar__filters :global(.bs-filters-bar--labelInside),
-[data-labels-enabled="true"] .bs-filters-bar--filtersBar__filters :global(.bs-filters-bar--labelInside) {
+.bs-filters-bar--filtersBarWithLabels
+  .bs-filters-bar--filtersBar__filters
+  :global(.bs-filters-bar--labelInside),
+[data-labels-enabled='true']
+  .bs-filters-bar--filtersBar__filters
+  :global(.bs-filters-bar--labelInside) {
   font-size: var(--font-body-small);
   display: block;
 }
 
 /* Fallback: Target the div inside selectWrapper (the select element) */
 /* This works because selectWrapper always contains exactly one direct child div (the select) */
-.bs-filters-bar--filtersBarWithLabels .bs-filters-bar--filtersBar__filters [data-filter-with-label="true"] > div > div:last-child > div,
-[data-labels-enabled="true"] .bs-filters-bar--filtersBar__filters [data-filter-with-label="true"] > div > div:last-child > div.selectLarge {
+.bs-filters-bar--filtersBarWithLabels
+  .bs-filters-bar--filtersBar__filters
+  [data-filter-with-label='true']
+  > div
+  > div:last-child
+  > div,
+[data-labels-enabled='true']
+  .bs-filters-bar--filtersBar__filters
+  [data-filter-with-label='true']
+  > div
+  > div:last-child
+  > div.selectLarge {
   height: 44px;
   padding: 4px 32px 4px 16px;
 }
