@@ -156,8 +156,8 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
 
   const filteredOptions = searchable
     ? options.filter((option) =>
-        getOptionLabel(option).toLowerCase().includes(search.toLowerCase())
-      )
+      getOptionLabel(option).toLowerCase().includes(search.toLowerCase())
+    )
     : options;
 
   const resolvedVariant: SelectOptionVariant =

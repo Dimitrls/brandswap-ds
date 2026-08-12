@@ -33,28 +33,22 @@
 /* Target labels inside select boxes when labels are enabled */
 .bs-filters-bar--filtersBarWithLabels
   .bs-filters-bar--filtersBar__filters
-  :global(.bs-filters-bar--labelInside),
+  .bs-selectbox--labelInside,
 [data-labels-enabled='true']
   .bs-filters-bar--filtersBar__filters
-  :global(.bs-filters-bar--labelInside) {
+  .bs-selectbox--labelInside {
   font-size: var(--font-body-small);
   display: block;
 }
 
-/* Fallback: Target the div inside selectWrapper (the select element) */
-/* This works because selectWrapper always contains exactly one direct child div (the select) */
 .bs-filters-bar--filtersBarWithLabels
   .bs-filters-bar--filtersBar__filters
   [data-filter-with-label='true']
-  > div
-  > div:last-child
-  > div,
+  .bs-selectbox--select,
 [data-labels-enabled='true']
   .bs-filters-bar--filtersBar__filters
   [data-filter-with-label='true']
-  > div
-  > div:last-child
-  > div.selectLarge {
+  .bs-selectbox--select {
   height: 44px;
   padding: 4px 32px 4px 16px;
 }
