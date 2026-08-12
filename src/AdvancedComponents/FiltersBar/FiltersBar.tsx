@@ -3,12 +3,7 @@ import './FiltersBar.css';
 
 import { InputField } from '../../FormElements/InputField';
 import { Button } from '../../Buttons/Button';
-import {
-  Select,
-  SelectMultiProps,
-  SelectSharedProps,
-  SelectSingleProps,
-} from '../../FormElements/Select';
+import { Select, SelectMultiProps, SelectSingleProps } from '../../FormElements/Select';
 
 const styles: Record<string, string> = {
   filtersBar: "bs-filters-bar--filtersBar",
@@ -20,23 +15,14 @@ const styles: Record<string, string> = {
   bordered: "bs-filters-bar--bordered",
 };
 
-type FilterSelectFields<T> = Omit<
-  SelectSharedProps<T>,
-  keyof React.HTMLAttributes<HTMLDivElement> | 'inForm' | 'labelOnTop' | 'labelInside'
-> &
-  Pick<React.HTMLAttributes<HTMLDivElement>, 'className' | 'style'>;
-
+/** Single select by default. Pass `multiple: true` for multi-select. */
 export type FilterItem<T = string> =
-  | (FilterSelectFields<T> & {
-      multiple?: false;
-      value?: T | null;
-      onChange?: SelectSingleProps<T>['onChange'];
-    })
-  | (FilterSelectFields<T> & {
-      multiple: true;
-      value?: T[];
-      onChange?: SelectMultiProps<T>['onChange'];
-    });
+  | (Omit<SelectSingleProps<T>, 'multiple'> & { multiple?: false })
+  | SelectMultiProps<T>;
+
+function isMultiFilter<T>(filter: FilterItem<T>): filter is SelectMultiProps<T> {
+  return filter.multiple === true;
+}
 
 export interface FiltersBarProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   children?: React.ReactNode;
@@ -90,20 +76,18 @@ export const FiltersBar = ({
 
     return (
       <div key={index} data-filter-with-label={labels && label ? 'true' : undefined}>
-        {filter.multiple === true ? (
+        {isMultiFilter(filter) ? (
           <Select
             {...filter}
             {...shared}
             multiple
             optionVariant={filter.optionVariant ?? 'checkbox'}
-            onChange={filter.onChange ?? (() => {})}
           />
         ) : (
           <Select
             {...filter}
             {...shared}
             multiple={false}
-            onChange={filter.onChange ?? (() => {})}
           />
         )}
       </div>
