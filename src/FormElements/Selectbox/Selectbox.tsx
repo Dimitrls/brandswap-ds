@@ -42,6 +42,7 @@ export interface SelectboxProps<T = string>
   iconName?: IconName;
   labelInside?: boolean;
   disabled?: boolean;
+  dropdownMaxHeight?: number;
 }
 
 export function Selectbox<T = string>({
@@ -56,6 +57,7 @@ export function Selectbox<T = string>({
   iconName = 'search',
   labelInside = false,
   disabled = false,
+  dropdownMaxHeight,
   className,
   ...props
 }: SelectboxProps<T>) {
@@ -150,7 +152,14 @@ export function Selectbox<T = string>({
         </div>
       </div>
       {open && !disabled && (
-        <ul className={styles.dropdown}>
+        <ul
+          className={styles.dropdown}
+          style={
+            dropdownMaxHeight != null
+              ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
+              : undefined
+          }
+        >
           {options.length === 0 ? (
             <li className={styles.emptyState}>No data</li>
           ) : (

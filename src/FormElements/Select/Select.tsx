@@ -58,6 +58,7 @@ type SelectSharedProps<T> = Omit<
   searchable?: boolean;
   searchPlaceholder?: string;
   disabled?: boolean;
+  dropdownMaxHeight?: number;
 };
 
 export type SelectSingleProps<T = string> = SelectSharedProps<T> & {
@@ -103,6 +104,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
     searchable = true,
     searchPlaceholder = 'Search...',
     disabled = false,
+    dropdownMaxHeight,
     className,
     value,
     onChange,
@@ -411,7 +413,17 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
               />
             </div>
           )}
-          <ul className={styles.dropdownScroll} style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+          <ul
+            className={styles.dropdownScroll}
+            style={{
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+              ...(dropdownMaxHeight != null
+                ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
+                : undefined),
+            }}
+          >
             {filteredOptions.length === 0 ? (
               <li className={styles.emptyState}>
                 {options.length === 0 ? 'No data' : 'No results'}

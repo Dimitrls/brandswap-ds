@@ -14,6 +14,7 @@ const styles: Record<string, string> = {
   filtersBar__button: "bs-filters-bar--filtersBar__button",
   filtersBarWithLabels: "bs-filters-bar--filtersBarWithLabels",
   labelInside: "bs-filters-bar--labelInside",
+  bordered: "bs-filters-bar--bordered",
 };
 
 interface BaseFilterProps {
@@ -24,6 +25,7 @@ interface BaseFilterProps {
   iconName?: IconName;
   placeholder?: string;
   disabled?: boolean;
+  dropdownMaxHeight?: number;
 }
 
 export interface SelectboxFilter extends BaseFilterProps {
@@ -53,6 +55,8 @@ export interface FiltersBarProps extends Omit<React.FormHTMLAttributes<HTMLFormE
   onApply?: () => void;
   applyLabel?: string;
   labels?: boolean;
+  border?: boolean;
+  dropdownMaxHeight?: number;
 }
 
 export const FiltersBar = ({
@@ -68,6 +72,8 @@ export const FiltersBar = ({
   onApply,
   applyLabel = 'Apply',
   labels = true,
+  border = false,
+  dropdownMaxHeight,
   ...props
 }: FiltersBarProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -79,7 +85,7 @@ export const FiltersBar = ({
 
   const renderFilter = (filter: FilterItem, index: number) => {
     if (filter.type === 'multiselectbox') {
-      const { type: _type, selected, label, onChange, ...multiSelectProps } = filter;
+      const { type: _type, selected, label, onChange, dropdownMaxHeight: filterMaxHeight, ...multiSelectProps } = filter;
       return (
         <div key={index} data-filter-with-label={labels && label ? 'true' : undefined}>
           <MultiSelectbox
@@ -88,12 +94,13 @@ export const FiltersBar = ({
             {...(labels && label ? { label, labelInside: true } : {})}
             {...multiSelectProps}
             size={labels ? 'large' : 'medium'}
+            dropdownMaxHeight={filterMaxHeight ?? dropdownMaxHeight}
           />
         </div>
       );
     }
 
-    const { type: _type, value, label, onChange, ...selectProps } = filter;
+    const { type: _type, value, label, onChange, dropdownMaxHeight: filterMaxHeight, ...selectProps } = filter;
     return (
       <div key={index} data-filter-with-label={labels && label ? 'true' : undefined}>
         <Selectbox
@@ -102,6 +109,7 @@ export const FiltersBar = ({
           {...(labels && label ? { label, labelInside: true } : {})}
           {...selectProps}
           size={labels ? 'large' : 'medium'}
+          dropdownMaxHeight={filterMaxHeight ?? dropdownMaxHeight}
         />
       </div>
     );
@@ -109,7 +117,12 @@ export const FiltersBar = ({
 
   return (
     <form
-      className={[styles.filtersBar, labels && styles.filtersBarWithLabels, className]
+      className={[
+        styles.filtersBar,
+        border && styles.bordered,
+        labels && styles.filtersBarWithLabels,
+        className,
+      ]
         .filter(Boolean)
         .join(' ')}
       data-labels-enabled={labels ? 'true' : undefined}

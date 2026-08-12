@@ -101,7 +101,9 @@
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
+  right: auto;
+  width: max-content;
+  min-width: 100%;
   background: #fff;
   font-size: var(--font-body);
   border-radius: 6px;
@@ -126,6 +128,7 @@
   align-items: center;
   transition: background 0.2s;
   box-sizing: border-box;
+  white-space: nowrap;
   &:hover {
     background: var(--primary-10, #3AB78F1a);
   }
@@ -210,6 +213,5 @@
 }
 
 .bs-selectbox--dropdownScroll {
-  max-height: 220px;
-  overflow-y: auto;
+  overflow-y: visible;
 }

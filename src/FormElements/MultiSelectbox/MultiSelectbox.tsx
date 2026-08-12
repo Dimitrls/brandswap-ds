@@ -48,6 +48,7 @@ export interface MultiSelectboxProps<T = string>
   iconName?: IconName;
   size?: 'small' | 'medium' | 'large';
   disabled?: boolean;
+  dropdownMaxHeight?: number;
 }
 
 export function MultiSelectbox<T = string>({
@@ -65,6 +66,7 @@ export function MultiSelectbox<T = string>({
   iconName = 'search',
   size = 'medium',
   disabled = false,
+  dropdownMaxHeight,
   className,
   ...props
 }: MultiSelectboxProps<T>) {
@@ -219,7 +221,14 @@ export function MultiSelectbox<T = string>({
         </div>
       </div>
       {open && !disabled && (
-        <ul className={styles.dropdown} style={{ maxHeight: 220, overflowY: 'auto' }}>
+        <ul
+          className={styles.dropdown}
+          style={
+            dropdownMaxHeight != null
+              ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
+              : undefined
+          }
+        >
           {options.length === 0 ? (
             <li className={styles.emptyState}>No data</li>
           ) : (

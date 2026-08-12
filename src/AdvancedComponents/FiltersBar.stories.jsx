@@ -116,6 +116,8 @@ export const WithLabels = () => {
   return (
     <FiltersBar
       labels={true}
+      border
+      dropdownMaxHeight={220}
       searchbox={true}
       searchValue={search}
       onSearchChange={setSearch}

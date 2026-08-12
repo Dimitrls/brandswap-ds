@@ -5,9 +5,13 @@
   padding: 4px;
   margin: 0;
   background: var(--bg-default);
-  border: 1px solid var(--border-default);
+  border: 1px solid transparent;
   border-radius: 8px;
   width: fit-content;
+}
+
+.bs-filters-bar--bordered {
+  border-color: var(--border-default);
 }
 
 .bs-filters-bar--filtersBar__searchbox {
