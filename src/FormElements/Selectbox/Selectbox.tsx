@@ -27,8 +27,6 @@ const styles: Record<string, string> = {
   emptyState: 'bs-selectbox--emptyState',
   optionSelected: 'bs-selectbox--optionSelected',
   dropdownScroll: 'bs-selectbox--dropdownScroll',
-  selectValue: 'bs-selectbox--selectValue',
-  sizer: 'bs-selectbox--sizer',
 };
 
 export interface SelectboxProps<T = string>
@@ -59,7 +57,6 @@ export function Selectbox<T = string>({
   labelInside = false,
   disabled = false,
   className,
-  style,
   ...props
 }: SelectboxProps<T>) {
   const [open, setOpen] = useState(false);
@@ -105,7 +102,6 @@ export function Selectbox<T = string>({
         .filter(Boolean)
         .join(' ')}
       ref={ref}
-      style={style}
       {...props}
     >
       {label && !labelInside && (
@@ -139,27 +135,15 @@ export function Selectbox<T = string>({
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
         >
-          <span className={styles.selectValue}>
-            {labelInside && label && (
-              <span
-                className="bs-selectbox--labelInside"
-                style={{ color: 'var(--text-muted)', marginRight: '6px' }}
-              >
-                {label}:
-              </span>
-            )}
-            {selected != null ? getOptionLabel(selected) : ''}
-          </span>
-          {(options.length > 0 ? options : [null]).map((option, idx) => (
+          {labelInside && label && (
             <span
-              key={option == null ? 'empty' : getOptionKey(option, idx)}
-              className={styles.sizer}
-              aria-hidden
+              className="bs-selectbox--labelInside"
+              style={{ color: 'var(--text-muted)', marginRight: '6px' }}
             >
-              {labelInside && label ? `${String(label)}: ` : ''}
-              {option == null ? 'No data' : getOptionLabel(option)}
+              {label}:
             </span>
-          ))}
+          )}
+          {selected != null ? getOptionLabel(selected) : ''}
           <span className={styles.arrow}>
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>

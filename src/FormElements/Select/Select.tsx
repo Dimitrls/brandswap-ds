@@ -33,8 +33,6 @@ const styles: Record<string, string> = {
   emptyState: 'bs-selectbox--emptyState',
   optionSelected: 'bs-selectbox--optionSelected',
   dropdownScroll: 'bs-selectbox--dropdownScroll',
-  selectValue: 'bs-selectbox--selectValue',
-  sizer: 'bs-selectbox--sizer',
 };
 
 export type SelectOptionVariant = 'default' | 'checkbox' | 'radio';
@@ -377,27 +375,15 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
         >
-          <span className={styles.selectValue}>
-            {labelInside && label && (
-              <span
-                className="bs-selectbox--labelInside"
-                style={{ color: 'var(--text-muted)', marginRight: '6px' }}
-              >
-                {label}:
-              </span>
-            )}
-            {displayValue}
-          </span>
-          {(options.length > 0 ? options : [null]).map((option, idx) => (
+          {labelInside && label && (
             <span
-              key={option == null ? 'empty' : resolveKey(option, idx)}
-              className={styles.sizer}
-              aria-hidden
+              className="bs-selectbox--labelInside"
+              style={{ color: 'var(--text-muted)', marginRight: '6px' }}
             >
-              {labelInside && label ? `${String(label)}: ` : ''}
-              {option == null ? placeholder : getOptionLabel(option)}
+              {label}:
             </span>
-          ))}
+          )}
+          {displayValue}
           <span className={styles.arrow}>
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>

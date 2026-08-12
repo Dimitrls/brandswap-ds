@@ -93,10 +93,11 @@ export const FiltersBar = ({
       );
     }
 
-    const { type: _type, value: _value, label, onChange, ...selectProps } = filter;
+    const { type: _type, value, label, onChange, ...selectProps } = filter;
     return (
       <div key={index} data-filter-with-label={labels && label ? 'true' : undefined}>
         <Selectbox
+          value={value}
           onChange={onChange}
           {...(labels && label ? { label, labelInside: true } : {})}
           {...selectProps}
