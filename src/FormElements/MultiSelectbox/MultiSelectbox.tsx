@@ -30,6 +30,8 @@ const styles: Record<string, string> = {
   emptyState: "bs-selectbox--emptyState",
   optionSelected: "bs-selectbox--optionSelected",
   dropdownScroll: "bs-selectbox--dropdownScroll",
+  selectValue: "bs-selectbox--selectValue",
+  sizer: "bs-selectbox--sizer",
 };
 
 export interface MultiSelectboxProps<T = string>
@@ -66,6 +68,7 @@ export function MultiSelectbox<T = string>({
   size = 'medium',
   disabled = false,
   className,
+  style,
   ...props
 }: MultiSelectboxProps<T>) {
   const [open, setOpen] = useState(false);
@@ -143,6 +146,7 @@ export function MultiSelectbox<T = string>({
         .filter(Boolean)
         .join(' ')}
       ref={ref}
+      style={style}
       {...props}
     >
       {!labelInside && labelOnTop ? (
@@ -181,38 +185,50 @@ export function MultiSelectbox<T = string>({
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
         >
-          {labelInside && label && (
-            <span className="bs-selectbox--labelInside" style={{ color: 'var(--text-muted)', marginRight: '6px' }}>
-              {label}:
-            </span>
-          )}
-          {selected.length === 0 ? (
-            <span className={styles.placeholder}>{placeholder}</span>
-          ) : (
-            <div
-              ref={tagsContainerRef}
-              style={{
-                display: 'flex',
-                flexWrap: 'nowrap',
-                gap: 6,
-                overflow: 'hidden',
-                minWidth: 0,
-                flex: 1,
-                alignItems: 'center',
-              }}
+          <span className={styles.selectValue}>
+            {labelInside && label && (
+              <span className="bs-selectbox--labelInside" style={{ color: 'var(--text-muted)', marginRight: '6px' }}>
+                {label}:
+              </span>
+            )}
+            {selected.length === 0 ? (
+              <span className={styles.placeholder}>{placeholder}</span>
+            ) : (
+              <div
+                ref={tagsContainerRef}
+                style={{
+                  display: 'flex',
+                  flexWrap: 'nowrap',
+                  gap: 6,
+                  overflow: 'hidden',
+                  minWidth: 0,
+                  flex: 1,
+                  alignItems: 'center',
+                }}
+              >
+                {selected.slice(0, visibleCount).map((option, index) => (
+                  <RemovableTag
+                    key={resolveKey(option, index)}
+                    label={getOptionLabel(option)}
+                    onRemove={() => handleRemove(option)}
+                  />
+                ))}
+                {visibleCount < selected.length && (
+                  <Tag label={`+${selected.length - visibleCount}`} variant="neutral" />
+                )}
+              </div>
+            )}
+          </span>
+          {(options.length > 0 ? options : [null]).map((option, idx) => (
+            <span
+              key={option == null ? 'empty' : resolveKey(option, idx)}
+              className={styles.sizer}
+              aria-hidden
             >
-              {selected.slice(0, visibleCount).map((option, index) => (
-                <RemovableTag
-                  key={resolveKey(option, index)}
-                  label={getOptionLabel(option)}
-                  onRemove={() => handleRemove(option)}
-                />
-              ))}
-              {visibleCount < selected.length && (
-                <Tag label={`+${selected.length - visibleCount}`} variant="neutral" />
-              )}
-            </div>
-          )}
+              {labelInside && label ? `${String(label)}: ` : ''}
+              {option == null ? 'No data' : getOptionLabel(option)}
+            </span>
+          ))}
           <span className={styles.arrow}>
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>

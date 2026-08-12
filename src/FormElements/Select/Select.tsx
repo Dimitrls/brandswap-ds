@@ -33,6 +33,8 @@ const styles: Record<string, string> = {
   emptyState: 'bs-selectbox--emptyState',
   optionSelected: 'bs-selectbox--optionSelected',
   dropdownScroll: 'bs-selectbox--dropdownScroll',
+  selectValue: 'bs-selectbox--selectValue',
+  sizer: 'bs-selectbox--sizer',
 };
 
 export type SelectOptionVariant = 'default' | 'checkbox' | 'radio';
@@ -107,6 +109,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
     value,
     onChange,
     multiple: _multiple,
+    style,
     ...divProps
   } = props;
 
@@ -332,6 +335,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
         .filter(Boolean)
         .join(' ')}
       ref={ref}
+      style={style}
       {...divProps}
     >
       {!labelInside && labelOnTop ? (
@@ -373,15 +377,27 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
             ...(icon && { paddingLeft: size === 'small' ? 36 : size === 'large' ? 44 : 40 }),
           }}
         >
-          {labelInside && label && (
+          <span className={styles.selectValue}>
+            {labelInside && label && (
+              <span
+                className="bs-selectbox--labelInside"
+                style={{ color: 'var(--text-muted)', marginRight: '6px' }}
+              >
+                {label}:
+              </span>
+            )}
+            {displayValue}
+          </span>
+          {(options.length > 0 ? options : [null]).map((option, idx) => (
             <span
-              className="bs-selectbox--labelInside"
-              style={{ color: 'var(--text-muted)', marginRight: '6px' }}
+              key={option == null ? 'empty' : resolveKey(option, idx)}
+              className={styles.sizer}
+              aria-hidden
             >
-              {label}:
+              {labelInside && label ? `${String(label)}: ` : ''}
+              {option == null ? placeholder : getOptionLabel(option)}
             </span>
-          )}
-          {displayValue}
+          ))}
           <span className={styles.arrow}>
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>
