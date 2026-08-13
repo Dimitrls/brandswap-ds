@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { FiltersBar } from './FiltersBar';
-import { Select } from '../FormElements/Select';
+import React, { useState } from 'react'
+import { FiltersBar } from './FiltersBar'
+import { Select } from '../FormElements/Select'
 
 export default {
   title: 'Advanced components/FiltersBar',
   component: FiltersBar,
-  tags: ['autodocs'],
-};
+  tags: ['autodocs']
+}
 
 export const Default = () => {
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('All Status');
-  const [categories, setCategories] = useState([]);
-  const [dateRange, setDateRange] = useState('All Dates');
+  const [search, setSearch] = useState('')
+  const [status, setStatus] = useState('All Status')
+  const [categories, setCategories] = useState([])
+  const [dateRange, setDateRange] = useState('All Dates')
 
   const filters = [
     {
@@ -20,7 +20,7 @@ export const Default = () => {
       value: status,
       onChange: setStatus,
       icon: true,
-      iconName: 'check',
+      iconName: 'check'
     },
     {
       multiple: true,
@@ -29,16 +29,52 @@ export const Default = () => {
       onChange: setCategories,
       placeholder: 'Select categories...',
       icon: true,
-      iconName: 'coffee',
+      iconName: 'coffee'
+    },
+    {
+      multiple: true,
+      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
+      value: categories,
+      onChange: setCategories,
+      placeholder: 'Select categories...',
+      icon: true,
+      iconName: 'coffee'
+    },
+    {
+      multiple: true,
+      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
+      value: categories,
+      onChange: setCategories,
+      placeholder: 'Select categories...',
+      icon: true,
+      iconName: 'coffee'
+    },
+    {
+      multiple: true,
+      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
+      value: categories,
+      onChange: setCategories,
+      placeholder: 'Select categories...',
+      icon: true,
+      iconName: 'coffee'
+    },
+    {
+      multiple: true,
+      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
+      value: categories,
+      onChange: setCategories,
+      placeholder: 'Select categories...',
+      icon: true,
+      iconName: 'coffee'
     },
     {
       options: ['All Dates', 'Today', 'This Week', 'This Month'],
       value: dateRange,
       onChange: setDateRange,
       icon: true,
-      iconName: 'calendar',
-    },
-  ];
+      iconName: 'calendar'
+    }
+  ]
 
   return (
     <FiltersBar
@@ -46,43 +82,42 @@ export const Default = () => {
       searchbox={true}
       searchValue={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search..."
+      searchPlaceholder='Search...'
       filters={filters}
-      onApply={() => console.log('Apply clicked', { status, categories, dateRange })}
-      applyLabel="Apply"
+      onApply={() =>
+        console.log('Apply clicked', { status, categories, dateRange })
+      }
+      applyLabel='Apply'
     />
-  );
-};
+  )
+}
 
 export const WithoutSearchbox = () => {
   return (
-    <FiltersBar
-      labels={false}
-      onApply={() => console.log('Apply clicked')}
-    >
+    <FiltersBar labels={false} onApply={() => console.log('Apply clicked')}>
       <Select
         options={['All Status', 'Active', 'Inactive']}
         icon={true}
-        iconName="check"
+        iconName='check'
         searchable={false}
         onChange={() => {}}
       />
       <Select
         options={['All Categories', 'Category 1', 'Category 2']}
         icon={true}
-        iconName="coffee"
+        iconName='coffee'
         searchable={false}
         onChange={() => {}}
       />
     </FiltersBar>
-  );
-};
+  )
+}
 
 export const WithLabels = () => {
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('All Status');
-  const [categories, setCategories] = useState([]);
-  const [dateRange, setDateRange] = useState('All Dates');
+  const [search, setSearch] = useState('')
+  const [status, setStatus] = useState('All Status')
+  const [categories, setCategories] = useState([])
+  const [dateRange, setDateRange] = useState('All Dates')
 
   const filters = [
     {
@@ -91,7 +126,7 @@ export const WithLabels = () => {
       value: status,
       onChange: setStatus,
       icon: true,
-      iconName: 'check',
+      iconName: 'check'
     },
     {
       multiple: true,
@@ -102,7 +137,7 @@ export const WithLabels = () => {
       onChange: setCategories,
       placeholder: 'Select categories...',
       icon: true,
-      iconName: 'coffee',
+      iconName: 'coffee'
     },
     {
       label: 'Date Range',
@@ -110,9 +145,9 @@ export const WithLabels = () => {
       value: dateRange,
       onChange: setDateRange,
       icon: true,
-      iconName: 'calendar',
-    },
-  ];
+      iconName: 'calendar'
+    }
+  ]
 
   return (
     <FiltersBar
@@ -122,10 +157,12 @@ export const WithLabels = () => {
       searchbox={true}
       searchValue={search}
       onSearchChange={setSearch}
-      searchPlaceholder="Search..."
+      searchPlaceholder='Search...'
       filters={filters}
-      onApply={() => console.log('Apply clicked', { status, categories, dateRange })}
-      applyLabel="Apply"
+      onApply={() =>
+        console.log('Apply clicked', { status, categories, dateRange })
+      }
+      applyLabel='Apply'
     />
-  );
-};
+  )
+}
