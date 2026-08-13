@@ -16,8 +16,9 @@
   border-color: var(--border-default);
 }
 
-/* Flatten so each filter (and children inputs) participates in the parent wrap layout */
-.bs-filters-bar--filtersBar__filters {
+/* Flatten so each filter / action / child participates in the parent wrap layout */
+.bs-filters-bar--filtersBar__filters,
+.bs-filters-bar--filtersBar__actions {
   display: contents;
 }
 

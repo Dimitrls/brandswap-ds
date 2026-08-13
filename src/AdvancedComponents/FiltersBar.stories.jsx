@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { FiltersBar } from './FiltersBar'
 import { Select } from '../FormElements/Select'
+import { Button } from '../Buttons/Button'
 
 export default {
   title: 'Advanced components/FiltersBar',
@@ -21,42 +22,6 @@ export const Default = () => {
       onChange: setStatus,
       icon: true,
       iconName: 'check'
-    },
-    {
-      multiple: true,
-      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
-      value: categories,
-      onChange: setCategories,
-      placeholder: 'Select categories...',
-      icon: true,
-      iconName: 'coffee'
-    },
-    {
-      multiple: true,
-      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
-      value: categories,
-      onChange: setCategories,
-      placeholder: 'Select categories...',
-      icon: true,
-      iconName: 'coffee'
-    },
-    {
-      multiple: true,
-      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
-      value: categories,
-      onChange: setCategories,
-      placeholder: 'Select categories...',
-      icon: true,
-      iconName: 'coffee'
-    },
-    {
-      multiple: true,
-      options: ['Category 1', 'Category 2', 'Category 3', 'Category 4'],
-      value: categories,
-      onChange: setCategories,
-      placeholder: 'Select categories...',
-      icon: true,
-      iconName: 'coffee'
     },
     {
       multiple: true,
@@ -163,6 +128,69 @@ export const WithLabels = () => {
         console.log('Apply clicked', { status, categories, dateRange })
       }
       applyLabel='Apply'
+    />
+  )
+}
+
+export const WithActionSlots = () => {
+  const [status, setStatus] = useState('All Status')
+  const [loading, setLoading] = useState(false)
+
+  const handleRefresh = async () => {
+    setLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    console.log('Refresh finished')
+    setLoading(false)
+  }
+
+  return (
+    <FiltersBar
+      labels
+      border
+      filters={[
+        {
+          label: 'Status',
+          options: ['All Status', 'Active', 'Inactive'],
+          value: status,
+          onChange: (value) => value && setStatus(value),
+          icon: true,
+          iconName: 'check'
+        }
+      ]}
+      onApply={() => console.log('Apply', status)}
+      startActions={
+        <Button
+          variant='subtle'
+          size='large'
+          label='Reset'
+          onClick={() => setStatus('All Status')}
+        />
+      }
+      beforeApply={
+        <Button
+          variant='outline'
+          size='large'
+          label='Preview'
+          onClick={() => console.log('Preview', status)}
+        />
+      }
+      afterApply={
+        <>
+          <Button
+            variant='outline'
+            size='large'
+            label={loading ? 'Refreshing...' : 'Refresh'}
+            onClick={handleRefresh}
+            disabled={loading}
+          />
+          <Button
+            variant='outline'
+            size='large'
+            label='Generate'
+            onClick={() => console.log('Generate')}
+          />
+        </>
+      }
     />
   )
 }

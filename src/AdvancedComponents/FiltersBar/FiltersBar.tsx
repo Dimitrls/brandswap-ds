@@ -6,13 +6,13 @@ import { Button } from '../../Buttons/Button';
 import { Select, SelectMultiProps, SelectSingleProps } from '../../FormElements/Select';
 
 const styles: Record<string, string> = {
-  filtersBar: "bs-filters-bar--filtersBar",
-  filtersBar__searchbox: "bs-filters-bar--filtersBar__searchbox",
-  filtersBar__filters: "bs-filters-bar--filtersBar__filters",
-  filtersBar__button: "bs-filters-bar--filtersBar__button",
-  filtersBarWithLabels: "bs-filters-bar--filtersBarWithLabels",
-  labelInside: "bs-filters-bar--labelInside",
-  bordered: "bs-filters-bar--bordered",
+  filtersBar: 'bs-filters-bar--filtersBar',
+  filtersBar__searchbox: 'bs-filters-bar--filtersBar__searchbox',
+  filtersBar__filters: 'bs-filters-bar--filtersBar__filters',
+  filtersBar__actions: 'bs-filters-bar--filtersBar__actions',
+  filtersBar__button: 'bs-filters-bar--filtersBar__button',
+  filtersBarWithLabels: 'bs-filters-bar--filtersBarWithLabels',
+  bordered: 'bs-filters-bar--bordered',
 };
 
 /** Single select by default. Pass `multiple: true` for multi-select. */
@@ -24,7 +24,12 @@ function isMultiFilter<T>(filter: FilterItem<T>): filter is SelectMultiProps<T> 
   return filter.multiple === true;
 }
 
-export interface FiltersBarProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+export interface FiltersBarProps
+  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+  /**
+   * Extra filter controls rendered after `filters` (or alone when `filters` is omitted).
+   * Use for custom inputs; for action buttons prefer the action slots below.
+   */
   children?: React.ReactNode;
   filters?: FilterItem[];
   className?: string;
@@ -39,7 +44,29 @@ export interface FiltersBarProps extends Omit<React.FormHTMLAttributes<HTMLFormE
   labels?: boolean;
   border?: boolean;
   dropdownMaxHeight?: number;
+  /**
+   * Arbitrary JSX (e.g. `<Button onClick={...} />`) rendered at the start of the bar,
+   * before search and filters. Event handlers stay on the elements you pass.
+   */
+  startActions?: React.ReactNode;
+  /**
+   * Arbitrary JSX rendered after filters / children and before the Apply button.
+   */
+  beforeApply?: React.ReactNode;
+  /**
+   * Arbitrary JSX rendered after the Apply button (or after filters when Apply is hidden).
+   */
+  afterApply?: React.ReactNode;
 }
+
+const renderActions = (content: React.ReactNode, slot: string) => {
+  if (content == null || content === false) return null;
+  return (
+    <div className={styles.filtersBar__actions} data-slot={slot}>
+      {content}
+    </div>
+  );
+};
 
 export const FiltersBar = ({
   children,
@@ -56,6 +83,9 @@ export const FiltersBar = ({
   labels = true,
   border = false,
   dropdownMaxHeight,
+  startActions,
+  beforeApply,
+  afterApply,
   ...props
 }: FiltersBarProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -84,11 +114,7 @@ export const FiltersBar = ({
             optionVariant={filter.optionVariant ?? 'checkbox'}
           />
         ) : (
-          <Select
-            {...filter}
-            {...shared}
-            multiple={false}
-          />
+          <Select {...filter} {...shared} multiple={false} />
         )}
       </div>
     );
@@ -108,6 +134,8 @@ export const FiltersBar = ({
       onSubmit={handleSubmit}
       {...props}
     >
+      {renderActions(startActions, 'start')}
+
       {showSearch && (
         <div className={styles.filtersBar__searchbox}>
           <InputField
@@ -123,9 +151,14 @@ export const FiltersBar = ({
           />
         </div>
       )}
+
       <div className={styles.filtersBar__filters}>
-        {filters ? filters.map(renderFilter) : children}
+        {filters?.map(renderFilter)}
+        {children}
       </div>
+
+      {renderActions(beforeApply, 'before-apply')}
+
       {onApply && (
         <div className={styles.filtersBar__button}>
           <Button
@@ -136,6 +169,8 @@ export const FiltersBar = ({
           />
         </div>
       )}
+
+      {renderActions(afterApply, 'after-apply')}
     </form>
   );
 };
