@@ -28,3 +28,24 @@ export const WithoutIcons = () => {
   return <Tabs options={options} value={value} onChange={setValue} />;
 };
 
+export const WithSeparatedTabs = () => {
+  const [value, setValue] = useState('details');
+  const options = [
+    { label: 'Details', value: 'details' },
+    { label: 'Content', value: 'content' },
+    { label: 'Targeting', value: 'targeting' },
+    { label: 'Vouchers', value: 'vouchers' },
+  ];
+  const separatedOptions = [
+    { label: 'Booster', value: 'booster' },
+  ];
+  return (
+    <Tabs
+      options={options}
+      separatedOptions={separatedOptions}
+      value={value}
+      onChange={setValue}
+    />
+  );
+};
+
