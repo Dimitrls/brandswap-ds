@@ -19,6 +19,32 @@ export type { BodyTextProps } from './Typography/BodyText';
 // Tables
 export { Table } from './Tables/Table';
 export type { TableProps } from './Tables/Table';
+export { DataTable, DataTableModal } from './Tables/DataTable';
+export type {
+  DataTableProps,
+  DataTableColumn,
+  DataTableColumnFilter,
+  DataTableCellContext,
+  DataTableFilterContext,
+  DataTableSortState,
+  DataTableSortDirection,
+  DataTableRowId,
+  DataTableAlign,
+  DataTableFilterType,
+  DataTableVariant,
+  DataTableSelectionConfig,
+  DataTableExpandableConfig,
+  DataTablePaginationConfig,
+  DataTableSortingConfig,
+  DataTableFilteringConfig,
+  DataTableAddItemConfig,
+  DataTableActionsConfig,
+  DataTableBulkActionsContext,
+  DataTableBulkActionsConfig,
+  DataTableFooterConfig,
+  DataTableFooterContext,
+  DataTableModalProps,
+} from './Tables/DataTable';
 
 // Navigation
 export { Tabs } from './Navigation/Tabs';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './Checkbox.css';
 
 const styles: Record<string, string> = {
@@ -17,6 +17,10 @@ export interface CheckboxProps
   onChange: (checked: boolean) => void;
   inForm?: boolean;
   disabled?: boolean;
+  /** Visual mixed state for select-all. Native `indeterminate` on the input. */
+  indeterminate?: boolean;
+  /** Keep the accessible label but hide it visually (e.g. table selection). */
+  hideLabel?: boolean;
 }
 
 export const Checkbox = ({
@@ -25,27 +29,41 @@ export const Checkbox = ({
   onChange,
   inForm = false,
   disabled = false,
+  indeterminate = false,
+  hideLabel = false,
   className,
   ...props
-}: CheckboxProps) => (
-  <label
-    className={[
-      inForm ? styles.wrapperInForm : styles.wrapper,
-      disabled ? 'bs-checkbox--disabled' : '',
-      className,
-    ]
-      .filter(Boolean)
-      .join(' ')}
-    {...props}
-  >
-    <input
-      type="checkbox"
-      className={styles.input}
-      checked={checked}
-      disabled={disabled}
-      onChange={(e) => onChange(e.target.checked)}
-    />
-    <span className={styles.custom} />
-    <span className={styles.label}>{label}</span>
-  </label>
-);
+}: CheckboxProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.indeterminate = Boolean(indeterminate);
+    }
+  }, [indeterminate]);
+
+  return (
+    <label
+      className={[
+        inForm ? styles.wrapperInForm : styles.wrapper,
+        disabled ? 'bs-checkbox--disabled' : '',
+        hideLabel ? 'bs-checkbox--noLabel' : '',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      {...props}
+    >
+      <input
+        ref={inputRef}
+        type="checkbox"
+        className={styles.input}
+        checked={checked}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      <span className={styles.custom} />
+      <span className={styles.label}>{label}</span>
+    </label>
+  );
+};

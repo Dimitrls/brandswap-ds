@@ -1,0 +1,55 @@
+.bs-data-table-modal--overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--black-50, rgba(22, 22, 22, 0.5));
+}
+
+.bs-data-table-modal--dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(960px, 100%);
+  max-height: min(80vh, 800px);
+  background: var(--bg-default);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.bs-data-table-modal--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.bs-data-table-modal--header h3 {
+  margin: 0;
+}
+
+.bs-data-table-modal--body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  padding: 8px 20px 0;
+}
+
+.bs-data-table-modal--body > .bs-data-table {
+  flex: 1;
+  min-height: 0;
+}
+
+.bs-data-table-modal--body > .bs-data-table > .bs-data-table--scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}

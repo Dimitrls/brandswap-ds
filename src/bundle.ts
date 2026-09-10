@@ -8,6 +8,8 @@ export { Button, IconButton, FloatingButton, Tag, RemovableTag } from './Buttons
 export { Heading } from './Typography/Heading';
 export { BodyText } from './Typography/BodyText';
 export { Table } from './Tables/Table';
+export { DataTable } from './Tables/DataTable';
+export { DataTableModal } from './Tables/DataTable';
 export { Tabs } from './Navigation/Tabs';
 export { TabsSecondary } from './Navigation/TabsSecondary';
 export { Pagination } from './Navigation/Pagination';
