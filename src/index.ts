@@ -19,31 +19,26 @@ export type { BodyTextProps } from './Typography/BodyText';
 // Tables
 export { Table } from './Tables/Table';
 export type { TableProps } from './Tables/Table';
-export { DataTable, DataTableModal } from './Tables/DataTable';
+export { DataTable } from './Tables/DataTable';
 export type {
   DataTableProps,
   DataTableColumn,
-  DataTableColumnFilter,
   DataTableCellContext,
-  DataTableFilterContext,
   DataTableSortState,
   DataTableSortDirection,
   DataTableRowId,
   DataTableAlign,
-  DataTableFilterType,
-  DataTableVariant,
+  DataTableFixed,
+  DataTableMode,
+  DataTableFilters,
   DataTableSelectionConfig,
   DataTableExpandableConfig,
   DataTablePaginationConfig,
-  DataTableSortingConfig,
-  DataTableFilteringConfig,
-  DataTableAddItemConfig,
-  DataTableActionsConfig,
   DataTableBulkActionsContext,
-  DataTableBulkActionsConfig,
-  DataTableFooterConfig,
-  DataTableFooterContext,
-  DataTableModalProps,
+  DataTableScrollConfig,
+  DataTableHoverActionsPosition,
+  DataTableSummaryContext,
+  DataTableTotalRow,
 } from './Tables/DataTable';
 
 // Navigation
