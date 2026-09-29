@@ -1,0 +1,410 @@
+.bs-grid-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  font-family: var(--bs-font-family, 'Poppins', sans-serif);
+  color: var(--text-default, #161616);
+  position: relative;
+}
+
+.bs-grid-table--toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.bs-grid-table--toolbarStart,
+.bs-grid-table--toolbarEnd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.bs-grid-table--search {
+  width: 220px;
+  max-width: 100%;
+}
+
+.bs-grid-table--pageSize {
+  width: 108px;
+}
+
+.bs-grid-table--body {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.bs-grid-table--scroll {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: auto;
+}
+
+.bs-grid-table--scroll.bs-grid-table--sticky {
+  overflow: auto;
+}
+
+.bs-grid-table--table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  font-family: inherit;
+  table-layout: auto;
+}
+
+.bs-grid-table--col {
+  width: var(--bs-grid-col-width, auto);
+  min-width: var(--bs-grid-col-min-width, 72px);
+}
+
+.bs-grid-table--colFlex {
+  width: auto;
+}
+
+.bs-grid-table--table th,
+.bs-grid-table--table td {
+  box-sizing: border-box;
+  vertical-align: middle;
+  min-width: 72px;
+  white-space: nowrap;
+}
+
+.bs-grid-table--table thead th {
+  position: relative;
+  height: auto;
+  min-height: 40px;
+  padding: 12px 16px;
+  font-size: var(--font-h6, 14px);
+  font-weight: var(--font-weight-bold, 600);
+  line-height: 16px;
+  color: var(--text-default, #161616);
+  text-align: left;
+  user-select: none;
+  border-bottom: 1px solid var(--border-default, #d3d5dd);
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--table tbody td {
+  height: auto;
+  min-height: 48px;
+  padding: 8px 16px;
+  font-size: var(--font-body, 14px);
+  font-weight: var(--font-weight-regular, 400);
+  line-height: 20px;
+  color: var(--text-default, #161616);
+  border-bottom: 1px solid var(--border-default, #d3d5dd);
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--density-compact .bs-grid-table--table tbody td {
+  min-height: 36px;
+  padding: 4px 12px;
+}
+
+.bs-grid-table--density-compact .bs-grid-table--table thead th {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.bs-grid-table--density-media .bs-grid-table--table tbody td {
+  min-height: 70px;
+  height: 70px;
+}
+
+.bs-grid-table--table tbody tr:hover td {
+  background: var(--black-03, rgba(22, 22, 22, 0.03));
+}
+
+.bs-grid-table--table tbody tr.bs-grid-table--expandedRow:hover td,
+.bs-grid-table--table tbody tr.bs-grid-table--emptyRow:hover td {
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--clickable {
+  cursor: pointer;
+}
+
+.bs-grid-table--rowMuted {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.bs-grid-table--selected td {
+  background: var(--primary-10, #3ab78f1a);
+}
+
+.bs-grid-table--table tbody tr.bs-grid-table--selected:hover td {
+  background: var(--primary-10, #3ab78f1a);
+}
+
+.bs-grid-table--headerInner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 16px;
+}
+
+.bs-grid-table--headerLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bs-grid-table--alignLeft {
+  text-align: left;
+}
+
+.bs-grid-table--alignCenter {
+  text-align: center;
+}
+
+.bs-grid-table--alignCenter .bs-grid-table--headerInner {
+  justify-content: center;
+}
+
+.bs-grid-table--alignRight {
+  text-align: right;
+}
+
+.bs-grid-table--alignRight .bs-grid-table--headerInner {
+  justify-content: flex-end;
+}
+
+.bs-grid-table--sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--font-weight-bold, 600);
+  font-size: var(--font-h6, 14px);
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.bs-grid-table--sortActive,
+.bs-grid-table--sortActive .bs-grid-table--sortButton {
+  color: var(--primary, #3ab78f);
+}
+
+.bs-grid-table--sortButton:focus-visible,
+.bs-grid-table--iconBtn:focus-visible {
+  outline: 2px solid var(--primary, #3ab78f);
+  outline-offset: 2px;
+}
+
+.bs-grid-table--sortIcon {
+  display: inline-flex;
+  color: var(--text-weak, #a0a2a7);
+}
+
+.bs-grid-table--sortIconActive {
+  color: var(--primary, #3ab78f);
+}
+
+.bs-grid-table--iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted, #77787e);
+  cursor: pointer;
+}
+
+.bs-grid-table--iconBtnActive {
+  color: var(--primary, #3ab78f);
+}
+
+.bs-grid-table--filterPopover {
+  position: absolute;
+  top: calc(100% - 4px);
+  left: 16px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+  padding: 8px;
+  background: var(--bg-default, #ffffff);
+  border: 1px solid var(--border-default, #d3d5dd);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.bs-grid-table--alignRight .bs-grid-table--filterPopover {
+  left: auto;
+  right: 16px;
+}
+
+.bs-grid-table--selectCol,
+.bs-grid-table--expandCol,
+.bs-grid-table--actionsCol {
+  width: 1px;
+}
+
+/* Selectors below are (0,2,2) so they beat the base cell and density padding / min-width rules. */
+.bs-grid-table--table tr > th.bs-grid-table--selectCol,
+.bs-grid-table--table tr > td.bs-grid-table--selectCol,
+.bs-grid-table--table tr > th.bs-grid-table--expandCol,
+.bs-grid-table--table tr > td.bs-grid-table--expandCol,
+.bs-grid-table--table tr > th.bs-grid-table--actionsCol,
+.bs-grid-table--table tr > td.bs-grid-table--actionsCol {
+  min-width: 0;
+}
+
+.bs-grid-table--table tr > th.bs-grid-table--expandCol,
+.bs-grid-table--table tr > td.bs-grid-table--expandCol {
+  padding-right: 4px;
+}
+
+.bs-grid-table--table tr > th.bs-grid-table--selectCol,
+.bs-grid-table--table tr > td.bs-grid-table--selectCol {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.bs-grid-table--table tr > th.bs-grid-table--actionsCol,
+.bs-grid-table--table tr > td.bs-grid-table--actionsCol {
+  text-align: right;
+}
+
+.bs-grid-table--table tr > th:first-child,
+.bs-grid-table--table tr > td:first-child {
+  padding-left: 16px;
+}
+
+.bs-grid-table--selectCol .bs-checkbox--wrapper {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.bs-grid-table--actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.bs-grid-table--table td.bs-grid-table--cellWrap {
+  min-width: 160px;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.bs-grid-table--table tr > td.bs-grid-table--expandedCell {
+  white-space: normal;
+  height: auto;
+  min-height: 0;
+  padding: 8px 16px 16px 48px;
+  border-bottom: 1px solid var(--border-default, #d3d5dd);
+  overflow: visible;
+}
+
+.bs-grid-table--expandedCell .bs-grid-table {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  background: var(--bg-xxlight);
+  border-radius: 8px;
+  padding: 4px 12px 8px;
+}
+
+.bs-grid-table--expandedCell .bs-grid-table--table {
+  min-width: 100%;
+}
+
+.bs-grid-table--summary td {
+  height: auto;
+  min-height: 48px;
+  padding: 12px 16px;
+  font-size: var(--font-body, 14px);
+  font-weight: var(--font-weight-bold, 600);
+  line-height: 20px;
+  color: var(--text-default, #161616);
+  border-top: 1px solid var(--border-default, #d3d5dd);
+  background: var(--bg-xxlight, #f5f5f5);
+}
+
+.bs-grid-table--table tr.bs-grid-table--emptyRow td {
+  height: 72px;
+  text-align: center;
+  color: var(--text-muted, #77787e);
+  border-bottom: none;
+}
+
+.bs-grid-table--overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white-75, rgba(255, 255, 255, 0.75));
+  border-radius: 8px;
+}
+
+.bs-grid-table--spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--primary-25, #3ab78f40);
+  border-top-color: var(--primary, #3ab78f);
+  border-radius: 50%;
+  animation: bs-grid-table-spin 0.8s linear infinite;
+}
+
+.bs-grid-table--pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bs-grid-table--paginationBottom {
+  margin-top: 12px;
+}
+
+.bs-grid-table--sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--sticky tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+}
+
+@keyframes bs-grid-table-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[data-theme='dark'] .bs-grid-table--overlay {
+  background: rgba(19, 22, 26, 0.72);
+}
+
+[data-theme='dark'] .bs-grid-table--table tbody tr:hover td {
+  background: var(--bg-xlight, #181c21);
+}
