@@ -1,187 +1,110 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './DataTable.css';
-
 import { Checkbox } from '../../FormElements/Checkbox';
+import { Heading } from '../../Typography/Heading';
 import { Icon } from '../../Icons/Icon';
 import { Pagination } from '../../Navigation/Pagination';
-import { Heading } from '../../Typography/Heading';
-import { BodyText } from '../../Typography/BodyText';
-import { DataTableHeader } from './DataTableHeader';
+import { downloadCsv, downloadXls, getExportRows } from './DataTable.export';
+import { DataTableFilter } from './DataTableFilter';
+import { DataTableMenu } from './DataTableMenu';
 import type {
-  DataTableActionsConfig,
-  DataTableBulkActionsContext,
   DataTableColumn,
-  DataTableFooterContext,
+  DataTableFilters,
+  DataTableHoverActionsPosition,
   DataTableProps,
   DataTableRowId,
 } from './DataTable.types';
 import {
-  compareRows,
+  DEFAULT_COL_WIDTH,
+  EXPAND_COL_WIDTH,
+  SELECT_COL_WIDTH,
   cycleSortState,
   defaultGetRowId,
   filterRows,
-  getAddItemConfig,
   getCellValue,
+  getFixedOffsets,
   getPaginationConfig,
   getSelectionConfig,
-  isPaginationEnabled,
+  getVisibleColumns,
   isSelectionEnabled,
-  renderDefaultCell,
+  paginateRows,
+  sortRows,
   toCssSize,
+  toPx,
   useControllableState,
 } from './DataTable.utils';
 
-const styles: Record<string, string> = {
-  root: 'bs-data-table',
-  heading: 'bs-data-table--heading',
-  headingMain: 'bs-data-table--headingMain',
-  headerActions: 'bs-data-table--headerActions',
-  topContent: 'bs-data-table--topContent',
-  toolbar: 'bs-data-table--toolbar',
-  scroll: 'bs-data-table--scroll',
-  table: 'bs-data-table--table',
-  separated: 'bs-data-table--separated',
-  stickyHeader: 'bs-data-table--stickyHeader',
-  stickyFooter: 'bs-data-table--stickyFooter',
-  hideHeader: 'bs-data-table--hideHeader',
-  selectedRow: 'bs-data-table--selectedRow',
-  clickableRow: 'bs-data-table--clickableRow',
-  actionsOnHover: 'bs-data-table--actionsOnHover',
-  hasBulk: 'bs-data-table--hasBulk',
-  hasPagination: 'bs-data-table--hasPagination',
-  addItemRow: 'bs-data-table--addItemRow',
-  alignLeft: 'bs-data-table--alignLeft',
-  alignCenter: 'bs-data-table--alignCenter',
-  alignRight: 'bs-data-table--alignRight',
-  selectCol: 'bs-data-table--selectCol',
-  expandCol: 'bs-data-table--expandCol',
-  actionsCol: 'bs-data-table--actionsCol',
-  iconBtn: 'bs-data-table--iconBtn',
-  expandedRow: 'bs-data-table--expandedRow',
-  expandedCell: 'bs-data-table--expandedCell',
-  footerRow: 'bs-data-table--footerRow',
-  statusRow: 'bs-data-table--statusRow',
-  addItem: 'bs-data-table--addItem',
-  bulkWrap: 'bs-data-table--bulkWrap',
-  bulkActions: 'bs-data-table--bulkActions',
-  bulkCount: 'bs-data-table--bulkCount',
-  pagination: 'bs-data-table--pagination',
-  range: 'bs-data-table--range',
-};
+type CellRole = 'header' | 'body' | 'footer';
 
-function alignClass(align?: 'left' | 'center' | 'right'): string {
-  if (align === 'center') return styles.alignCenter;
-  if (align === 'right') return styles.alignRight;
-  return styles.alignLeft;
+function getAlignClass(align?: DataTableColumn<unknown>['align']) {
+  if (align === 'center') return 'bs-data-table--alignCenter';
+  if (align === 'right') return 'bs-data-table--alignRight';
+  return 'bs-data-table--alignLeft';
 }
 
-function getActionsConfig<T>(
-  actions: DataTableProps<T>['actions']
-): DataTableActionsConfig<T> | null {
-  if (!actions) return null;
-  if (typeof actions === 'function') return { render: actions };
-  return actions;
+function renderCell<T>(row: T, column: DataTableColumn<T>) {
+  const value = getCellValue(row, column);
+  if (column.cell) return column.cell({ value, row, column });
+  if (value == null) return '';
+  return String(value);
 }
 
-function renderBulkActions<T>(
-  bulkActions: DataTableProps<T>['bulkActions'],
-  ctx: DataTableBulkActionsContext<T>
-): React.ReactNode {
-  if (!bulkActions) return null;
-  if (typeof bulkActions === 'function') return bulkActions(ctx);
-  return bulkActions.render(ctx);
-}
-
-function getColumnCount<T>(
-  columns: DataTableColumn<T>[],
-  selectionEnabled: boolean,
-  expandableEnabled: boolean,
-  hasActions: boolean
-): number {
-  return columns.length + (selectionEnabled ? 1 : 0) + (expandableEnabled ? 1 : 0) + (hasActions ? 1 : 0);
-}
-
-function getActionsOnHover<T>(actions: DataTableProps<T>['actions']): boolean {
-  return Boolean(actions && typeof actions !== 'function' && actions.showOnHover);
-}
-
-function getBulkShowCount<T>(bulkActions: DataTableProps<T>['bulkActions']): boolean {
-  if (!bulkActions || typeof bulkActions === 'function') return true;
-  return bulkActions.showCount !== false;
-}
-
-function renderNode(value: React.ReactNode, stringRenderer: (text: string) => React.ReactNode) {
-  if (typeof value === 'string' || typeof value === 'number') {
-    return stringRenderer(String(value));
-  }
-  return value;
-}
-
-/**
- * Generic, opt-in data table. Configure columns independently for sort, filter,
- * alignment and custom cells. Selection, expansion, actions, pagination, add-item,
- * footer and top content are all optional.
- */
 export function DataTable<T>({
   columns,
   data,
   getRowId = defaultGetRowId,
   title,
-  description,
-  topContent,
-  toolbar,
-  headerActions,
-  selection,
+  rowSelection,
   expandable,
-  actions,
-  bulkActions,
-  addItem,
+  sort: sortProp,
+  defaultSort = null,
+  onSortChange,
+  sortMode = 'client',
+  filters: filtersProp,
+  defaultFilters = {},
+  onFiltersChange,
+  filterMode = 'client',
   pagination,
-  sorting,
-  filtering,
-  footer,
+  rowActions,
+  hoverActions,
+  hoverActionsPosition = 'right',
+  bulkActions,
+  totalRow,
+  stickyTotalRow = false,
+  showExportMenu,
+  exportFileName = 'table',
+  onExportCsv,
+  onExportXls,
+  scroll,
   loading = false,
-  loadingContent,
-  emptyContent,
   emptyMessage = 'No data',
-  variant = 'default',
-  hideHeader = false,
-  stickyHeader = false,
-  stickyFooter = false,
-  maxHeight,
-  getRowClassName,
-  onRowClick,
+  nested = false,
   className,
-  ...props
+  style,
 }: DataTableProps<T>) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const selectionEnabled = isSelectionEnabled(selection);
-  const selectionConfig = getSelectionConfig(selection);
-  const showCheckboxes = selectionEnabled && selectionConfig.showCheckboxes !== false;
-  const expandableEnabled = Boolean(expandable && expandable.enabled !== false);
-  const actionsConfig = getActionsConfig(actions);
-  const hasActions = Boolean(actionsConfig);
-  const addItemConfig = getAddItemConfig(addItem);
-  const paginationEnabled = isPaginationEnabled(pagination);
+  const visibleColumns = useMemo(() => getVisibleColumns(columns), [columns]);
+  const selectionEnabled = isSelectionEnabled(rowSelection);
+  const selectionConfig = getSelectionConfig(rowSelection);
   const paginationConfig = getPaginationConfig(pagination);
-  const colSpan = getColumnCount(columns, showCheckboxes, expandableEnabled, hasActions);
+  const pageSize = paginationConfig?.pageSize ?? paginationConfig?.defaultPageSize ?? 10;
+  const exportMenuVisible = showExportMenu ?? !nested;
 
   const [sort, setSort] = useControllableState({
-    value: sorting?.sort,
-    defaultValue: sorting?.defaultSort ?? null,
-    onChange: sorting?.onSortChange,
+    value: sortProp,
+    defaultValue: defaultSort,
+    onChange: onSortChange,
   });
-  const [filters, setFilters] = useControllableState({
-    value: filtering?.filters,
-    defaultValue: filtering?.defaultFilters ?? {},
-    onChange: filtering?.onFiltersChange,
+  const [filters, setFilters] = useControllableState<DataTableFilters>({
+    value: filtersProp,
+    defaultValue: defaultFilters,
+    onChange: onFiltersChange,
   });
   const [selectedRowIds, setSelectedRowIds] = useControllableState<DataTableRowId[]>({
     value: selectionConfig.selectedRowIds,
     defaultValue: selectionConfig.defaultSelectedRowIds ?? [],
     onChange: (ids) => {
-      const selectedRows = data.filter((row, index) => ids.includes(getRowId(row, index)));
-      selectionConfig.onChange?.(ids, selectedRows);
+      const rows = data.filter((row, index) => ids.includes(getRowId(row, index)));
+      selectionConfig.onChange?.(ids, rows);
     },
   });
   const [expandedRowIds, setExpandedRowIds] = useControllableState<DataTableRowId[]>({
@@ -190,85 +113,154 @@ export function DataTable<T>({
     onChange: expandable?.onChange,
   });
   const [page, setPage] = useControllableState({
-    value: paginationConfig.page,
-    defaultValue: paginationConfig.defaultPage ?? 1,
-    onChange: paginationConfig.onPageChange,
+    value: paginationConfig?.current,
+    defaultValue: paginationConfig?.defaultCurrent ?? 1,
+    onChange: (nextPage) => paginationConfig?.onChange?.(nextPage, pageSize),
   });
-  const [pageSize] = useControllableState({
-    value: paginationConfig.pageSize,
-    defaultValue: paginationConfig.defaultPageSize ?? 10,
-    onChange: paginationConfig.onPageSizeChange,
-  });
-  const [openFilterId, setOpenFilterId] = useControllableState<string | null>({
-    defaultValue: null,
-  });
+  const [openFilterId, setOpenFilterId] = useState<string | null>(null);
+  const [ping, setPing] = useState({ left: false, right: false });
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const leadingWidth =
+    (expandable ? EXPAND_COL_WIDTH : 0) + (selectionEnabled ? SELECT_COL_WIDTH : 0);
+  const fixedOffsets = useMemo(
+    () => getFixedOffsets(visibleColumns, leadingWidth),
+    [visibleColumns, leadingWidth]
+  );
+
+  const processedRows = useMemo(() => {
+    let rows = data;
+    if (filterMode === 'client') rows = filterRows(rows, visibleColumns, filters);
+    if (sortMode === 'client') rows = sortRows(rows, visibleColumns, sort);
+    return rows;
+  }, [data, filterMode, filters, sort, sortMode, visibleColumns]);
+
+  const totalItems = paginationConfig?.total ?? processedRows.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const pagedRows = paginationConfig
+    ? paginationConfig.total != null
+      ? processedRows
+      : paginateRows(processedRows, page, pageSize)
+    : processedRows;
+
+  const pagedIds = pagedRows.map((row, index) => getRowId(row, index));
+  const selectedOnPage = pagedIds.filter((id) => selectedRowIds.includes(id));
+  const allPageSelected = pagedIds.length > 0 && selectedOnPage.length === pagedIds.length;
+  const somePageSelected = selectedOnPage.length > 0 && !allPageSelected;
+  const selectedRows = data.filter((row, index) =>
+    selectedRowIds.includes(getRowId(row, index))
+  );
+
+  const tableMinWidth =
+    leadingWidth +
+    visibleColumns.reduce((sum, column) => sum + toPx(column.width ?? column.minWidth), 0) +
+    (rowActions ? 88 : 0);
+
+  const extraColumns =
+    (hoverActions ? 1 : 0) +
+    (expandable ? 1 : 0) +
+    (selectionEnabled ? 1 : 0) +
+    (rowActions ? 1 : 0);
+  const colSpan = visibleColumns.length + extraColumns;
+
+  const lastLeftId = [...visibleColumns].reverse().find((column) => column.fixed === 'left')?.id;
+  const firstRightId = visibleColumns.find((column) => column.fixed === 'right')?.id;
+  const leftEdgeIsSelect = !lastLeftId && selectionEnabled;
+  const leftEdgeIsExpand = !lastLeftId && !selectionEnabled && Boolean(expandable);
+
+  const totalCells = useMemo(() => {
+    if (!totalRow) return null;
+    if (typeof totalRow === 'function') {
+      return totalRow({ rows: processedRows, columns: visibleColumns });
+    }
+    return totalRow;
+  }, [totalRow, processedRows, visibleColumns]);
+
+  const updateScrollPing = useCallback((element: HTMLDivElement) => {
+    const maxScroll = element.scrollWidth - element.clientWidth;
+    const left = element.scrollLeft > 0;
+    const right = maxScroll > 1 && element.scrollLeft < maxScroll - 1;
+    setPing((prev) => (prev.left === left && prev.right === right ? prev : { left, right }));
+  }, []);
+
+  const syncScrollWidth = useCallback((element: HTMLDivElement) => {
+    element.style.setProperty('--bs-data-table-scroll-width', `${element.clientWidth}px`);
+  }, []);
 
   useEffect(() => {
-    if (!openFilterId) return undefined;
-    const handlePointer = (event: MouseEvent) => {
-      const target = event.target as Element | null;
-      if (target && target.closest('[data-bs-filter]')) return;
-      setOpenFilterId(null);
+    const element = scrollRef.current;
+    if (!element) return undefined;
+    const onResize = () => {
+      syncScrollWidth(element);
+      updateScrollPing(element);
     };
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpenFilterId(null);
-    };
-    document.addEventListener('mousedown', handlePointer);
-    document.addEventListener('keydown', handleKey);
-    return () => {
-      document.removeEventListener('mousedown', handlePointer);
-      document.removeEventListener('keydown', handleKey);
-    };
-  }, [openFilterId, setOpenFilterId]);
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [visibleColumns, data, scroll, syncScrollWidth, updateScrollPing]);
 
-  const processedEntries = useMemo(() => {
-    let entries = data.map((row, index) => ({ row, index }));
-    if (!filtering?.manual) {
-      const passing = new Set(filterRows(data, columns, filters));
-      entries = entries.filter(({ row }) => passing.has(row));
+  const getStickyStyle = (
+    column: DataTableColumn<T>,
+    role: CellRole
+  ): React.CSSProperties | undefined => {
+    const isHeader = role === 'header';
+    const isFooter = role === 'footer';
+    const pinFooter = isFooter && stickyTotalRow;
+    if (!column.fixed && !isHeader && !pinFooter) return undefined;
+    const style: React.CSSProperties = {
+      position: 'sticky',
+    };
+    if (isHeader) {
+      style.top = 0;
+      style.zIndex = column.fixed ? 6 : 5;
     }
-    if (!sorting?.manual && sort) {
-      entries = entries.slice().sort((a, b) => compareRows(a.row, b.row, columns, sort));
+    if (pinFooter) {
+      style.bottom = 0;
+      style.zIndex = column.fixed ? 5 : 4;
     }
-    return entries;
-  }, [columns, data, filters, filtering?.manual, sort, sorting?.manual]);
+    if (!isHeader && !pinFooter) style.zIndex = 2;
+    if (column.fixed === 'left') style.left = fixedOffsets.left[column.id];
+    if (column.fixed === 'right') style.right = fixedOffsets.right[column.id];
+    return style;
+  };
 
-  const manualPagination =
-    paginationConfig.manual ||
-    paginationConfig.totalItems != null ||
-    paginationConfig.totalPages != null;
-  const totalItems = paginationConfig.totalItems ?? processedEntries.length;
-  const totalPages =
-    paginationConfig.totalPages ?? Math.max(1, Math.ceil(totalItems / Math.max(pageSize, 1)));
-  const currentPage = Math.min(Math.max(page, 1), totalPages);
+  const getUtilityStickyStyle = (
+    side: 'left' | 'right',
+    offset: number,
+    role: CellRole
+  ): React.CSSProperties => {
+    const isHeader = role === 'header';
+    const pinFooter = role === 'footer' && stickyTotalRow;
+    return {
+      position: 'sticky',
+      zIndex: isHeader ? 6 : pinFooter ? 5 : 2,
+      top: isHeader ? 0 : undefined,
+      bottom: pinFooter ? 0 : undefined,
+      [side]: offset,
+    };
+  };
 
-  const visibleEntries = useMemo(() => {
-    if (!paginationEnabled || manualPagination) return processedEntries;
-    const start = (currentPage - 1) * pageSize;
-    return processedEntries.slice(start, start + pageSize);
-  }, [currentPage, manualPagination, pageSize, paginationEnabled, processedEntries]);
+  const getFixedEdgeClass = (column: DataTableColumn<T>) =>
+    [
+      column.fixed === 'left' && lastLeftId === column.id ? 'bs-data-table--fixedLeftLast' : '',
+      column.fixed === 'right' && firstRightId === column.id
+        ? 'bs-data-table--fixedRightFirst'
+        : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
 
-  const visibleIds = visibleEntries.map(({ row, index }) => getRowId(row, index));
-  const selectedVisibleCount = visibleIds.filter((id) => selectedRowIds.includes(id)).length;
-  const allSelected = visibleIds.length > 0 && selectedVisibleCount === visibleIds.length;
-  const someSelected = selectedVisibleCount > 0 && !allSelected;
-  const selectedRows = data.filter((row, index) => selectedRowIds.includes(getRowId(row, index)));
-  const showBulkActions = selectionEnabled && selectedRowIds.length > 0 && Boolean(bulkActions);
-
-  const handleToggleSelectAll = (checked: boolean) => {
+  const handleToggleAll = (checked: boolean) => {
     if (checked) {
-      const next = Array.from(new Set([...selectedRowIds, ...visibleIds]));
-      setSelectedRowIds(next);
-      return;
+      setSelectedRowIds(Array.from(new Set([...selectedRowIds, ...pagedIds])));
+    } else {
+      setSelectedRowIds(selectedRowIds.filter((id) => !pagedIds.includes(id)));
     }
-    setSelectedRowIds(selectedRowIds.filter((id) => !visibleIds.includes(id)));
   };
 
   const handleToggleRow = (rowId: DataTableRowId, checked: boolean) => {
     setSelectedRowIds(
-      checked
-        ? Array.from(new Set([...selectedRowIds, rowId]))
-        : selectedRowIds.filter((id) => id !== rowId)
+      checked ? [...selectedRowIds, rowId] : selectedRowIds.filter((id) => id !== rowId)
     );
   };
 
@@ -280,265 +272,371 @@ export function DataTable<T>({
     );
   };
 
-  const handleFilterChange = (columnId: string, value: unknown) => {
-    setFilters({ ...filters, [columnId]: value });
+  const applyFilter = (columnId: string, value: string) => {
+    const next = { ...filters };
+    if (value.trim()) next[columnId] = value;
+    else delete next[columnId];
+    setFilters(next);
   };
 
-  const footerCtx: DataTableFooterContext<T> = {
-    rows: processedEntries.map(({ row }) => row),
-    columns,
+  const handleDefaultExport = (format: 'csv' | 'xls') => {
+    const { headers, values } = getExportRows(visibleColumns, processedRows);
+    const baseName = exportFileName.replace(/\.(csv|xls|xlsx)$/i, '');
+    if (format === 'csv') downloadCsv(headers, values, `${baseName}.csv`);
+    else downloadXls(headers, values, `${baseName}.xls`);
   };
-  const footerCells =
-    footer && !footer.render
-      ? typeof footer.cells === 'function'
-        ? footer.cells(footerCtx)
-        : footer.cells
-      : undefined;
 
-  const empty = !loading && visibleEntries.length === 0;
-  const actionsOnHover = getActionsOnHover(actions);
-  const addItemPlacement = addItemConfig?.placement ?? 'start';
-  const showAddItemStart = Boolean(addItemConfig) && addItemPlacement === 'start' && !loading;
-  const showAddItemEnd = Boolean(addItemConfig) && addItemPlacement === 'end' && !loading;
+  const handleExportCsv = onExportCsv ?? (() => handleDefaultExport('csv'));
+  const handleExportXls = onExportXls ?? (() => handleDefaultExport('xls'));
 
-  const renderAddItem = () => {
-    if (!addItemConfig) return null;
-    if (addItemConfig.render) return addItemConfig.render();
+  const hoverPositionClass = `is-${hoverActionsPosition as DataTableHoverActionsPosition}`;
+  const scrollStyle: React.CSSProperties = {
+    maxHeight: toCssSize(scroll?.y),
+    minWidth: 0,
+  };
+
+  const renderHoverAnchor = (role: CellRole, row?: T) => {
+    if (!hoverActions) return null;
+    const Cell = role === 'header' ? 'th' : 'td';
     return (
-      <button type="button" className={styles.addItem} onClick={addItemConfig.onClick}>
-        <Icon name="plus" size={16} />
-        <span>{addItemConfig.label}</span>
-      </button>
+      <Cell className="bs-data-table--hoverAnchor">
+        {role === 'body' && row ? (
+          <div className={`bs-data-table--hoverActions ${hoverPositionClass}`}>
+            <div className="bs-data-table--hoverActionsChip">{hoverActions(row)}</div>
+          </div>
+        ) : null}
+      </Cell>
     );
   };
 
-  const bulkCtx: DataTableBulkActionsContext<T> = {
-    selectedRows,
-    selectedRowIds,
-    clearSelection: () => setSelectedRowIds([]),
-    totalCount: paginationConfig.totalItems ?? processedEntries.length,
-  };
+  const renderLeadingCells = (role: CellRole, _row?: T, rowId?: DataTableRowId) => (
+    <>
+      {expandable && (
+        role === 'header' ? (
+          <th
+            className={[
+              'bs-data-table--expandCol',
+              leftEdgeIsExpand ? 'bs-data-table--fixedLeftLast' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            style={getUtilityStickyStyle('left', 0, role)}
+          />
+        ) : (
+          <td
+            className={[
+              'bs-data-table--expandCol',
+              leftEdgeIsExpand ? 'bs-data-table--fixedLeftLast' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            style={getUtilityStickyStyle('left', 0, role)}
+          >
+            {role === 'body' && rowId != null ? (
+              <button
+                type="button"
+                className="bs-data-table--expandButton"
+                aria-expanded={expandedRowIds.includes(rowId)}
+                aria-label={expandedRowIds.includes(rowId) ? 'Collapse row' : 'Expand row'}
+                onClick={() => handleToggleExpand(rowId)}
+              >
+                <Icon
+                  name={expandedRowIds.includes(rowId) ? 'chevron-down' : 'chevron-right'}
+                  size={16}
+                />
+              </button>
+            ) : null}
+          </td>
+        )
+      )}
+      {selectionEnabled &&
+        (role === 'header' ? (
+          <th
+            className={[
+              'bs-data-table--selectCol',
+              leftEdgeIsSelect ? 'bs-data-table--fixedLeftLast' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            style={getUtilityStickyStyle('left', expandable ? EXPAND_COL_WIDTH : 0, role)}
+          >
+            <Checkbox
+              hideLabel
+              label="Select all rows"
+              checked={allPageSelected}
+              indeterminate={somePageSelected}
+              onChange={handleToggleAll}
+            />
+          </th>
+        ) : (
+          <td
+            className={[
+              'bs-data-table--selectCol',
+              leftEdgeIsSelect ? 'bs-data-table--fixedLeftLast' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            style={getUtilityStickyStyle('left', expandable ? EXPAND_COL_WIDTH : 0, role)}
+          >
+            {role === 'body' && rowId != null ? (
+              <Checkbox
+                hideLabel
+                label={`Select row ${rowId}`}
+                checked={selectedRowIds.includes(rowId)}
+                onChange={(checked) => handleToggleRow(rowId, checked)}
+              />
+            ) : null}
+          </td>
+        ))}
+    </>
+  );
 
   return (
     <div
-      ref={rootRef}
       className={[
-        styles.root,
-        variant === 'separated' ? styles.separated : '',
-        actionsOnHover ? styles.actionsOnHover : '',
-        showBulkActions ? styles.hasBulk : '',
-        paginationEnabled ? styles.hasPagination : '',
+        'bs-data-table',
+        nested ? 'bs-data-table--nested' : '',
+        ping.left ? 'bs-data-table--pingLeft' : '',
+        ping.right ? 'bs-data-table--pingRight' : '',
+        hoverActions ? 'bs-data-table--hasHoverActions' : '',
+        exportMenuVisible ? 'bs-data-table--hasExportMenu' : '',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
-      {...props}
+      style={style}
     >
-      {(title != null || description != null || headerActions != null) && (
-        <div className={styles.heading}>
-          <div className={styles.headingMain}>
-            {title != null &&
-              renderNode(title, (text) => <Heading level={3}>{text}</Heading>)}
-            {description != null &&
-              renderNode(description, (text) => (
-                <BodyText variant="light">{text}</BodyText>
-              ))}
-          </div>
-          {headerActions != null && <div className={styles.headerActions}>{headerActions}</div>}
+      {title ? (
+        <div className="bs-data-table--heading">
+          {typeof title === 'string' ? <Heading level={3}>{title}</Heading> : title}
         </div>
-      )}
-      {topContent != null && <div className={styles.topContent}>{topContent}</div>}
-      {toolbar != null && <div className={styles.toolbar}>{toolbar}</div>}
+      ) : null}
+
       <div
-        className={[
-          styles.scroll,
-          hideHeader ? styles.hideHeader : '',
-          stickyHeader ? styles.stickyHeader : '',
-          stickyFooter ? styles.stickyFooter : '',
-        ]
-          .filter(Boolean)
-          .join(' ')}
-        style={maxHeight != null ? { maxHeight: toCssSize(maxHeight) } : undefined}
+        ref={scrollRef}
+        className="bs-data-table--scroll"
+        style={scrollStyle}
+        onScroll={(event) => updateScrollPing(event.currentTarget)}
       >
-        <table className={styles.table}>
-          {!hideHeader && (
-            <DataTableHeader
-              columns={columns}
-              selectionEnabled={showCheckboxes}
-              expandableEnabled={expandableEnabled}
-              hasActions={hasActions}
-              actionsHeader={actionsConfig?.header}
-              allSelected={allSelected}
-              someSelected={someSelected}
-              onToggleSelectAll={handleToggleSelectAll}
-              sort={sort}
-              onSort={(columnId) => setSort(cycleSortState(sort, columnId))}
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              openFilterId={openFilterId}
-              onOpenFilter={setOpenFilterId}
-            />
-          )}
+        {exportMenuVisible ? (
+          <div className="bs-data-table--headerMenu">
+            <DataTableMenu onExportCsv={handleExportCsv} onExportXls={handleExportXls} />
+          </div>
+        ) : null}
+        <table
+          className="bs-data-table--table"
+          style={{ minWidth: toCssSize(scroll?.x) || tableMinWidth }}
+        >
+          <colgroup>
+            {hoverActions && <col style={{ width: 0 }} />}
+            {expandable && <col style={{ width: EXPAND_COL_WIDTH }} />}
+            {selectionEnabled && <col style={{ width: SELECT_COL_WIDTH }} />}
+            {visibleColumns.map((column) => (
+              <col
+                key={column.id}
+                style={{
+                  width: toCssSize(column.width),
+                  minWidth: toCssSize(column.minWidth ?? column.width ?? DEFAULT_COL_WIDTH),
+                }}
+              />
+            ))}
+            {rowActions && <col style={{ width: 88 }} />}
+          </colgroup>
+          <thead>
+            <tr>
+              {renderHoverAnchor('header')}
+              {renderLeadingCells('header')}
+              {visibleColumns.map((column) => {
+                const isSorted = sort?.columnId === column.id;
+                const ariaSort = isSorted
+                  ? sort?.direction === 'asc'
+                    ? 'ascending'
+                    : 'descending'
+                  : undefined;
+                const filterValue = filters[column.id] ?? '';
+                return (
+                  <th
+                    key={column.id}
+                    className={[getAlignClass(column.align), getFixedEdgeClass(column)]
+                      .filter(Boolean)
+                      .join(' ')}
+                    style={getStickyStyle(column, 'header')}
+                    aria-sort={ariaSort}
+                  >
+                    <div className="bs-data-table--headerInner">
+                      {column.sortable ? (
+                        <button
+                          type="button"
+                          className={[
+                            'bs-data-table--sortButton',
+                            isSorted ? 'bs-data-table--sortActive' : '',
+                          ]
+                            .filter(Boolean)
+                            .join(' ')}
+                          aria-label={`Sort by ${typeof column.title === 'string' ? column.title : column.id}`}
+                          onClick={() => setSort(cycleSortState(sort, column.id))}
+                        >
+                          <span>{column.title}</span>
+                          <span
+                            className={
+                              isSorted
+                                ? 'bs-data-table--sortIconActive'
+                                : 'bs-data-table--sortIcon'
+                            }
+                          >
+                            <Icon
+                              name={isSorted && sort?.direction === 'asc' ? 'chevron-up' : 'chevron-down'}
+                              size={16}
+                            />
+                          </span>
+                        </button>
+                      ) : (
+                        <span>{column.title}</span>
+                      )}
+                      {column.filterable && (
+                        <DataTableFilter
+                          columnId={column.id}
+                          title={typeof column.title === 'string' ? column.title : column.id}
+                          placeholder={column.filterPlaceholder}
+                          value={filterValue}
+                          open={openFilterId === column.id}
+                          active={Boolean(filterValue)}
+                          onOpenChange={(open) => setOpenFilterId(open ? column.id : null)}
+                          onApply={(value) => applyFilter(column.id, value)}
+                          onClear={() => applyFilter(column.id, '')}
+                        />
+                      )}
+                    </div>
+                  </th>
+                );
+              })}
+              {rowActions && (
+                <th
+                  className="bs-data-table--actionsCol"
+                  style={
+                    visibleColumns.some((column) => column.fixed === 'right')
+                      ? undefined
+                      : getUtilityStickyStyle('right', 0, 'header')
+                  }
+                />
+              )}
+            </tr>
+          </thead>
           <tbody>
             {loading && (
-              <tr className={styles.statusRow}>
-                <td colSpan={colSpan}>{loadingContent ?? 'Loading...'}</td>
+              <tr className="bs-data-table--statusRow">
+                <td colSpan={colSpan}>Loading</td>
               </tr>
             )}
-            {showAddItemStart && (
-              <tr className={styles.addItemRow}>
-                <td colSpan={colSpan}>{renderAddItem()}</td>
+            {!loading && pagedRows.length === 0 && (
+              <tr className="bs-data-table--statusRow">
+                <td colSpan={colSpan}>{emptyMessage}</td>
               </tr>
             )}
             {!loading &&
-              visibleEntries.map(({ row, index: rowIndex }) => {
-                const rowId = getRowId(row, rowIndex);
-                const selected = selectedRowIds.includes(rowId);
+              pagedRows.map((row, index) => {
+                const rowId = getRowId(row, index);
                 const expanded = expandedRowIds.includes(rowId);
-                const canExpand =
-                  expandableEnabled &&
-                  (expandable?.getRowCanExpand ? expandable.getRowCanExpand(row) : true);
-
+                const selected = selectedRowIds.includes(rowId);
                 return (
                   <React.Fragment key={rowId}>
                     <tr
                       className={[
-                        selected ? styles.selectedRow : '',
-                        actionsOnHover ? styles.actionsOnHover : '',
-                        onRowClick ? styles.clickableRow : '',
-                        getRowClassName?.(row, rowIndex),
+                        selected ? 'bs-data-table--selectedRow' : '',
+                        hoverActions ? 'bs-data-table--hoverRow' : '',
                       ]
                         .filter(Boolean)
-                        .join(' ') || undefined}
-                      onClick={
-                        onRowClick
-                          ? (event) => {
-                              const target = event.target as HTMLElement;
-                              if (target.closest('button, a, input, label, [data-bs-filter]')) return;
-                              onRowClick(row, rowIndex);
-                            }
-                          : undefined
-                      }
+                        .join(' ')}
                     >
-                      {expandableEnabled && (
-                        <td className={styles.expandCol}>
-                          {canExpand ? (
-                            <button
-                              type="button"
-                              className={styles.iconBtn}
-                              aria-expanded={expanded}
-                              aria-label={expanded ? `Collapse row ${rowId}` : `Expand row ${rowId}`}
-                              onClick={() => handleToggleExpand(rowId)}
-                            >
-                              <Icon name={expanded ? 'chevron-down' : 'chevron-right'} size={16} />
-                            </button>
-                          ) : null}
+                      {renderHoverAnchor('body', row)}
+                      {renderLeadingCells('body', row, rowId)}
+                      {visibleColumns.map((column) => (
+                        <td
+                          key={column.id}
+                          className={[getAlignClass(column.align), getFixedEdgeClass(column)]
+                            .filter(Boolean)
+                            .join(' ')}
+                          style={getStickyStyle(column, 'body')}
+                        >
+                          {renderCell(row, column)}
                         </td>
-                      )}
-                      {showCheckboxes && (
-                        <td className={styles.selectCol}>
-                          <Checkbox
-                            label={`Select row ${rowId}`}
-                            hideLabel
-                            checked={selected}
-                            onChange={(checked) => handleToggleRow(rowId, checked)}
-                          />
-                        </td>
-                      )}
-                      {columns.map((column) => {
-                        const value = getCellValue(row, column);
-                        const content = column.cell
-                          ? column.cell({ value, row, rowIndex, column })
-                          : renderDefaultCell(value);
-                        return (
-                          <td
-                            key={column.id}
-                            className={[alignClass(column.align), column.cellClassName]
-                              .filter(Boolean)
-                              .join(' ')}
-                            style={{
-                              width: toCssSize(column.width),
-                              minWidth: toCssSize(column.minWidth),
-                              maxWidth: toCssSize(column.maxWidth),
-                            }}
-                          >
-                            {content}
-                          </td>
-                        );
-                      })}
-                      {hasActions && actionsConfig && (
-                        <td className={styles.actionsCol}>{actionsConfig.render(row, rowIndex)}</td>
+                      ))}
+                      {rowActions && (
+                        <td className="bs-data-table--actionsCol">{rowActions(row)}</td>
                       )}
                     </tr>
-                    {canExpand && expanded && expandable && (
-                      <tr className={styles.expandedRow}>
-                        <td className={styles.expandedCell} colSpan={colSpan}>
-                          {expandable.renderExpandedRow(row, rowIndex)}
+                    {expanded && expandable && (
+                      <tr className="bs-data-table--expandedRow">
+                        <td colSpan={colSpan}>
+                          <div className="bs-data-table--nestedWrap">
+                            {expandable.renderExpandedRow(row)}
+                          </div>
                         </td>
                       </tr>
                     )}
                   </React.Fragment>
                 );
               })}
-            {empty && (
-              <tr className={styles.statusRow}>
-                <td colSpan={colSpan}>{emptyContent ?? emptyMessage}</td>
-              </tr>
-            )}
           </tbody>
-          {footer && !loading && (
+          {totalCells && (
             <tfoot>
-              <tr className={styles.footerRow}>
-                {footer.render ? (
-                  <td colSpan={colSpan}>{footer.render(footerCtx)}</td>
-                ) : (
-                  <>
-                    {expandableEnabled && <td className={styles.expandCol} />}
-                    {showCheckboxes && <td className={styles.selectCol} />}
-                    {columns.map((column) => (
-                      <td key={column.id} className={alignClass(column.align)}>
-                        {footerCells?.[column.id]}
-                      </td>
-                    ))}
-                    {hasActions && <td className={styles.actionsCol} />}
-                  </>
+              <tr
+                className={[
+                  'bs-data-table--totalRow',
+                  stickyTotalRow ? 'is-sticky' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {renderHoverAnchor('footer')}
+                {renderLeadingCells('footer')}
+                {visibleColumns.map((column) => (
+                  <td
+                    key={column.id}
+                    className={[getAlignClass(column.align), getFixedEdgeClass(column)]
+                      .filter(Boolean)
+                      .join(' ')}
+                    style={getStickyStyle(column, 'footer')}
+                  >
+                    {totalCells[column.id] ?? ''}
+                  </td>
+                ))}
+                {rowActions && (
+                  <td
+                    className="bs-data-table--actionsCol"
+                    style={
+                      stickyTotalRow
+                        ? { position: 'sticky', bottom: 0, zIndex: 3 }
+                        : undefined
+                    }
+                  />
                 )}
               </tr>
             </tfoot>
           )}
         </table>
       </div>
-      {showAddItemEnd && renderAddItem()}
-      {showBulkActions && (
-        <div className={styles.bulkWrap}>
-          <div className={styles.bulkActions} role="region" aria-label="Bulk actions">
-            {getBulkShowCount(bulkActions) && (
-              <span className={styles.bulkCount}>
-                {selectedRows.length} of {bulkCtx.totalCount} selected
-              </span>
-            )}
-            {renderBulkActions(bulkActions, bulkCtx)}
-          </div>
-        </div>
-      )}
-      {paginationEnabled && (
-        <div
-          className={styles.pagination}
-          data-has-range={paginationConfig.showRange ? 'true' : undefined}
-        >
-          {paginationConfig.showRange && (
-            <span className={styles.range}>
-              {totalItems === 0
-                ? 'Showing 0 of 0'
-                : `Showing ${Math.min((currentPage - 1) * pageSize + 1, totalItems)}-${Math.min(
-                    currentPage * pageSize,
-                    totalItems
-                  )} of ${totalItems}`}
-            </span>
+
+      {(bulkActions && selectedRowIds.length > 0) || paginationConfig ? (
+        <div className="bs-data-table--footer">
+          {bulkActions && selectedRowIds.length > 0 ? (
+            <div className="bs-data-table--bulkBar">
+              {bulkActions({
+                selectedRows,
+                selectedRowIds,
+                clearSelection: () => setSelectedRowIds([]),
+              })}
+            </div>
+          ) : (
+            <span />
           )}
-          <Pagination totalPages={totalPages} currentPage={currentPage} onChange={setPage} />
+          {paginationConfig && (
+            <div className="bs-data-table--pagination">
+              <Pagination totalPages={totalPages} currentPage={page} onChange={setPage} />
+            </div>
+          )}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
