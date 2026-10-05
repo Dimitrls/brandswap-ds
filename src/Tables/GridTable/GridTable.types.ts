@@ -119,8 +119,9 @@ export interface GridTableExpandableConfig<T> {
 export interface GridTableSummaryConfig<T> {
   row: Partial<T> | ((processedRows: T[]) => Partial<T>);
   label?: string;
-  /** Pin the summary row to the bottom of the scroll area. Implied by `stickyHeader`. */
+  /** Pin the summary row to the bottom of the scroll area. Implied by `stickyHeader`. With several summary rows only the last one sticks. */
   sticky?: boolean;
+  className?: string;
 }
 
 export interface GridTableExportCsvConfig {
@@ -169,7 +170,8 @@ export interface GridTableProps<T>
   hoverActions?: (row: T) => React.ReactNode;
   hoverActionsPosition?: GridTableAlign;
   expandable?: GridTableExpandableConfig<T>;
-  summary?: GridTableSummaryConfig<T>;
+  /** One summary row, or several (e.g. Total then Average), rendered in order in the footer. */
+  summary?: GridTableSummaryConfig<T> | GridTableSummaryConfig<T>[];
   exportCsv?: GridTableExportCsvConfig;
   exportXls?: GridTableExportXlsConfig;
   /** Replaces the built-in CSV download, e.g. for a server-side export. Enables the CSV option. */

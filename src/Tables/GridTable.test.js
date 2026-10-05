@@ -175,6 +175,25 @@ describe('GridTable', () => {
     expect(container.querySelector('tfoot').textContent).not.toContain('19.25')
   })
 
+  it('renders several summary rows in order with their own class', () => {
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        summary={[
+          { label: 'Total', row: (processed) => ({ commission: sumBy(processed, (row) => row.commission) }) },
+          { label: 'Average', className: 'average-row', row: (processed) => ({ commission: avgBy(processed, (row) => row.commission) }) }
+        ]}
+      />
+    )
+    const summaryRows = container.querySelectorAll('tfoot tr')
+    expect(summaryRows.length).toBe(2)
+    expect(summaryRows[0].textContent).toContain('Total')
+    expect(summaryRows[1].textContent).toContain('Average')
+    expect(summaryRows[1].classList.contains('average-row')).toBe(true)
+  })
+
   it('paginates client rows and skips slice in server mode', () => {
     function ClientPager() {
       const [page, setPage] = useState(1)

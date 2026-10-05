@@ -493,6 +493,15 @@
   z-index: 3;
 }
 
+.bs-grid-table--stickySummary tfoot tr:not(:last-child) td {
+  position: static;
+}
+
+.bs-grid-table--stickySummary tfoot tr:not(:last-child) td.bs-grid-table--pinned {
+  position: sticky;
+  bottom: auto;
+}
+
 /* Pinned columns. Offsets come from inline left/right; backgrounds must be opaque. */
 .bs-grid-table--table th.bs-grid-table--pinned,
 .bs-grid-table--table td.bs-grid-table--pinned {

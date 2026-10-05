@@ -234,7 +234,8 @@ export function GridTable<T>({
   const paginationPlacement = pagination?.placement ?? 'top';
   const paginationMode = pagination?.mode ?? 'client';
   const headerSticky = stickyHeader || maxHeight != null;
-  const summarySticky = headerSticky || Boolean(summary?.sticky);
+  const summaries = useMemo(() => (summary ? (Array.isArray(summary) ? summary : [summary]) : []), [summary]);
+  const summarySticky = headerSticky || summaries.some((config) => config.sticky);
 
   const [sort, setSort] = useControllableState({
     value: sorting,
@@ -348,10 +349,14 @@ export function GridTable<T>({
   const allSelected = selectableVisibleIds.length > 0 && selectedVisibleCount === selectableVisibleIds.length;
   const someSelected = selectedVisibleCount > 0 && !allSelected;
 
-  const summaryRow = useMemo(() => {
-    if (!summary) return null;
-    return typeof summary.row === 'function' ? summary.row(processedRows) : summary.row;
-  }, [processedRows, summary]);
+  const summaryRows = useMemo(
+    () =>
+      summaries.map((config) => ({
+        config,
+        row: typeof config.row === 'function' ? config.row(processedRows) : config.row,
+      })),
+    [processedRows, summaries]
+  );
 
   // Pinned columns: utility columns join the left pin group so they never scroll under it.
   const cellKeys = useMemo(
@@ -701,36 +706,38 @@ export function GridTable<T>({
                 </tr>
               )}
             </tbody>
-            {summary && summaryRow && !loading && (
+            {summaryRows.length > 0 && !loading && (
               <tfoot>
-                <tr className={styles.summary}>
-                  {hoverEnabled && <td className={styles.hoverAnchor} />}
-                  {expandableEnabled && (
-                    <td className={joinClasses(styles.expandCol, expandPin.className)} style={expandPin.style} />
-                  )}
-                  {selectionEnabled && (
-                    <td className={joinClasses(styles.selectCol, selectPin.className)} style={selectPin.style} />
-                  )}
-                  {displayColumns.map((column, index) => {
-                    const pin = getPin(column.id);
-                    const value = getCellValue(summaryRow as T, column);
-                    const content =
-                      index === 0 && summary.label
-                        ? summary.label
-                        : column.render
-                          ? column.render({ value, row: summaryRow as T, rowIndex: -1, column })
-                          : renderTypedCell(column.type ?? 'text', value, Boolean(column.hideZero), countryCode);
-                    return (
-                      <td
-                        key={column.id}
-                        className={joinClasses(alignClass(defaultAlign(column)), pin.className)}
-                        style={pin.style}
-                      >
-                        {content}
-                      </td>
-                    );
-                  })}
-                </tr>
+                {summaryRows.map(({ config, row: summaryRow }, summaryIndex) => (
+                  <tr key={summaryIndex} className={joinClasses(styles.summary, config.className)}>
+                    {hoverEnabled && <td className={styles.hoverAnchor} />}
+                    {expandableEnabled && (
+                      <td className={joinClasses(styles.expandCol, expandPin.className)} style={expandPin.style} />
+                    )}
+                    {selectionEnabled && (
+                      <td className={joinClasses(styles.selectCol, selectPin.className)} style={selectPin.style} />
+                    )}
+                    {displayColumns.map((column, index) => {
+                      const pin = getPin(column.id);
+                      const value = getCellValue(summaryRow as T, column);
+                      const content =
+                        index === 0 && config.label
+                          ? config.label
+                          : column.render
+                            ? column.render({ value, row: summaryRow as T, rowIndex: -1, column })
+                            : renderTypedCell(column.type ?? 'text', value, Boolean(column.hideZero), countryCode);
+                      return (
+                        <td
+                          key={column.id}
+                          className={joinClasses(alignClass(defaultAlign(column)), pin.className)}
+                          style={pin.style}
+                        >
+                          {content}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
               </tfoot>
             )}
           </table>
