@@ -7,8 +7,12 @@ export type {
   GridTableCountryCode,
   GridTableDensity,
   GridTableExpandableConfig,
+  GridTableBulkActionsContext,
   GridTableExportCsvConfig,
+  GridTableExportXlsConfig,
   GridTableFilterOperator,
+  GridTableMode,
+  GridTablePinned,
   GridTableFilterValue,
   GridTableFilteringConfig,
   GridTablePageSizeOption,
@@ -21,7 +25,14 @@ export type {
   GridTableSummaryConfig,
 } from './GridTable.types';
 export { avgBy, sumBy } from './GridTable.utils';
-export { buildCsv, downloadCsv, exportRowsToCsv } from './exportCsv';
+export {
+  buildCsv,
+  buildXls,
+  downloadCsv,
+  downloadXls,
+  exportRowsToCsv,
+  exportRowsToXls,
+} from './exportCsv';
 export {
   ActionsCell,
   DateCell,

@@ -21,6 +21,20 @@ export function toCssSize(value?: string | number): string | undefined {
   return typeof value === 'number' ? `${value}px` : value;
 }
 
+export const HOVER_KEY = '__hover';
+export const EXPAND_KEY = '__expand';
+export const SELECT_KEY = '__select';
+
+/** Drops hidden columns and moves pinned columns to their edge, keeping relative order. */
+export function getDisplayColumns<T>(columns: Column<T>[]): Column<T>[] {
+  const visible = columns.filter((column) => !column.hidden);
+  return [
+    ...visible.filter((column) => column.pinned === 'left'),
+    ...visible.filter((column) => !column.pinned),
+    ...visible.filter((column) => column.pinned === 'right'),
+  ];
+}
+
 export function getColumnType<T>(column: Column<T>): GridTableColumnType {
   return column.type ?? 'text';
 }

@@ -24,22 +24,33 @@ import {
 | Prop | Notes |
 | --- | --- |
 | `rows` | Row data |
-| `columns` | `Column<T>`: `id`, `header`, `accessor`, `width` / `minWidth` / `flex`, `align`, `type`, `render`, `sortable`, `filterable`, `sortComparator`, `headerTooltip`, `hideZero` |
+| `columns` | `Column<T>`: `id`, `header`, `accessor`, `width` / `minWidth` / `flex`, `align`, `type`, `render`, `sortable`, `filterable`, `filterOperators`, `sortComparator`, `headerTooltip`, `hideZero`, `hidden`, `pinned` (`left` / `right`) |
 | `getRowId` | Required stable id |
+| `title` | Heading above the toolbar (string renders an `h3`) |
 | `loading` | Overlay spinner over the grid body |
 | `emptyText` | Default `"No data"` |
 | `density` | `compact` (~36px), `default` (~48px), `media` (70px) |
-| `sorting` / `onSortChange` | Controlled sort `{ field, direction }`. Click cycles unsorted → asc → desc |
-| `filtering` | Column filters + `quickFilter` across primitive cell values |
-| `pagination` | `mode: "client" \| "server"`, 1-based `page`, `pageSize` (`-1` = All), `total`, `pageSizeOptions`, `onChange`, `placement` (`top` default) |
+| `sorting` / `defaultSorting` / `onSortChange` | Sort `{ field, direction }`. Click cycles unsorted → asc → desc |
+| `sortMode` | `client` (default) or `server`: skip client sorting, sort in the API from `onSortChange` |
+| `filtering` | Column filters + `quickFilter` across primitive cell values. Column filters apply on **Apply** / Enter; **Clear** removes them |
+| `filterMode` | `client` (default) or `server`: skip client quick/column filtering, filter in the API from the filtering callbacks |
+| `pagination` | `mode` (`client` default / `server`), 1-based `page` or `defaultPage`, `pageSize` or `defaultPageSize` (`-1` = All), `total`, `pageSizeOptions`, `onChange`, `placement` (`top` default). Sort / filter changes go back to page 1 |
 | `selection` | `none` / `single` / `multiple`, `selectedIds`, `onChange`, `isRowSelectable` |
+| `bulkActions` | `({ selectedIds, selectedRows, clearSelection }) => ReactNode`, shown in a bar above the grid while rows are selected |
 | `onRowClick` | Skips `button`, `a`, `input`, `label`, `[data-stop-row-click]` |
 | `getRowClassName` | e.g. `bs-grid-table--rowMuted` for pending / in-test rows |
-| `expandable` | Controlled `isExpanded` / `onToggle` / `renderExpanded` (nested `GridTable` supported) |
-| `summary` | Pinned `tfoot` from **filtered/sorted** rows, not the current page. `row` can be `Partial<T>` or `(processedRows) => Partial<T>` |
-| `exportCsv` | Toolbar Export of processed rows. UTF-8 BOM on by default |
+| `hoverActions` / `hoverActionsPosition` | Floating action chip on row hover / focus, aligned `left` / `center` / `right` (default) of the visible area |
+| `expandable` | `renderExpanded` plus either `isExpanded` / `onToggle`, or `expandedIds` / `defaultExpandedIds` / `onExpandedChange` (`onToggle` still fires, handy for lazy loading). Nested `GridTable` supported |
+| `summary` | `tfoot` from **filtered/sorted** rows, not the current page. `row` can be `Partial<T>` or `(processedRows) => Partial<T>`. `sticky` pins it to the bottom |
+| `exportCsv` / `exportXls` | Toolbar export of processed rows. Both enabled → Export menu. CSV has a UTF-8 BOM by default |
+| `onExportCsv` / `onExportXls` | Replace the built-in download (e.g. server-side export of every page) |
 | `stickyHeader` | Sticky header + sticky summary footer |
+| `maxHeight` | Caps the scroll area; header and summary stick inside it |
 | `countryCode` | `GB` (default) or `US` for date / money helpers |
+
+### Pinned columns
+
+`pinned: 'left'` columns move to the start (after the expand / select columns, which pin with them); `pinned: 'right'` columns move to the end. Offsets are measured from the rendered header, so `width` is optional. A shadow shows on the pinned edge while content is scrolled underneath.
 
 ### Column `type`
 
@@ -49,13 +60,13 @@ Defaults: numeric/currency/percent/actions align right; actions are not sortable
 
 ### Pipeline
 
-1. Quick filter  
-2. Column filters (`contains`, `equals`, `startsWith`, `endsWith`, `gt`, `lt`)  
-3. Sort  
+1. Quick filter (skipped when `filterMode="server"`)  
+2. Column filters (`contains`, `equals`, `startsWith`, `endsWith`, `gt`, `lt`; skipped when `filterMode="server"`)  
+3. Sort (skipped when `sortMode="server"`)  
 4. Summary aggregation  
-5. Client page slice (skipped for `server` or `pageSize === -1`)
+5. Client page slice (skipped for `pagination.mode="server"` or `pageSize === -1`)
 
-Server lists still run client filter/sort on the **provided page**. Keep system-log search in the app (`FiltersBar` + fetch).
+For server lists set `sortMode` / `filterMode` to `server` together with `pagination.mode="server"`, otherwise the grid re-sorts and re-filters only the page you passed in. Debounce `onQuickFilterChange` in the app before fetching.
 
 ## Admin screens this replaces
 

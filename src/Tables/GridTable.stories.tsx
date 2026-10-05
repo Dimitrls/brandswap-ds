@@ -1,9 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FiltersBar } from '../AdvancedComponents/FiltersBar';
+import { Button } from '../Buttons/Button';
 import { ActionsCell } from './GridTable/cells/ActionsCell';
 import { StatusCell } from './GridTable/cells/StatusCell';
 import { GridTable } from './GridTable/GridTable';
-import type { Column, GridTableRowId } from './GridTable/GridTable.types';
+import type {
+  Column,
+  GridTableFilterValue,
+  GridTableRowId,
+  GridTableSortState,
+} from './GridTable/GridTable.types';
 import { avgBy, sumBy } from './GridTable/GridTable.utils';
 
 export default {
@@ -318,6 +324,164 @@ export const ExpandableNested = () => {
             'Loading offers…'
           ),
       }}
+    />
+  );
+};
+
+type WideRow = InsightRow & {
+  host: string;
+  advertiser: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  revenue: number;
+};
+
+const wideRows: WideRow[] = [];
+insightRows.forEach((row, index) => {
+  ['Currys', 'IKEA', 'Wickes'].forEach((host, hostIndex) => {
+    wideRows.push({
+      ...row,
+      id: `${row.id}-${hostIndex}`,
+      host,
+      advertiser: ['Beer52', 'SnackBox', 'Fitmeal'][(index + hostIndex) % 3],
+      impressions: row.loads * 3 + hostIndex * 17,
+      clicks: Math.round(row.loads / 4) + hostIndex,
+      ctr: Number(((row.loads / 4 / (row.loads * 3 || 1)) * 100).toFixed(2)),
+      revenue: row.commission * 4 + hostIndex * 10,
+    });
+  });
+});
+
+export const PinnedWideReport = () => {
+  const columns: Column<WideRow>[] = [
+    { id: 'campaign', header: 'Campaign', accessor: 'campaign', type: 'text', minWidth: 160, pinned: 'left' },
+    { id: 'host', header: 'Host', accessor: 'host', type: 'text' },
+    { id: 'advertiser', header: 'Advertiser', accessor: 'advertiser', type: 'text' },
+    { id: 'impressions', header: 'Impressions', accessor: 'impressions', type: 'number', width: 130 },
+    { id: 'loads', header: 'Loads', accessor: 'loads', type: 'number', width: 110, hideZero: true },
+    { id: 'clicks', header: 'Clicks', accessor: 'clicks', type: 'number', width: 110 },
+    { id: 'ctr', header: 'CTR', accessor: 'ctr', type: 'percent', width: 100 },
+    { id: 'sales', header: 'Sales', accessor: 'sales', type: 'number', width: 100, hideZero: true },
+    { id: 'seen', header: 'Seen %', accessor: 'seen', type: 'percent', width: 110, hideZero: true },
+    { id: 'cvr', header: 'CVR', accessor: 'cvr', type: 'percent', width: 100, hideZero: true },
+    { id: 'internalId', header: 'Internal id', accessor: 'id', hidden: true },
+    {
+      id: 'commission',
+      header: 'Commission',
+      accessor: 'commission',
+      type: 'currency',
+      width: 140,
+      hideZero: true,
+      pinned: 'right',
+    },
+  ];
+
+  return (
+    <div style={{ maxWidth: 900 }}>
+      <GridTable
+        title="Campaign performance"
+        rows={wideRows}
+        columns={columns}
+        getRowId={(row) => row.id}
+        density="compact"
+        maxHeight={360}
+        filtering={{}}
+        selection={{ mode: 'multiple' }}
+        bulkActions={({ selectedRows, clearSelection }) => (
+          <Button
+            size="small"
+            variant="outline"
+            label={`Archive ${selectedRows.length}`}
+            onClick={clearSelection}
+          />
+        )}
+        hoverActions={(row) => (
+          <ActionsCell
+            actions={[
+              { icon: 'pencil', ariaLabel: `Edit ${row.campaign} ${row.host}`, onClick: () => undefined },
+              { icon: 'trash', ariaLabel: `Delete ${row.campaign} ${row.host}`, onClick: () => undefined, variant: 'subtle-warning' },
+            ]}
+          />
+        )}
+        exportCsv={{ filename: 'campaign-performance.csv' }}
+        exportXls={{ filename: 'campaign-performance.xls' }}
+        pagination={{ defaultPageSize: 25, pageSizeOptions: [10, 25, { value: -1, label: 'All' }] }}
+        summary={{
+          label: 'Total',
+          row: (processed) => ({
+            impressions: sumBy(processed, (row) => row.impressions),
+            loads: sumBy(processed, (row) => row.loads),
+            clicks: sumBy(processed, (row) => row.clicks),
+            sales: sumBy(processed, (row) => row.sales),
+            commission: sumBy(processed, (row) => row.commission),
+          }),
+        }}
+        countryCode="GB"
+      />
+    </div>
+  );
+};
+
+export const ServerDriven = () => {
+  const [sorting, setSorting] = useState<GridTableSortState>(null);
+  const [filters, setFilters] = useState<Record<string, GridTableFilterValue | undefined>>({});
+  const [quickFilter, setQuickFilter] = useState('');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{ rows: OfferRow[]; total: number }>({ rows: [], total: 0 });
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = window.setTimeout(() => {
+      const needle = quickFilter.trim().toLowerCase();
+      const advertiserFilter = filters.advertiser?.value.toLowerCase() ?? '';
+      let matched = offers.filter(
+        (row) =>
+          (!needle || row.name.toLowerCase().includes(needle)) &&
+          (!advertiserFilter || row.advertiser.toLowerCase().includes(advertiserFilter))
+      );
+      if (sorting) {
+        const field = sorting.field as keyof OfferRow;
+        matched = matched
+          .slice()
+          .sort((a, b) => String(a[field]).localeCompare(String(b[field])) * (sorting.direction === 'asc' ? 1 : -1));
+      }
+      setResult({ rows: matched.slice((page - 1) * pageSize, page * pageSize), total: matched.length });
+      setLoading(false);
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [filters, page, pageSize, quickFilter, sorting]);
+
+  return (
+    <GridTable
+      title="Offers (server sort, filter and paging)"
+      rows={result.rows}
+      columns={[
+        { id: 'name', header: 'Offer', accessor: 'name', type: 'text', filterable: false },
+        { id: 'advertiser', header: 'Advertiser', accessor: 'advertiser', type: 'text', filterOperators: ['contains'] },
+        { id: 'createdAt', header: 'Created', accessor: 'createdAt', type: 'date', filterable: false },
+      ]}
+      getRowId={(row) => row.id}
+      loading={loading}
+      sortMode="server"
+      sorting={sorting}
+      onSortChange={setSorting}
+      filterMode="server"
+      filtering={{ filters, onFiltersChange: setFilters, quickFilter, onQuickFilterChange: setQuickFilter }}
+      pagination={{
+        mode: 'server',
+        page,
+        pageSize,
+        total: result.total,
+        pageSizeOptions: [2, 5, 10],
+        onChange: ({ page: nextPage, pageSize: nextSize }) => {
+          setPage(nextPage);
+          setPageSize(nextSize);
+        },
+      }}
+      onExportCsv={() => window.alert('Server CSV export requested')}
     />
   );
 };

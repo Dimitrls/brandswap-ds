@@ -49,8 +49,84 @@
   overflow-x: auto;
 }
 
-.bs-grid-table--scroll.bs-grid-table--sticky {
+.bs-grid-table--scroll.bs-grid-table--sticky,
+.bs-grid-table--scroll.bs-grid-table--stickySummary {
   overflow: auto;
+}
+
+.bs-grid-table--title {
+  margin-bottom: 12px;
+}
+
+.bs-grid-table--title > h1,
+.bs-grid-table--title > h2,
+.bs-grid-table--title > h3,
+.bs-grid-table--title > h4 {
+  margin: 0;
+}
+
+.bs-grid-table--exportMenu {
+  position: relative;
+}
+
+.bs-grid-table--menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 30;
+  min-width: 160px;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--bg-default, #ffffff);
+  border: 1px solid var(--border-default, #d3d5dd);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.bs-grid-table--menuItem {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-default, #161616);
+  font: inherit;
+  font-size: var(--font-body, 14px);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.bs-grid-table--menuItem:hover,
+.bs-grid-table--menuItem:focus-visible {
+  background: var(--bg-xxlight, #f5f5f5);
+  outline: none;
+}
+
+.bs-grid-table--bulkBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--primary-10, #3ab78f1a);
+  font-size: var(--font-body, 14px);
+}
+
+.bs-grid-table--bulkCount {
+  font-weight: var(--font-weight-bold, 600);
+  white-space: nowrap;
+}
+
+.bs-grid-table--bulkActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  flex-wrap: wrap;
 }
 
 .bs-grid-table--table {
@@ -254,6 +330,12 @@
   right: 16px;
 }
 
+.bs-grid-table--filterActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .bs-grid-table--selectCol,
 .bs-grid-table--expandCol,
 .bs-grid-table--actionsCol {
@@ -389,10 +471,126 @@
   background: var(--bg-default, #ffffff);
 }
 
-.bs-grid-table--sticky tfoot td {
+.bs-grid-table--stickySummary tfoot td {
   position: sticky;
   bottom: 0;
   z-index: 3;
+}
+
+/* Pinned columns. Offsets come from inline left/right; backgrounds must be opaque. */
+.bs-grid-table--table th.bs-grid-table--pinned,
+.bs-grid-table--table td.bs-grid-table--pinned {
+  position: sticky;
+  z-index: 2;
+}
+
+.bs-grid-table--table thead th.bs-grid-table--pinned,
+.bs-grid-table--stickySummary tfoot td.bs-grid-table--pinned {
+  z-index: 4;
+}
+
+.bs-grid-table--sticky thead th.bs-grid-table--pinned {
+  z-index: 5;
+}
+
+.bs-grid-table--table tbody tr:hover td.bs-grid-table--pinned {
+  background: linear-gradient(var(--black-03, rgba(22, 22, 22, 0.03)), var(--black-03, rgba(22, 22, 22, 0.03))),
+    var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--table tbody tr.bs-grid-table--selected td.bs-grid-table--pinned {
+  background: linear-gradient(var(--primary-10, #3ab78f1a), var(--primary-10, #3ab78f1a)),
+    var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--pingLeft .bs-grid-table--pinnedLeftEdge::after,
+.bs-grid-table--pingRight .bs-grid-table--pinnedRightEdge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  pointer-events: none;
+}
+
+.bs-grid-table--pingLeft .bs-grid-table--pinnedLeftEdge::after {
+  right: -8px;
+  background: linear-gradient(to right, rgba(22, 22, 22, 0.1), rgba(22, 22, 22, 0));
+}
+
+.bs-grid-table--pingRight .bs-grid-table--pinnedRightEdge::before {
+  left: -8px;
+  background: linear-gradient(to left, rgba(22, 22, 22, 0.1), rgba(22, 22, 22, 0));
+}
+
+/* Hover actions: a zero-width sticky anchor cell hosts a chip spanning the visible scroll width. */
+.bs-grid-table--hoverCol {
+  width: 0;
+}
+
+.bs-grid-table--table tr > th.bs-grid-table--hoverAnchor,
+.bs-grid-table--table tr > td.bs-grid-table--hoverAnchor {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 0;
+  min-width: 0;
+  max-width: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: transparent;
+  pointer-events: none;
+}
+
+.bs-grid-table--table tr > .bs-grid-table--hoverAnchor + th,
+.bs-grid-table--table tr > .bs-grid-table--hoverAnchor + td {
+  padding-left: 16px;
+}
+
+.bs-grid-table--table tbody tr:hover td.bs-grid-table--hoverAnchor {
+  background: transparent;
+}
+
+.bs-grid-table--hoverActions {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--bs-grid-scroll-width, 100%);
+  display: none;
+  align-items: center;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+.bs-grid-table--hoverRow:hover .bs-grid-table--hoverActions,
+.bs-grid-table--hoverRow:focus-within .bs-grid-table--hoverActions {
+  display: flex;
+}
+
+.bs-grid-table--hoverLeft {
+  justify-content: flex-start;
+}
+
+.bs-grid-table--hoverCenter {
+  justify-content: center;
+}
+
+.bs-grid-table--hoverRight {
+  justify-content: flex-end;
+}
+
+.bs-grid-table--hoverChip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 8px;
+  background: var(--bg-default, #ffffff);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  pointer-events: auto;
 }
 
 @keyframes bs-grid-table-spin {

@@ -28,6 +28,10 @@ export type GridTableFilterOperator =
 
 export type GridTableCountryCode = 'GB' | 'US';
 
+export type GridTableMode = 'client' | 'server';
+
+export type GridTablePinned = 'left' | 'right';
+
 export type GridTableSortState = {
   field: string;
   direction: GridTableSortDirection;
@@ -61,6 +65,9 @@ export interface Column<T> {
   headerTooltip?: React.ReactNode;
   hideZero?: boolean;
   filterOperators?: GridTableFilterOperator[];
+  hidden?: boolean;
+  /** Sticks the column to the edge while scrolling horizontally. Pinned columns are moved to that edge. */
+  pinned?: GridTablePinned;
 }
 
 export interface GridTableFilteringConfig {
@@ -75,12 +82,16 @@ export interface GridTableFilteringConfig {
 export type GridTablePageSizeOption = number | { value: -1; label: string };
 
 export interface GridTablePaginationConfig {
-  mode: 'client' | 'server';
-  page: number;
-  pageSize: number;
+  /** Defaults to `client`. */
+  mode?: GridTableMode;
+  /** Controlled 1-based page. Omit and use `defaultPage` to let the grid own it. */
+  page?: number;
+  defaultPage?: number;
+  pageSize?: number;
+  defaultPageSize?: number;
   total?: number;
   pageSizeOptions?: GridTablePageSizeOption[];
-  onChange: (next: { page: number; pageSize: number }) => void;
+  onChange?: (next: { page: number; pageSize: number }) => void;
   placement?: 'top' | 'bottom';
 }
 
@@ -92,15 +103,24 @@ export interface GridTableSelectionConfig<T> {
   isRowSelectable?: (row: T) => boolean;
 }
 
+/**
+ * Either drive expansion per row (`isExpanded` + `onToggle`), or by ids
+ * (`expandedIds` / `defaultExpandedIds` + `onExpandedChange`).
+ */
 export interface GridTableExpandableConfig<T> {
-  isExpanded: (row: T) => boolean;
-  onToggle: (row: T) => void;
+  isExpanded?: (row: T) => boolean;
+  onToggle?: (row: T) => void;
+  expandedIds?: GridTableRowId[];
+  defaultExpandedIds?: GridTableRowId[];
+  onExpandedChange?: (ids: GridTableRowId[]) => void;
   renderExpanded: (row: T) => React.ReactNode;
 }
 
 export interface GridTableSummaryConfig<T> {
   row: Partial<T> | ((processedRows: T[]) => Partial<T>);
   label?: string;
+  /** Pin the summary row to the bottom of the scroll area. Implied by `stickyHeader`. */
+  sticky?: boolean;
 }
 
 export interface GridTableExportCsvConfig {
@@ -108,25 +128,51 @@ export interface GridTableExportCsvConfig {
   utf8Bom?: boolean;
 }
 
-export interface GridTableProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface GridTableExportXlsConfig {
+  filename?: string;
+}
+
+export interface GridTableBulkActionsContext<T> {
+  selectedIds: GridTableRowId[];
+  selectedRows: T[];
+  clearSelection: () => void;
+}
+
+export interface GridTableProps<T>
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'title'> {
   rows: T[];
   columns: Column<T>[];
   getRowId: (row: T) => GridTableRowId;
+  title?: React.ReactNode;
   loading?: boolean;
   emptyText?: string;
   density?: GridTableDensity;
   sorting?: GridTableSortState;
   defaultSorting?: GridTableSortState;
   onSortChange?: (next: GridTableSortState) => void;
+  /** `server` skips client sorting; the parent sorts from `onSortChange`. */
+  sortMode?: GridTableMode;
   filtering?: GridTableFilteringConfig;
+  /** `server` skips client quick/column filtering; the parent filters from the filtering callbacks. */
+  filterMode?: GridTableMode;
   pagination?: GridTablePaginationConfig;
   selection?: GridTableSelectionConfig<T>;
+  bulkActions?: (ctx: GridTableBulkActionsContext<T>) => React.ReactNode;
   onRowClick?: (row: T) => void;
   getRowClassName?: (row: T) => string;
+  hoverActions?: (row: T) => React.ReactNode;
+  hoverActionsPosition?: GridTableAlign;
   expandable?: GridTableExpandableConfig<T>;
   summary?: GridTableSummaryConfig<T>;
   exportCsv?: GridTableExportCsvConfig;
+  exportXls?: GridTableExportXlsConfig;
+  /** Replaces the built-in CSV download, e.g. for a server-side export. Enables the CSV option. */
+  onExportCsv?: () => void;
+  /** Replaces the built-in XLS download. Enables the XLS option. */
+  onExportXls?: () => void;
   stickyHeader?: boolean;
+  /** Caps the scroll area height; header and summary stick inside it. */
+  maxHeight?: string | number;
   countryCode?: GridTableCountryCode;
 }
 

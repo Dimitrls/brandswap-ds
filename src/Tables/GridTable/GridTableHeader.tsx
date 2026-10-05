@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from '../../Buttons/Button';
 import { Checkbox } from '../../FormElements/Checkbox';
 import { InputField } from '../../FormElements/InputField';
 import { Select } from '../../FormElements/Select';
@@ -11,6 +12,8 @@ import type {
   GridTableSortState,
 } from './GridTable.types';
 import {
+  EXPAND_KEY,
+  SELECT_KEY,
   defaultAlign,
   defaultFilterOperators,
   filterOperatorLabel,
@@ -35,6 +38,8 @@ const styles: Record<string, string> = {
   iconBtn: 'bs-grid-table--iconBtn',
   iconBtnActive: 'bs-grid-table--iconBtnActive',
   filterPopover: 'bs-grid-table--filterPopover',
+  filterActions: 'bs-grid-table--filterActions',
+  hoverAnchor: 'bs-grid-table--hoverAnchor',
 };
 
 function alignClass(align: 'left' | 'center' | 'right'): string {
@@ -43,11 +48,76 @@ function alignClass(align: 'left' | 'center' | 'right'): string {
   return styles.alignLeft;
 }
 
+function joinClasses(...classes: Array<string | undefined | false>): string {
+  return classes.filter(Boolean).join(' ');
+}
+
+export interface GridTableCellPin {
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+interface GridTableFilterPopoverProps {
+  label: string;
+  operators: GridTableFilterOperator[];
+  initialOperator: GridTableFilterOperator;
+  initialValue: string;
+  onApply: (next: GridTableFilterValue | undefined) => void;
+}
+
+function GridTableFilterPopover({
+  label,
+  operators,
+  initialOperator,
+  initialValue,
+  onApply,
+}: GridTableFilterPopoverProps) {
+  const [operator, setOperator] = useState(initialOperator);
+  const [value, setValue] = useState(initialValue);
+
+  const apply = () => onApply(value.trim() === '' ? undefined : { operator, value });
+
+  return (
+    <div className={styles.filterPopover} data-bs-filter="popover" role="dialog" aria-label={`Filter ${label}`}>
+      <Select
+        size="small"
+        options={operators}
+        value={operator}
+        getOptionLabel={filterOperatorLabel}
+        getOptionKey={(item) => item}
+        onChange={(next) => setOperator(next ?? operator)}
+        placeholder="Operator"
+        searchable={false}
+      />
+      <InputField
+        size="small"
+        value={value}
+        onChange={setValue}
+        onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            apply();
+          }
+        }}
+        placeholder="Filter"
+        aria-label={`Filter ${label}`}
+        autoFocus
+      />
+      <div className={styles.filterActions}>
+        <Button size="small" variant="outline" label="Clear" onClick={() => onApply(undefined)} />
+        <Button size="small" variant="filled" label="Apply" onClick={apply} />
+      </div>
+    </div>
+  );
+}
+
 export interface GridTableHeaderProps<T> {
   columns: Column<T>[];
   selectionEnabled: boolean;
   showSelectAll: boolean;
   expandableEnabled: boolean;
+  hoverAnchor: boolean;
+  getPin: (key: string) => GridTableCellPin;
   allSelected: boolean;
   someSelected: boolean;
   onToggleSelectAll: (checked: boolean) => void;
@@ -64,6 +134,8 @@ export function GridTableHeader<T>({
   selectionEnabled,
   showSelectAll,
   expandableEnabled,
+  hoverAnchor,
+  getPin,
   allSelected,
   someSelected,
   onToggleSelectAll,
@@ -74,12 +146,26 @@ export function GridTableHeader<T>({
   openFilterId,
   onOpenFilter,
 }: GridTableHeaderProps<T>) {
+  const expandPin = getPin(EXPAND_KEY);
+  const selectPin = getPin(SELECT_KEY);
   return (
     <thead>
       <tr>
-        {expandableEnabled && <th className={styles.expandCol} scope="col" aria-label="Expand" />}
+        {hoverAnchor && <th className={styles.hoverAnchor} aria-hidden="true" />}
+        {expandableEnabled && (
+          <th
+            className={joinClasses(styles.expandCol, expandPin.className)}
+            style={expandPin.style}
+            scope="col"
+            aria-label="Expand"
+          />
+        )}
         {selectionEnabled && (
-          <th className={styles.selectCol} scope="col">
+          <th
+            className={joinClasses(styles.selectCol, selectPin.className)}
+            style={selectPin.style}
+            scope="col"
+          >
             {showSelectAll ? (
               <Checkbox
                 label="Select all rows"
@@ -123,10 +209,13 @@ export function GridTableHeader<T>({
             </span>
           );
 
+          const pin = getPin(column.id);
+
           return (
             <th
               key={column.id}
-              className={[alignClass(align), isSorted ? styles.sortActive : ''].filter(Boolean).join(' ')}
+              className={joinClasses(alignClass(align), isSorted && styles.sortActive, pin.className)}
+              style={pin.style}
               scope="col"
               aria-sort={ariaSort}
             >
@@ -174,37 +263,16 @@ export function GridTableHeader<T>({
                 )}
               </div>
               {filterable && filterOpen && (
-                <div
-                  className={styles.filterPopover}
-                  data-bs-filter="popover"
-                  role="dialog"
-                  aria-label={`Filter ${headerLabel}`}
-                >
-                  <Select
-                    size="small"
-                    options={operators}
-                    value={operator}
-                    getOptionLabel={filterOperatorLabel}
-                    getOptionKey={(item) => item}
-                    onChange={(next) =>
-                      onFilterChange(column.id, {
-                        operator: next ?? operator,
-                        value: currentFilter?.value ?? '',
-                      })
-                    }
-                    placeholder="Operator"
-                    searchable={false}
-                  />
-                  <InputField
-                    size="small"
-                    value={currentFilter?.value ?? ''}
-                    onChange={(next) =>
-                      onFilterChange(column.id, next.trim() === '' ? undefined : { operator, value: next })
-                    }
-                    placeholder="Filter"
-                    aria-label={`Filter ${headerLabel}`}
-                  />
-                </div>
+                <GridTableFilterPopover
+                  label={headerLabel}
+                  operators={operators}
+                  initialOperator={operator}
+                  initialValue={currentFilter?.value ?? ''}
+                  onApply={(next) => {
+                    onFilterChange(column.id, next);
+                    onOpenFilter(null);
+                  }}
+                />
               )}
             </th>
           );

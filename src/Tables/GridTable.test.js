@@ -5,7 +5,7 @@ import { GridTable } from './GridTable/GridTable'
 import { ActionsCell } from './GridTable/cells/ActionsCell'
 import { StatusCell } from './GridTable/cells/StatusCell'
 import { MoneyCell } from './GridTable/cells/MoneyCell'
-import { buildCsv } from './GridTable/exportCsv'
+import { buildCsv, buildXls } from './GridTable/exportCsv'
 import { avgBy, sumBy } from './GridTable/GridTable.utils'
 
 let container
@@ -41,6 +41,16 @@ function change(element, value) {
     element.dispatchEvent(new Event('input', { bubbles: true }))
     element.dispatchEvent(new Event('change', { bubbles: true }))
   })
+}
+
+function buttonByText(text) {
+  return Array.from(container.querySelectorAll('button')).find((button) => button.textContent === text)
+}
+
+function bodyText(columnIndex = 0) {
+  return Array.from(container.querySelectorAll('tbody tr:not(.bs-grid-table--emptyRow)')).map(
+    (row) => row.querySelectorAll('td:not(.bs-grid-table--hoverAnchor)')[columnIndex].textContent
+  )
 }
 
 const rows = [
@@ -81,14 +91,55 @@ describe('GridTable', () => {
     expect(container.querySelector('th[aria-sort="ascending"]')).toBeFalsy()
   })
 
-  it('filters rows from a column filter', () => {
+  it('applies a column filter only on Apply and removes it on Clear', () => {
     render(<GridTable columns={columns} rows={rows} getRowId={(row) => row.id} />)
     click(container.querySelector('button[aria-label="Filter Host"]'))
     const input = container.querySelector('[data-bs-filter="popover"] input')
     expect(input).toBeTruthy()
     change(input, 'ikea')
+    expect(container.textContent).toContain('Currys')
+    click(buttonByText('Apply'))
+    expect(container.querySelector('[data-bs-filter="popover"]')).toBeFalsy()
     expect(container.textContent).toContain('IKEA')
     expect(container.textContent).not.toContain('Currys')
+
+    click(container.querySelector('button[aria-label="Filter Host"]'))
+    expect(container.querySelector('[data-bs-filter="popover"] input').value).toBe('ikea')
+    click(buttonByText('Clear'))
+    expect(container.textContent).toContain('Currys')
+  })
+
+  it('applies a column filter on Enter', () => {
+    render(<GridTable columns={columns} rows={rows} getRowId={(row) => row.id} />)
+    click(container.querySelector('button[aria-label="Filter Host"]'))
+    const input = container.querySelector('[data-bs-filter="popover"] input')
+    change(input, 'wick')
+    act(() => {
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    })
+    expect(bodyText()).toEqual(['Wickes'])
+  })
+
+  it('skips client sort and filter in server modes and reports changes', () => {
+    const onSortChange = jest.fn()
+    const onQuickFilterChange = jest.fn()
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        sortMode="server"
+        filterMode="server"
+        onSortChange={onSortChange}
+        filtering={{ onQuickFilterChange }}
+      />
+    )
+    click(container.querySelector('button[aria-label="Sort by Host"]'))
+    click(container.querySelector('button[aria-label="Sort by Host"]'))
+    expect(onSortChange).toHaveBeenLastCalledWith({ field: 'host', direction: 'desc' })
+    change(container.querySelector('input[aria-label="Quick filter"]'), 'wickes')
+    expect(onQuickFilterChange).toHaveBeenLastCalledWith('wickes')
+    expect(bodyText()).toEqual(['Currys', 'IKEA', 'Wickes'])
   })
 
   it('applies a quick filter across primitive values', () => {
@@ -341,5 +392,169 @@ describe('GridTable', () => {
     expect(container.textContent).toContain('Active')
     expect(container.textContent).toMatch(/£10/)
     expect(avgBy(rows, (row) => row.sales)).toBeCloseTo(5)
+  })
+
+  it('shows a bulk-actions bar for selected rows and clears selection', () => {
+    const bulkActions = jest.fn(({ selectedRows }) => (
+      <button type="button">{`Archive ${selectedRows.map((row) => row.host).join('+')}`}</button>
+    ))
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        selection={{ mode: 'multiple' }}
+        bulkActions={bulkActions}
+      />
+    )
+    expect(container.querySelector('[aria-label="Bulk actions"]')).toBeFalsy()
+    const boxes = container.querySelectorAll('tbody input[type="checkbox"]')
+    click(boxes[0])
+    click(boxes[2])
+    const bar = container.querySelector('[aria-label="Bulk actions"]')
+    expect(bar.textContent).toContain('2 selected')
+    expect(bar.textContent).toContain('Archive Currys+Wickes')
+    click(buttonByText('Clear selection'))
+    expect(container.querySelector('[aria-label="Bulk actions"]')).toBeFalsy()
+    expect(container.querySelectorAll('tbody input:checked').length).toBe(0)
+  })
+
+  it('offers CSV and XLS from an export menu and honours export overrides', () => {
+    const xls = buildXls(rows, columns)
+    expect(xls).toContain('<Data ss:Type="Number">8.5</Data>')
+    expect(xls).toContain('<Data ss:Type="String">Currys</Data>')
+
+    const created = []
+    const original = URL.createObjectURL
+    URL.createObjectURL = (blob) => {
+      created.push(blob)
+      return 'blob:grid-table'
+    }
+    const clickSpy = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+    const onExportCsv = jest.fn()
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        onExportCsv={onExportCsv}
+        exportXls={{ filename: 'hosts.xls' }}
+      />
+    )
+    click(container.querySelector('button[aria-label="Export"]'))
+    click(buttonByText('Export as CSV'))
+    expect(onExportCsv).toHaveBeenCalledTimes(1)
+    expect(created.length).toBe(0)
+    click(container.querySelector('button[aria-label="Export"]'))
+    click(buttonByText('Export as XLS'))
+    expect(created.length).toBe(1)
+    expect(created[0].type).toBe('application/vnd.ms-excel')
+    URL.createObjectURL = original
+    clickSpy.mockRestore()
+  })
+
+  it('drops hidden columns and moves pinned columns to their edge', () => {
+    render(
+      <GridTable
+        columns={[
+          { id: 'status', header: 'Status', accessor: 'status', pinned: 'right' },
+          { id: 'commission', header: 'Commission', accessor: 'commission', hidden: true },
+          { id: 'sales', header: 'Sales', accessor: 'sales' },
+          { id: 'host', header: 'Host', accessor: 'host', pinned: 'left' }
+        ]}
+        rows={rows}
+        getRowId={(row) => row.id}
+        selection={{ mode: 'multiple' }}
+      />
+    )
+    const headers = Array.from(container.querySelectorAll('thead th')).map((th) => th.textContent)
+    expect(headers).toEqual(['Select all rows', 'Host', 'Sales', 'Status'])
+    const [selectTh, hostTh, salesTh, statusTh] = container.querySelectorAll('thead th')
+    expect(selectTh.className).toContain('bs-grid-table--pinned')
+    expect(hostTh.className).toContain('bs-grid-table--pinnedLeftEdge')
+    expect(hostTh.style.left).toBe('0px')
+    expect(salesTh.className).not.toContain('bs-grid-table--pinned')
+    expect(statusTh.className).toContain('bs-grid-table--pinnedRightEdge')
+    expect(statusTh.style.right).toBe('0px')
+  })
+
+  it('renders hover actions without triggering row click', () => {
+    const onRowClick = jest.fn()
+    const onArchive = jest.fn()
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        onRowClick={onRowClick}
+        hoverActions={(row) => (
+          <button type="button" aria-label={`Archive ${row.host}`} onClick={() => onArchive(row.id)} />
+        )}
+        hoverActionsPosition="center"
+      />
+    )
+    expect(container.querySelector('.bs-grid-table--hoverCenter')).toBeTruthy()
+    click(container.querySelector('button[aria-label="Archive IKEA"]'))
+    expect(onArchive).toHaveBeenCalledWith('ikea')
+    expect(onRowClick).not.toHaveBeenCalled()
+    expect(bodyText()).toEqual(['Currys', 'IKEA', 'Wickes'])
+  })
+
+  it('owns pagination when uncontrolled and resets to page 1 on filter', () => {
+    const onChange = jest.fn()
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        filtering={{}}
+        pagination={{ defaultPageSize: 1, onChange }}
+      />
+    )
+    expect(bodyText()).toEqual(['Currys'])
+    click(container.querySelector('button[aria-label="Next"]'))
+    expect(bodyText()).toEqual(['IKEA'])
+    expect(onChange).toHaveBeenLastCalledWith({ page: 2, pageSize: 1 })
+    change(container.querySelector('input[aria-label="Quick filter"]'), 'kes')
+    expect(onChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 1 })
+    expect(bodyText()).toEqual(['Wickes'])
+  })
+
+  it('owns expansion from defaultExpandedIds and reports changes', () => {
+    const onExpandedChange = jest.fn()
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        expandable={{
+          defaultExpandedIds: ['ikea'],
+          onExpandedChange,
+          renderExpanded: (row) => `Details ${row.host}`
+        }}
+      />
+    )
+    expect(container.textContent).toContain('Details IKEA')
+    click(container.querySelector('button[aria-label="Expand row currys"]'))
+    expect(container.textContent).toContain('Details Currys')
+    expect(onExpandedChange).toHaveBeenLastCalledWith(['ikea', 'currys'])
+  })
+
+  it('renders a title and caps the scroll height with a sticky header', () => {
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        title="Hosts"
+        maxHeight={240}
+        summary={{ row: { host: 'Total' } }}
+      />
+    )
+    expect(container.querySelector('.bs-grid-table--title h3').textContent).toBe('Hosts')
+    const scroll = container.querySelector('.bs-grid-table--scroll')
+    expect(scroll.style.maxHeight).toBe('240px')
+    expect(scroll.className).toContain('bs-grid-table--sticky')
+    expect(scroll.className).toContain('bs-grid-table--stickySummary')
   })
 })

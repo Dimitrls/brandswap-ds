@@ -1,32 +1,42 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import './GridTable.css';
 
+import { Button } from '../../Buttons/Button';
 import { Checkbox } from '../../FormElements/Checkbox';
 import { Icon } from '../../Icons/Icon';
+import { Heading } from '../../Typography/Heading';
 import { DateCell } from './cells/DateCell';
 import { MoneyCell } from './cells/MoneyCell';
 import { PercentCell } from './cells/PercentCell';
 import { StatusCell } from './cells/StatusCell';
-import { exportRowsToCsv } from './exportCsv';
+import { exportRowsToCsv, exportRowsToXls } from './exportCsv';
 import { GridTableHeader } from './GridTableHeader';
+import type { GridTableCellPin } from './GridTableHeader';
 import { GridTableToolbar } from './GridTableToolbar';
+import type { GridTableExportFormat } from './GridTableToolbar';
 import type {
   Column,
+  GridTableAlign,
   GridTableColumnType,
   GridTableCountryCode,
   GridTableFilterValue,
   GridTableProps,
   GridTableRowId,
+  GridTableSortState,
 } from './GridTable.types';
 import {
   cycleSortState,
   DEFAULT_PAGE_SIZE_OPTIONS,
   defaultAlign,
+  EXPAND_KEY,
   getCellValue,
+  getDisplayColumns,
   getTotalPages,
+  HOVER_KEY,
   isNumericZero,
   primitiveString,
   processRows,
+  SELECT_KEY,
   slicePage,
   toCssSize,
   useControllableState,
@@ -34,12 +44,17 @@ import {
 
 const styles: Record<string, string> = {
   root: 'bs-grid-table',
+  title: 'bs-grid-table--title',
   body: 'bs-grid-table--body',
   scroll: 'bs-grid-table--scroll',
   sticky: 'bs-grid-table--sticky',
+  stickySummary: 'bs-grid-table--stickySummary',
+  pingLeft: 'bs-grid-table--pingLeft',
+  pingRight: 'bs-grid-table--pingRight',
   table: 'bs-grid-table--table',
   col: 'bs-grid-table--col',
   colFlex: 'bs-grid-table--colFlex',
+  hoverCol: 'bs-grid-table--hoverCol',
   alignLeft: 'bs-grid-table--alignLeft',
   alignCenter: 'bs-grid-table--alignCenter',
   alignRight: 'bs-grid-table--alignRight',
@@ -47,8 +62,15 @@ const styles: Record<string, string> = {
   expandCol: 'bs-grid-table--expandCol',
   actionsCol: 'bs-grid-table--actionsCol',
   cellWrap: 'bs-grid-table--cellWrap',
+  pinned: 'bs-grid-table--pinned',
+  pinnedLeftEdge: 'bs-grid-table--pinnedLeftEdge',
+  pinnedRightEdge: 'bs-grid-table--pinnedRightEdge',
   clickable: 'bs-grid-table--clickable',
   selected: 'bs-grid-table--selected',
+  hoverRow: 'bs-grid-table--hoverRow',
+  hoverAnchor: 'bs-grid-table--hoverAnchor',
+  hoverActions: 'bs-grid-table--hoverActions',
+  hoverChip: 'bs-grid-table--hoverChip',
   iconBtn: 'bs-grid-table--iconBtn',
   expandedRow: 'bs-grid-table--expandedRow',
   expandedCell: 'bs-grid-table--expandedCell',
@@ -57,14 +79,38 @@ const styles: Record<string, string> = {
   overlay: 'bs-grid-table--overlay',
   spinner: 'bs-grid-table--spinner',
   paginationBottom: 'bs-grid-table--paginationBottom',
+  bulkBar: 'bs-grid-table--bulkBar',
+  bulkCount: 'bs-grid-table--bulkCount',
+  bulkActions: 'bs-grid-table--bulkActions',
 };
 
 const INTERACTIVE_SELECTOR = 'button, a, input, label, textarea, select, [data-stop-row-click], [data-bs-filter]';
 
-function alignClass(align: 'left' | 'center' | 'right'): string {
+const NO_PIN: GridTableCellPin = {};
+
+function joinClasses(...classes: Array<string | undefined | false>): string {
+  return classes.filter(Boolean).join(' ');
+}
+
+function alignClass(align: GridTableAlign): string {
   if (align === 'center') return styles.alignCenter;
   if (align === 'right') return styles.alignRight;
   return styles.alignLeft;
+}
+
+function hoverPositionClass(position: GridTableAlign): string {
+  switch (position) {
+    case 'left':
+      return 'bs-grid-table--hoverLeft';
+    case 'center':
+      return 'bs-grid-table--hoverCenter';
+    case 'right':
+      return 'bs-grid-table--hoverRight';
+    default: {
+      const _exhaustive: never = position;
+      return _exhaustive;
+    }
+  }
 }
 
 function densityClass(density: GridTableProps<unknown>['density']): string {
@@ -73,15 +119,7 @@ function densityClass(density: GridTableProps<unknown>['density']): string {
   return 'bs-grid-table--density-default';
 }
 
-function getColumnCount<T>(
-  columns: Column<T>[],
-  selectionEnabled: boolean,
-  expandableEnabled: boolean
-): number {
-  return columns.length + (selectionEnabled ? 1 : 0) + (expandableEnabled ? 1 : 0);
-}
-
-function renderTypedCell<T>(
+function renderTypedCell(
   type: GridTableColumnType,
   value: unknown,
   hideZero: boolean,
@@ -135,38 +173,60 @@ function getColVars<T>(column: Column<T>): React.CSSProperties {
   return vars as React.CSSProperties;
 }
 
+function sameOffsets(a: Record<string, number>, b: Record<string, number>): boolean {
+  const aKeys = Object.keys(a);
+  if (aKeys.length !== Object.keys(b).length) return false;
+  return aKeys.every((key) => a[key] === b[key]);
+}
+
 /**
  * Admin-ready data grid. FiltersBar stays above; GridTable owns sort, quick
- * filter, paging, selection, expand, insight summary, and CSV export.
+ * filter, paging, selection, expand, pinned columns, insight summary, and export.
  */
 export function GridTable<T>({
   rows,
   columns,
   getRowId,
+  title,
   loading = false,
   emptyText = 'No data',
   density = 'default',
   sorting,
   defaultSorting = null,
   onSortChange,
+  sortMode = 'client',
   filtering,
+  filterMode = 'client',
   pagination,
   selection,
+  bulkActions,
   onRowClick,
   getRowClassName,
+  hoverActions,
+  hoverActionsPosition = 'right',
   expandable,
   summary,
   exportCsv,
+  exportXls,
+  onExportCsv,
+  onExportXls,
   stickyHeader = false,
+  maxHeight,
   countryCode = 'GB',
   className,
   ...props
 }: GridTableProps<T>) {
+  const displayColumns = useMemo(() => getDisplayColumns(columns), [columns]);
   const selectionMode = selection?.mode ?? 'none';
   const selectionEnabled = selectionMode === 'single' || selectionMode === 'multiple';
   const expandableEnabled = Boolean(expandable);
-  const colSpan = getColumnCount(columns, selectionEnabled, expandableEnabled);
+  const hoverEnabled = Boolean(hoverActions);
+  const colSpan =
+    displayColumns.length + (selectionEnabled ? 1 : 0) + (expandableEnabled ? 1 : 0) + (hoverEnabled ? 1 : 0);
   const paginationPlacement = pagination?.placement ?? 'top';
+  const paginationMode = pagination?.mode ?? 'client';
+  const headerSticky = stickyHeader || maxHeight != null;
+  const summarySticky = headerSticky || Boolean(summary?.sticky);
 
   const [sort, setSort] = useControllableState({
     value: sorting,
@@ -191,6 +251,19 @@ export function GridTable<T>({
       selection?.onChange?.(ids, selectedRows);
     },
   });
+  const [expandedIds, setExpandedIds] = useControllableState<GridTableRowId[]>({
+    value: expandable?.expandedIds,
+    defaultValue: expandable?.defaultExpandedIds ?? [],
+    onChange: expandable?.onExpandedChange,
+  });
+  const [page, setPage] = useControllableState({
+    value: pagination?.page,
+    defaultValue: pagination?.defaultPage ?? 1,
+  });
+  const [pageSize, setPageSize] = useControllableState({
+    value: pagination?.pageSize,
+    defaultValue: pagination?.defaultPageSize ?? 10,
+  });
   const [openFilterId, setOpenFilterId] = useControllableState<string | null>({
     defaultValue: null,
   });
@@ -213,20 +286,50 @@ export function GridTable<T>({
     };
   }, [openFilterId, setOpenFilterId]);
 
+  const changePage = (nextPage: number, nextSize: number) => {
+    setPage(nextPage);
+    setPageSize(nextSize);
+    pagination?.onChange?.({ page: nextPage, pageSize: nextSize });
+  };
+
+  const resetToFirstPage = () => {
+    if (pagination && page !== 1) changePage(1, pageSize);
+  };
+
+  const updateSort = (next: GridTableSortState) => {
+    setSort(next);
+    resetToFirstPage();
+  };
+
+  const updateFilters = (next: Record<string, GridTableFilterValue | undefined>) => {
+    setFilters(next);
+    resetToFirstPage();
+  };
+
+  const updateQuickFilter = (next: string) => {
+    setQuickFilter(next);
+    resetToFirstPage();
+  };
+
   const processedRows = useMemo(
-    () => processRows(rows, columns, quickFilter, filters, sort),
-    [columns, filters, quickFilter, rows, sort]
+    () =>
+      processRows(
+        rows,
+        displayColumns,
+        filterMode === 'server' ? '' : quickFilter,
+        filterMode === 'server' ? {} : filters,
+        sortMode === 'server' ? null : sort
+      ),
+    [displayColumns, filterMode, filters, quickFilter, rows, sort, sortMode]
   );
 
-  const page = pagination?.page ?? 1;
-  const pageSize = pagination?.pageSize ?? 10;
   const totalItems =
-    pagination?.mode === 'server' ? (pagination.total ?? processedRows.length) : processedRows.length;
+    paginationMode === 'server' ? (pagination?.total ?? processedRows.length) : processedRows.length;
   const totalPages = getTotalPages(totalItems, pageSize);
   const currentPage = Math.min(Math.max(page, 1), totalPages);
   const visibleRows = useMemo(
-    () => slicePage(processedRows, currentPage, pageSize, pagination?.mode),
-    [currentPage, pageSize, pagination?.mode, processedRows]
+    () => (pagination ? slicePage(processedRows, currentPage, pageSize, paginationMode) : processedRows),
+    [currentPage, pageSize, pagination, paginationMode, processedRows]
   );
 
   const selectableVisible = visibleRows.filter((row) =>
@@ -241,6 +344,116 @@ export function GridTable<T>({
     if (!summary) return null;
     return typeof summary.row === 'function' ? summary.row(processedRows) : summary.row;
   }, [processedRows, summary]);
+
+  // Pinned columns: utility columns join the left pin group so they never scroll under it.
+  const cellKeys = useMemo(
+    () => [
+      ...(hoverEnabled ? [HOVER_KEY] : []),
+      ...(expandableEnabled ? [EXPAND_KEY] : []),
+      ...(selectionEnabled ? [SELECT_KEY] : []),
+      ...displayColumns.map((column) => column.id),
+    ],
+    [displayColumns, expandableEnabled, hoverEnabled, selectionEnabled]
+  );
+  const leftPinKeys = useMemo(() => {
+    const pinnedIds = displayColumns.filter((column) => column.pinned === 'left').map((column) => column.id);
+    if (pinnedIds.length === 0) return [];
+    return [...(expandableEnabled ? [EXPAND_KEY] : []), ...(selectionEnabled ? [SELECT_KEY] : []), ...pinnedIds];
+  }, [displayColumns, expandableEnabled, selectionEnabled]);
+  const rightPinKeys = useMemo(
+    () => displayColumns.filter((column) => column.pinned === 'right').map((column) => column.id),
+    [displayColumns]
+  );
+  const hasPins = leftPinKeys.length > 0 || rightPinKeys.length > 0;
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const [pinOffsets, setPinOffsets] = useState<Record<string, number>>({});
+  const [ping, setPing] = useState({ left: false, right: false });
+
+  useLayoutEffect(() => {
+    const table = tableRef.current;
+    if (!hasPins || !table) return undefined;
+    const measure = () => {
+      const headerCells = Array.from(table.tHead?.rows[0]?.cells ?? []);
+      const widths: Record<string, number> = {};
+      headerCells.forEach((cell, index) => {
+        const key = cellKeys[index];
+        if (key) widths[key] = cell.getBoundingClientRect().width;
+      });
+      const next: Record<string, number> = {};
+      let left = 0;
+      leftPinKeys.forEach((key) => {
+        next[key] = left;
+        left += widths[key] ?? 0;
+      });
+      let right = 0;
+      [...rightPinKeys].reverse().forEach((key) => {
+        next[key] = right;
+        right += widths[key] ?? 0;
+      });
+      setPinOffsets((prev) => (sameOffsets(prev, next) ? prev : next));
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(measure);
+    Array.from(table.tHead?.rows[0]?.cells ?? []).forEach((cell) => observer.observe(cell));
+    return () => observer.disconnect();
+  }, [cellKeys, hasPins, leftPinKeys, rightPinKeys, visibleRows]);
+
+  const updateScrollState = useCallback(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+    const maxScroll = element.scrollWidth - element.clientWidth;
+    const left = element.scrollLeft > 0;
+    const right = maxScroll > 1 && element.scrollLeft < maxScroll - 1;
+    setPing((prev) => (prev.left === left && prev.right === right ? prev : { left, right }));
+    element.style.setProperty('--bs-grid-scroll-width', `${element.clientWidth}px`);
+  }, []);
+
+  useLayoutEffect(() => {
+    const element = scrollRef.current;
+    if (!element || (!hasPins && !hoverEnabled)) return undefined;
+    updateScrollState();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(updateScrollState);
+    observer.observe(element);
+    if (tableRef.current) observer.observe(tableRef.current);
+    return () => observer.disconnect();
+  }, [hasPins, hoverEnabled, updateScrollState]);
+
+  const lastLeftKey = leftPinKeys[leftPinKeys.length - 1];
+  const firstRightKey = rightPinKeys[0];
+
+  const getPin = (key: string): GridTableCellPin => {
+    const side = leftPinKeys.includes(key) ? 'left' : rightPinKeys.includes(key) ? 'right' : null;
+    if (!side) return NO_PIN;
+    return {
+      className: joinClasses(
+        styles.pinned,
+        key === lastLeftKey && styles.pinnedLeftEdge,
+        key === firstRightKey && styles.pinnedRightEdge
+      ),
+      style: side === 'left' ? { left: pinOffsets[key] ?? 0 } : { right: pinOffsets[key] ?? 0 },
+    };
+  };
+
+  const isRowExpanded = (row: T): boolean => {
+    if (!expandable) return false;
+    if (expandable.isExpanded) return expandable.isExpanded(row);
+    return expandedIds.includes(getRowId(row));
+  };
+
+  const handleToggleExpand = (row: T) => {
+    if (!expandable) return;
+    if (!expandable.isExpanded) {
+      const rowId = getRowId(row);
+      setExpandedIds(
+        expandedIds.includes(rowId) ? expandedIds.filter((id) => id !== rowId) : [...expandedIds, rowId]
+      );
+    }
+    expandable.onToggle?.(row);
+  };
 
   const handleToggleSelectAll = (checked: boolean) => {
     if (selectionMode !== 'multiple') return;
@@ -269,73 +482,117 @@ export function GridTable<T>({
     onRowClick(row);
   };
 
-  const handleExport = () => {
-    exportRowsToCsv(processedRows, columns, exportCsv);
+  const exportFormats: GridTableExportFormat[] = [
+    ...(exportCsv || onExportCsv ? (['csv'] as const) : []),
+    ...(exportXls || onExportXls ? (['xls'] as const) : []),
+  ];
+
+  const handleExport = (format: GridTableExportFormat) => {
+    switch (format) {
+      case 'csv':
+        if (onExportCsv) onExportCsv();
+        else exportRowsToCsv(processedRows, displayColumns, exportCsv);
+        return;
+      case 'xls':
+        if (onExportXls) onExportXls();
+        else exportRowsToXls(processedRows, displayColumns, exportXls);
+        return;
+      default: {
+        const _exhaustive: never = format;
+        return _exhaustive;
+      }
+    }
   };
 
-  const pager = pagination ? (
-    <GridTableToolbar
-      showSearch={false}
-      quickFilter={quickFilter}
-      onQuickFilterChange={setQuickFilter}
-      showExport={false}
-      onExport={handleExport}
-      showPagination
-      page={currentPage}
-      pageSize={pageSize}
-      totalPages={totalPages}
-      pageSizeOptions={pagination.pageSizeOptions ?? DEFAULT_PAGE_SIZE_OPTIONS}
-      onPageChange={(nextPage) => pagination.onChange({ page: nextPage, pageSize })}
-      onPageSizeChange={(nextSize) => pagination.onChange({ page: 1, pageSize: nextSize })}
-    />
-  ) : null;
+  const toolbarPagingProps = {
+    page: currentPage,
+    pageSize,
+    totalPages,
+    pageSizeOptions: pagination?.pageSizeOptions ?? DEFAULT_PAGE_SIZE_OPTIONS,
+    onPageChange: (nextPage: number) => changePage(nextPage, pageSize),
+    onPageSizeChange: (nextSize: number) => changePage(1, nextSize),
+  };
 
-  const showTopToolbar = Boolean(filtering) || Boolean(exportCsv) || (Boolean(pagination) && paginationPlacement === 'top');
+  const showTopToolbar =
+    Boolean(filtering) || exportFormats.length > 0 || (Boolean(pagination) && paginationPlacement === 'top');
+
+  const selectedRows = bulkActions ? rows.filter((row) => selectedIds.includes(getRowId(row))) : [];
+  const hoverClass = hoverPositionClass(hoverActionsPosition);
+  const expandPin = getPin(EXPAND_KEY);
+  const selectPin = getPin(SELECT_KEY);
 
   return (
-    <div className={[styles.root, densityClass(density), className].filter(Boolean).join(' ')} {...props}>
+    <div
+      className={joinClasses(
+        styles.root,
+        densityClass(density),
+        ping.left && styles.pingLeft,
+        ping.right && styles.pingRight,
+        className
+      )}
+      {...props}
+    >
+      {title != null && (
+        <div className={styles.title}>{typeof title === 'string' ? <Heading level={3}>{title}</Heading> : title}</div>
+      )}
       {showTopToolbar && (
         <GridTableToolbar
           showSearch={Boolean(filtering)}
           quickFilter={quickFilter}
-          onQuickFilterChange={setQuickFilter}
-          showExport={Boolean(exportCsv)}
+          onQuickFilterChange={updateQuickFilter}
+          exportFormats={exportFormats}
           onExport={handleExport}
           showPagination={Boolean(pagination) && paginationPlacement === 'top'}
-          page={currentPage}
-          pageSize={pageSize}
-          totalPages={totalPages}
-          pageSizeOptions={pagination?.pageSizeOptions ?? DEFAULT_PAGE_SIZE_OPTIONS}
-          onPageChange={(nextPage) => pagination?.onChange({ page: nextPage, pageSize })}
-          onPageSizeChange={(nextSize) => pagination?.onChange({ page: 1, pageSize: nextSize })}
+          {...toolbarPagingProps}
         />
       )}
+      {bulkActions && selectedIds.length > 0 && (
+        <div className={styles.bulkBar} role="region" aria-label="Bulk actions">
+          <span className={styles.bulkCount}>{`${selectedIds.length} selected`}</span>
+          <div className={styles.bulkActions}>
+            {bulkActions({ selectedIds, selectedRows, clearSelection: () => setSelectedIds([]) })}
+          </div>
+          <Button variant="subtle" size="small" label="Clear selection" onClick={() => setSelectedIds([])} />
+        </div>
+      )}
       <div className={styles.body}>
-        <div className={[styles.scroll, stickyHeader ? styles.sticky : ''].filter(Boolean).join(' ')}>
-          <table className={styles.table}>
+        <div
+          ref={scrollRef}
+          className={joinClasses(
+            styles.scroll,
+            headerSticky && styles.sticky,
+            summarySticky && styles.stickySummary
+          )}
+          style={maxHeight != null ? { maxHeight: toCssSize(maxHeight) } : undefined}
+          onScroll={hasPins ? updateScrollState : undefined}
+        >
+          <table className={styles.table} ref={tableRef}>
             <colgroup>
+              {hoverEnabled && <col className={styles.hoverCol} />}
               {expandableEnabled && <col className={styles.expandCol} />}
               {selectionEnabled && <col className={styles.selectCol} />}
-              {columns.map((column) => (
+              {displayColumns.map((column) => (
                 <col
                   key={column.id}
-                  className={[styles.col, column.flex ? styles.colFlex : ''].filter(Boolean).join(' ')}
+                  className={joinClasses(styles.col, Boolean(column.flex) && styles.colFlex)}
                   style={getColVars(column)}
                 />
               ))}
             </colgroup>
             <GridTableHeader
-              columns={columns}
+              columns={displayColumns}
               selectionEnabled={selectionEnabled}
               showSelectAll={selectionMode === 'multiple'}
               expandableEnabled={expandableEnabled}
+              hoverAnchor={hoverEnabled}
+              getPin={getPin}
               allSelected={allSelected}
               someSelected={someSelected}
               onToggleSelectAll={handleToggleSelectAll}
               sort={sort}
-              onSort={(columnId) => setSort(cycleSortState(sort, columnId))}
+              onSort={(columnId) => updateSort(cycleSortState(sort, columnId))}
               filters={filters}
-              onFilterChange={(columnId, value) => setFilters({ ...filters, [columnId]: value })}
+              onFilterChange={(columnId, value) => updateFilters({ ...filters, [columnId]: value })}
               openFilterId={openFilterId}
               onOpenFilter={setOpenFilterId}
             />
@@ -344,7 +601,7 @@ export function GridTable<T>({
                 visibleRows.map((row, rowIndex) => {
                   const rowId = getRowId(row);
                   const selected = selectedIds.includes(rowId);
-                  const expanded = Boolean(expandable?.isExpanded(row));
+                  const expanded = isRowExpanded(row);
                   const canSelect =
                     selectionEnabled &&
                     (selection?.isRowSelectable ? selection.isRowSelectable(row) : true);
@@ -353,31 +610,39 @@ export function GridTable<T>({
                     <React.Fragment key={rowId}>
                       <tr
                         className={
-                          [
-                            selected ? styles.selected : '',
-                            onRowClick ? styles.clickable : '',
-                            getRowClassName?.(row),
-                          ]
-                            .filter(Boolean)
-                            .join(' ') || undefined
+                          joinClasses(
+                            selected && styles.selected,
+                            onRowClick && styles.clickable,
+                            hoverEnabled && styles.hoverRow,
+                            getRowClassName?.(row)
+                          ) || undefined
                         }
                         onClick={onRowClick ? (event) => handleRowClick(row, event) : undefined}
                       >
-                        {expandableEnabled && expandable && (
-                          <td className={styles.expandCol}>
+                        {hoverEnabled && hoverActions && (
+                          <td className={styles.hoverAnchor}>
+                            <div className={joinClasses(styles.hoverActions, hoverClass)}>
+                              <div className={styles.hoverChip} data-stop-row-click>
+                                {hoverActions(row)}
+                              </div>
+                            </div>
+                          </td>
+                        )}
+                        {expandableEnabled && (
+                          <td className={joinClasses(styles.expandCol, expandPin.className)} style={expandPin.style}>
                             <button
                               type="button"
                               className={styles.iconBtn}
                               aria-expanded={expanded}
                               aria-label={expanded ? `Collapse row ${rowId}` : `Expand row ${rowId}`}
-                              onClick={() => expandable.onToggle(row)}
+                              onClick={() => handleToggleExpand(row)}
                             >
                               <Icon name={expanded ? 'chevron-down' : 'chevron-right'} size={16} />
                             </button>
                           </td>
                         )}
                         {selectionEnabled && (
-                          <td className={styles.selectCol}>
+                          <td className={joinClasses(styles.selectCol, selectPin.className)} style={selectPin.style}>
                             {canSelect ? (
                               <Checkbox
                                 label={`Select row ${rowId}`}
@@ -388,19 +653,19 @@ export function GridTable<T>({
                             ) : null}
                           </td>
                         )}
-                        {columns.map((column) => {
+                        {displayColumns.map((column) => {
                           const type = column.type ?? 'text';
-                          const align = defaultAlign(column);
+                          const pin = getPin(column.id);
                           return (
                             <td
                               key={column.id}
-                              className={[
-                                alignClass(align),
-                                type === 'actions' ? styles.actionsCol : '',
-                                type === 'text' ? styles.cellWrap : '',
-                              ]
-                                .filter(Boolean)
-                                .join(' ')}
+                              className={joinClasses(
+                                alignClass(defaultAlign(column)),
+                                type === 'actions' && styles.actionsCol,
+                                type === 'text' && styles.cellWrap,
+                                pin.className
+                              )}
+                              style={pin.style}
                             >
                               {renderCell(column, row, rowIndex, countryCode)}
                             </td>
@@ -426,24 +691,28 @@ export function GridTable<T>({
             {summary && summaryRow && !loading && (
               <tfoot>
                 <tr className={styles.summary}>
-                  {expandableEnabled && <td className={styles.expandCol} />}
-                  {selectionEnabled && <td className={styles.selectCol} />}
-                  {columns.map((column, index) => {
-                    const align = defaultAlign(column);
-                    const isFirstData = index === 0;
+                  {hoverEnabled && <td className={styles.hoverAnchor} />}
+                  {expandableEnabled && (
+                    <td className={joinClasses(styles.expandCol, expandPin.className)} style={expandPin.style} />
+                  )}
+                  {selectionEnabled && (
+                    <td className={joinClasses(styles.selectCol, selectPin.className)} style={selectPin.style} />
+                  )}
+                  {displayColumns.map((column, index) => {
+                    const pin = getPin(column.id);
                     const value = getCellValue(summaryRow as T, column);
-                    const content = isFirstData && summary.label
-                      ? summary.label
-                      : column.render
-                        ? column.render({
-                            value,
-                            row: summaryRow as T,
-                            rowIndex: -1,
-                            column,
-                          })
-                        : renderTypedCell(column.type ?? 'text', value, Boolean(column.hideZero), countryCode);
+                    const content =
+                      index === 0 && summary.label
+                        ? summary.label
+                        : column.render
+                          ? column.render({ value, row: summaryRow as T, rowIndex: -1, column })
+                          : renderTypedCell(column.type ?? 'text', value, Boolean(column.hideZero), countryCode);
                     return (
-                      <td key={column.id} className={alignClass(align)}>
+                      <td
+                        key={column.id}
+                        className={joinClasses(alignClass(defaultAlign(column)), pin.className)}
+                        style={pin.style}
+                      >
                         {content}
                       </td>
                     );
@@ -460,7 +729,17 @@ export function GridTable<T>({
         )}
       </div>
       {pagination && paginationPlacement === 'bottom' && (
-        <div className={styles.paginationBottom}>{pager}</div>
+        <div className={styles.paginationBottom}>
+          <GridTableToolbar
+            showSearch={false}
+            quickFilter={quickFilter}
+            onQuickFilterChange={updateQuickFilter}
+            exportFormats={[]}
+            onExport={handleExport}
+            showPagination
+            {...toolbarPagingProps}
+          />
+        </div>
       )}
     </div>
   );
