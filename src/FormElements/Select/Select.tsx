@@ -5,6 +5,7 @@ import { Checkbox } from '../Checkbox';
 import { RadioButton } from '../RadioButton';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
+import type { SizeVariant } from '../../shared/types';
 import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
 import { useVisibleTagCount } from '../useVisibleTagCount';
 
@@ -23,6 +24,11 @@ const styles: Record<string, string> = {
   selectLarge: 'bs-selectbox--selectLarge',
   arrow: 'bs-selectbox--arrow',
   dropdown: 'bs-selectbox--dropdown',
+  dropdownTop: 'bs-selectbox--dropdown--top',
+  dropdownBottom: 'bs-selectbox--dropdown--bottom',
+  dropdownSmall: 'bs-selectbox--dropdown--small',
+  dropdownMedium: 'bs-selectbox--dropdown--medium',
+  dropdownLarge: 'bs-selectbox--dropdown--large',
   option: 'bs-selectbox--option',
   placeholder: 'bs-selectbox--placeholder',
   wrapperInForm: 'bs-selectbox--wrapperInForm',
@@ -36,6 +42,8 @@ const styles: Record<string, string> = {
 };
 
 export type SelectOptionVariant = 'default' | 'checkbox' | 'radio';
+export type DropdownPosition = 'top' | 'bottom';
+export type DropdownSize = SizeVariant;
 
 export type SelectSharedProps<T = string> = Omit<
   React.HTMLAttributes<HTMLDivElement>,
@@ -53,7 +61,11 @@ export type SelectSharedProps<T = string> = Omit<
   labelInside?: boolean;
   icon?: boolean;
   iconName?: IconName;
-  size?: 'small' | 'medium' | 'large';
+  size?: SizeVariant;
+  /** Independent size for the dropdown options panel (default: medium = current look). */
+  dropdownSize?: DropdownSize;
+  /** Where the dropdown opens relative to the select trigger (default: bottom). */
+  dropdownPosition?: DropdownPosition;
   optionVariant?: SelectOptionVariant;
   searchable?: boolean;
   searchPlaceholder?: string;
@@ -100,6 +112,8 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
     icon = false,
     iconName = 'search',
     size = 'medium',
+    dropdownSize = 'medium',
+    dropdownPosition = 'bottom',
     optionVariant = 'default',
     searchable = true,
     searchPlaceholder = 'Search...',
@@ -223,6 +237,15 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
     if (size === 'small') return styles.labelSmall;
     if (size === 'large') return styles.labelLarge;
     return styles.labelMedium;
+  };
+
+  const getDropdownPositionClass = () =>
+    dropdownPosition === 'top' ? styles.dropdownTop : styles.dropdownBottom;
+
+  const getDropdownSizeClass = () => {
+    if (dropdownSize === 'small') return styles.dropdownSmall;
+    if (dropdownSize === 'large') return styles.dropdownLarge;
+    return styles.dropdownMedium;
   };
 
   let wrapperClass = styles.wrapper;
@@ -390,50 +413,64 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>
         </div>
-      </div>
-      {open && !disabled && (
-        <div className={styles.dropdown} role="listbox">
-          {searchable && (
-            <div
-              className={styles.searchBox}
-              style={{ position: 'relative' }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span className={styles.searchIcon}>
-                <Icon name="search" size={16} />
-              </span>
-              <input
-                ref={searchInputRef}
-                type="text"
-                className={styles.searchInput}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={searchPlaceholder}
-                aria-label={searchPlaceholder}
-              />
-            </div>
-          )}
-          <ul
-            className={styles.dropdownScroll}
-            style={{
-              listStyle: 'none',
-              margin: 0,
-              padding: 0,
-              ...(dropdownMaxHeight != null
-                ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
-                : undefined),
-            }}
+        {open && !disabled && (
+          <div
+            className={[
+              styles.dropdown,
+              getDropdownPositionClass(),
+              getDropdownSizeClass(),
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            role="listbox"
+            data-dropdown-position={dropdownPosition}
+            data-dropdown-size={dropdownSize}
           >
-            {filteredOptions.length === 0 ? (
-              <li className={styles.emptyState}>
-                {options.length === 0 ? 'No data' : 'No results'}
-              </li>
-            ) : (
-              filteredOptions.map(renderOption)
+            {searchable && (
+              <div
+                className={styles.searchBox}
+                style={{ position: 'relative' }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span className={styles.searchIcon}>
+                  <Icon
+                    name="search"
+                    size={dropdownSize === 'small' ? 14 : dropdownSize === 'large' ? 18 : 16}
+                  />
+                </span>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  className={styles.searchInput}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={searchPlaceholder}
+                  aria-label={searchPlaceholder}
+                />
+              </div>
             )}
-          </ul>
-        </div>
-      )}
+            <ul
+              className={styles.dropdownScroll}
+              style={{
+                listStyle: 'none',
+                margin: 0,
+                padding: 0,
+                ...(dropdownMaxHeight != null
+                  ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
+                  : undefined),
+              }}
+            >
+              {filteredOptions.length === 0 ? (
+                <li className={styles.emptyState}>
+                  {options.length === 0 ? 'No data' : 'No results'}
+                </li>
+              ) : (
+                filteredOptions.map(renderOption)
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

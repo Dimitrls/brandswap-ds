@@ -3,7 +3,13 @@ import './FiltersBar.css';
 
 import { InputField } from '../../FormElements/InputField';
 import { Button } from '../../Buttons/Button';
-import { Select, SelectMultiProps, SelectSingleProps } from '../../FormElements/Select';
+import {
+  Select,
+  SelectMultiProps,
+  SelectSingleProps,
+  DropdownPosition,
+  DropdownSize,
+} from '../../FormElements/Select';
 
 const styles: Record<string, string> = {
   filtersBar: 'bs-filters-bar--filtersBar',
@@ -44,6 +50,10 @@ export interface FiltersBarProps
   labels?: boolean;
   border?: boolean;
   dropdownMaxHeight?: number;
+  /** Default dropdown option size for all filters (overridable per filter). */
+  dropdownSize?: DropdownSize;
+  /** Default dropdown position for all filters (overridable per filter). */
+  dropdownPosition?: DropdownPosition;
   /**
    * Arbitrary JSX (e.g. `<Button onClick={...} />`) rendered at the start of the bar,
    * before search and filters. Event handlers stay on the elements you pass.
@@ -83,6 +93,8 @@ export const FiltersBar = ({
   labels = true,
   border = false,
   dropdownMaxHeight,
+  dropdownSize,
+  dropdownPosition,
   startActions,
   beforeApply,
   afterApply,
@@ -96,12 +108,21 @@ export const FiltersBar = ({
   const showSearch = searchbox && !hideSearch;
 
   const renderFilter = (filter: FilterItem, index: number) => {
-    const { label, size, searchable = false, dropdownMaxHeight: filterMaxHeight } = filter;
+    const {
+      label,
+      size,
+      searchable = false,
+      dropdownMaxHeight: filterMaxHeight,
+      dropdownSize: filterDropdownSize,
+      dropdownPosition: filterDropdownPosition,
+    } = filter;
     const shared = {
       ...(labels && label ? { label, labelInside: true as const } : {}),
       size: size ?? (labels ? 'large' : 'medium'),
       searchable,
       dropdownMaxHeight: filterMaxHeight ?? dropdownMaxHeight,
+      dropdownSize: filterDropdownSize ?? dropdownSize,
+      dropdownPosition: filterDropdownPosition ?? dropdownPosition,
     };
 
     return (

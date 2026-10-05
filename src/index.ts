@@ -89,6 +89,8 @@ export type {
   SelectMultiProps,
   SelectSharedProps,
   SelectOptionVariant,
+  DropdownPosition,
+  DropdownSize,
 } from './FormElements/Select';
 export { RadioButton, RadioButtonGroup } from './FormElements/RadioButton';
 export type { RadioButtonProps, RadioButtonGroupProps } from './FormElements/RadioButton';

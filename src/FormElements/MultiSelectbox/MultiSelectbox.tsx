@@ -4,8 +4,10 @@ import '../Selectbox/Selectbox.css';
 import { Checkbox } from '../Checkbox';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
+import type { SizeVariant } from '../../shared/types';
 import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
 import { useVisibleTagCount } from '../useVisibleTagCount';
+import type { DropdownPosition, DropdownSize } from '../Select/Select';
 
 const styles: Record<string, string> = {
   wrapper: "bs-selectbox--wrapper",
@@ -20,6 +22,11 @@ const styles: Record<string, string> = {
   selectLarge: "bs-selectbox--selectLarge",
   arrow: "bs-selectbox--arrow",
   dropdown: "bs-selectbox--dropdown",
+  dropdownTop: "bs-selectbox--dropdown--top",
+  dropdownBottom: "bs-selectbox--dropdown--bottom",
+  dropdownSmall: "bs-selectbox--dropdown--small",
+  dropdownMedium: "bs-selectbox--dropdown--medium",
+  dropdownLarge: "bs-selectbox--dropdown--large",
   option: "bs-selectbox--option",
   placeholder: "bs-selectbox--placeholder",
   wrapperInForm: "bs-selectbox--wrapperInForm",
@@ -46,7 +53,9 @@ export interface MultiSelectboxProps<T = string>
   labelInside?: boolean;
   icon?: boolean;
   iconName?: IconName;
-  size?: 'small' | 'medium' | 'large';
+  size?: SizeVariant;
+  dropdownSize?: DropdownSize;
+  dropdownPosition?: DropdownPosition;
   disabled?: boolean;
   dropdownMaxHeight?: number;
 }
@@ -65,6 +74,8 @@ export function MultiSelectbox<T = string>({
   icon = false,
   iconName = 'search',
   size = 'medium',
+  dropdownSize = 'medium',
+  dropdownPosition = 'bottom',
   disabled = false,
   dropdownMaxHeight,
   className,
@@ -130,6 +141,15 @@ export function MultiSelectbox<T = string>({
     if (size === 'small') return styles.labelSmall;
     if (size === 'large') return styles.labelLarge;
     return styles.labelMedium;
+  };
+
+  const getDropdownPositionClass = () =>
+    dropdownPosition === 'top' ? styles.dropdownTop : styles.dropdownBottom;
+
+  const getDropdownSizeClass = () => {
+    if (dropdownSize === 'small') return styles.dropdownSmall;
+    if (dropdownSize === 'large') return styles.dropdownLarge;
+    return styles.dropdownMedium;
   };
 
   let wrapperClass = styles.wrapper;
@@ -219,37 +239,45 @@ export function MultiSelectbox<T = string>({
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>
         </div>
+        {open && !disabled && (
+          <ul
+            className={[
+              styles.dropdown,
+              getDropdownPositionClass(),
+              getDropdownSizeClass(),
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            data-dropdown-position={dropdownPosition}
+            data-dropdown-size={dropdownSize}
+            style={
+              dropdownMaxHeight != null
+                ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
+                : undefined
+            }
+          >
+            {options.length === 0 ? (
+              <li className={styles.emptyState}>No data</li>
+            ) : (
+              options.map((option, idx) => (
+                <li
+                  key={resolveKey(option, idx)}
+                  className={styles.option}
+                  style={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <Checkbox
+                    label={getOptionLabel(option)}
+                    checked={isSelected(option)}
+                    onChange={() => handleToggle(option)}
+                    inForm={false}
+                    disabled={disabled}
+                  />
+                </li>
+              ))
+            )}
+          </ul>
+        )}
       </div>
-      {open && !disabled && (
-        <ul
-          className={styles.dropdown}
-          style={
-            dropdownMaxHeight != null
-              ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
-              : undefined
-          }
-        >
-          {options.length === 0 ? (
-            <li className={styles.emptyState}>No data</li>
-          ) : (
-            options.map((option, idx) => (
-              <li
-                key={resolveKey(option, idx)}
-                className={styles.option}
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
-                <Checkbox
-                  label={getOptionLabel(option)}
-                  checked={isSelected(option)}
-                  onChange={() => handleToggle(option)}
-                  inForm={false}
-                  disabled={disabled}
-                />
-              </li>
-            ))
-          )}
-        </ul>
-      )}
     </div>
   );
 }

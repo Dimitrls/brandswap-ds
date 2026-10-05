@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import './Selectbox.css';
 
 import { Icon, IconName } from '../../Icons/Icon';
+import type { SizeVariant } from '../../shared/types';
 import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
+import type { DropdownPosition, DropdownSize } from '../Select/Select';
 
 const styles: Record<string, string> = {
   wrapper: 'bs-selectbox--wrapper',
@@ -17,6 +19,11 @@ const styles: Record<string, string> = {
   selectLarge: 'bs-selectbox--selectLarge',
   arrow: 'bs-selectbox--arrow',
   dropdown: 'bs-selectbox--dropdown',
+  dropdownTop: 'bs-selectbox--dropdown--top',
+  dropdownBottom: 'bs-selectbox--dropdown--bottom',
+  dropdownSmall: 'bs-selectbox--dropdown--small',
+  dropdownMedium: 'bs-selectbox--dropdown--medium',
+  dropdownLarge: 'bs-selectbox--dropdown--large',
   option: 'bs-selectbox--option',
   placeholder: 'bs-selectbox--placeholder',
   wrapperInForm: 'bs-selectbox--wrapperInForm',
@@ -37,7 +44,9 @@ export interface SelectboxProps<T = string>
   onChange?: (option: T) => void;
   getOptionLabel?: (option: T) => string;
   getOptionKey?: (option: T, index?: number) => string | number;
-  size?: 'small' | 'medium' | 'large';
+  size?: SizeVariant;
+  dropdownSize?: DropdownSize;
+  dropdownPosition?: DropdownPosition;
   icon?: boolean;
   iconName?: IconName;
   labelInside?: boolean;
@@ -53,6 +62,8 @@ export function Selectbox<T = string>({
   getOptionLabel = defaultGetOptionLabel,
   getOptionKey = defaultGetOptionKey,
   size = 'medium',
+  dropdownSize = 'medium',
+  dropdownPosition = 'bottom',
   icon = false,
   iconName = 'search',
   labelInside = false,
@@ -96,6 +107,15 @@ export function Selectbox<T = string>({
     if (size === 'small') return styles.labelSmall;
     if (size === 'large') return styles.labelLarge;
     return styles.labelMedium;
+  };
+
+  const getDropdownPositionClass = () =>
+    dropdownPosition === 'top' ? styles.dropdownTop : styles.dropdownBottom;
+
+  const getDropdownSizeClass = () => {
+    if (dropdownSize === 'small') return styles.dropdownSmall;
+    if (dropdownSize === 'large') return styles.dropdownLarge;
+    return styles.dropdownMedium;
   };
 
   return (
@@ -150,31 +170,39 @@ export function Selectbox<T = string>({
             <Icon name="chevron-down" size={size === 'small' ? 16 : size === 'large' ? 20 : 18} />
           </span>
         </div>
+        {open && !disabled && (
+          <ul
+            className={[
+              styles.dropdown,
+              getDropdownPositionClass(),
+              getDropdownSizeClass(),
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            data-dropdown-position={dropdownPosition}
+            data-dropdown-size={dropdownSize}
+            style={
+              dropdownMaxHeight != null
+                ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
+                : undefined
+            }
+          >
+            {options.length === 0 ? (
+              <li className={styles.emptyState}>No data</li>
+            ) : (
+              options.map((option, idx) => (
+                <li
+                  key={getOptionKey(option, idx)}
+                  className={styles.option}
+                  onClick={() => handleSelect(option)}
+                >
+                  {getOptionLabel(option)}
+                </li>
+              ))
+            )}
+          </ul>
+        )}
       </div>
-      {open && !disabled && (
-        <ul
-          className={styles.dropdown}
-          style={
-            dropdownMaxHeight != null
-              ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
-              : undefined
-          }
-        >
-          {options.length === 0 ? (
-            <li className={styles.emptyState}>No data</li>
-          ) : (
-            options.map((option, idx) => (
-              <li
-                key={getOptionKey(option, idx)}
-                className={styles.option}
-                onClick={() => handleSelect(option)}
-              >
-                {getOptionLabel(option)}
-              </li>
-            ))
-          )}
-        </ul>
-      )}
     </div>
   );
 }
