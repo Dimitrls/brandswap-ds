@@ -25,11 +25,12 @@ import {
 | --- | --- |
 | `rows` | Row data |
 | `columns` | `Column<T>`: `id`, `header`, `accessor`, `width` / `minWidth` / `flex`, `align`, `type`, `render`, `sortable`, `filterable`, `filterOperators`, `sortComparator`, `headerTooltip`, `hideZero`, `hidden`, `pinned` (`left` / `right`) |
-| `getRowId` | Required stable id |
+| `getRowId` | `(row, index) => id`. Optional: defaults to the row's index in `rows`, which breaks selection / expansion if rows are refetched or reordered, so pass a real id for live data |
 | `title` | Heading above the toolbar (string renders an `h3`) |
 | `loading` | Overlay spinner over the grid body |
-| `emptyText` | Default `"No data"` |
+| `emptyText` | Any `ReactNode`. Default `"No data"` |
 | `density` | `compact` (~36px), `default` (~48px), `media` (70px) |
+| `nested` | For a grid inside `renderExpanded`: bordered card, compact 40px rows, title hidden |
 | `sorting` / `defaultSorting` / `onSortChange` | Sort `{ field, direction }`. Click cycles unsorted → asc → desc |
 | `sortMode` | `client` (default) or `server`: skip client sorting, sort in the API from `onSortChange` |
 | `filtering` | Column filters + `quickFilter` across primitive cell values. Column filters apply on **Apply** / Enter; **Clear** removes them |
@@ -46,11 +47,14 @@ import {
 | `onExportCsv` / `onExportXls` | Replace the built-in download (e.g. server-side export of every page) |
 | `stickyHeader` | Sticky header + sticky summary footer |
 | `maxHeight` | Caps the scroll area; header and summary stick inside it |
+| `tableMinWidth` | Minimum table width; narrower containers scroll horizontally |
 | `countryCode` | `GB` (default) or `US` for date / money helpers |
 
 ### Pinned columns
 
 `pinned: 'left'` columns move to the start (after the expand / select columns, which pin with them); `pinned: 'right'` columns move to the end. Offsets are measured from the rendered header, so `width` is optional. A shadow shows on the pinned edge while content is scrolled underneath.
+
+Column filter popovers and the export menu render into `document.body`, so `maxHeight` and pinned scroll areas never clip them.
 
 ### Column `type`
 

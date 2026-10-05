@@ -142,11 +142,17 @@ export interface GridTableProps<T>
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'title'> {
   rows: T[];
   columns: Column<T>[];
-  getRowId: (row: T) => GridTableRowId;
+  /**
+   * `index` is the row's position in `rows`. Defaults to that index, which only stays
+   * stable while `rows` keeps its order; pass a real id when rows are refetched or reordered.
+   */
+  getRowId?: (row: T, index: number) => GridTableRowId;
   title?: React.ReactNode;
   loading?: boolean;
-  emptyText?: string;
+  emptyText?: React.ReactNode;
   density?: GridTableDensity;
+  /** Styles the grid for use inside an expanded row: bordered card, compact rows, no title. */
+  nested?: boolean;
   sorting?: GridTableSortState;
   defaultSorting?: GridTableSortState;
   onSortChange?: (next: GridTableSortState) => void;
@@ -173,6 +179,8 @@ export interface GridTableProps<T>
   stickyHeader?: boolean;
   /** Caps the scroll area height; header and summary stick inside it. */
   maxHeight?: string | number;
+  /** Minimum table width; narrower containers scroll horizontally. */
+  tableMinWidth?: string | number;
   countryCode?: GridTableCountryCode;
 }
 

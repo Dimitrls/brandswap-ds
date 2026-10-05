@@ -70,11 +70,10 @@
 }
 
 .bs-grid-table--menu {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  z-index: 30;
+  z-index: 1000;
+  box-sizing: border-box;
   min-width: 160px;
+  font-family: var(--bs-font-family, 'Poppins', sans-serif);
   margin: 0;
   padding: 4px;
   list-style: none;
@@ -310,10 +309,8 @@
 }
 
 .bs-grid-table--filterPopover {
-  position: absolute;
-  top: calc(100% - 4px);
-  left: 16px;
-  z-index: 20;
+  z-index: 1000;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -323,11 +320,8 @@
   border: 1px solid var(--border-default, #d3d5dd);
   border-radius: 8px;
   box-shadow: var(--shadow-sm);
-}
-
-.bs-grid-table--alignRight .bs-grid-table--filterPopover {
-  left: auto;
-  right: 16px;
+  font-family: var(--bs-font-family, 'Poppins', sans-serif);
+  color: var(--text-default, #161616);
 }
 
 .bs-grid-table--filterActions {
@@ -411,6 +405,28 @@
 
 .bs-grid-table--expandedCell .bs-grid-table--table {
   min-width: 100%;
+}
+
+.bs-grid-table.bs-grid-table--nested {
+  box-sizing: border-box;
+  padding: 0;
+  background: var(--bg-default, #ffffff);
+  border: 1px solid var(--border-default, #d3d5dd);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.bs-grid-table--nested .bs-grid-table--title {
+  display: none;
+}
+
+.bs-grid-table--nested .bs-grid-table--table thead th,
+.bs-grid-table--nested .bs-grid-table--table tbody td {
+  height: 40px;
+}
+
+.bs-grid-table--nested .bs-grid-table--table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .bs-grid-table--summary td {

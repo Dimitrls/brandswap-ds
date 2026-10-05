@@ -318,7 +318,7 @@ export const ExpandableNested = () => {
                 { id: 'commission', header: 'Commission', accessor: 'commission', type: 'percent' },
               ]}
               getRowId={(child) => child.id}
-              density="compact"
+              nested
             />
           ) : (
             'Loading offers…'
@@ -386,6 +386,7 @@ export const PinnedWideReport = () => {
         getRowId={(row) => row.id}
         density="compact"
         maxHeight={360}
+        tableMinWidth={1400}
         filtering={{}}
         selection={{ mode: 'multiple' }}
         bulkActions={({ selectedRows, clearSelection }) => (
@@ -503,7 +504,11 @@ export const EmptyAndLoading = () => {
         columns={columns}
         getRowId={(row) => row.id}
         loading={loading}
-        emptyText="No offers found"
+        emptyText={
+          <span>
+            No offers found. <a href="#create">Create an offer</a>
+          </span>
+        }
       />
     </div>
   );

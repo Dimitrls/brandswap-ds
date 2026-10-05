@@ -44,7 +44,7 @@ function change(element, value) {
 }
 
 function buttonByText(text) {
-  return Array.from(container.querySelectorAll('button')).find((button) => button.textContent === text)
+  return Array.from(document.querySelectorAll('button')).find((button) => button.textContent === text)
 }
 
 function bodyText(columnIndex = 0) {
@@ -94,17 +94,17 @@ describe('GridTable', () => {
   it('applies a column filter only on Apply and removes it on Clear', () => {
     render(<GridTable columns={columns} rows={rows} getRowId={(row) => row.id} />)
     click(container.querySelector('button[aria-label="Filter Host"]'))
-    const input = container.querySelector('[data-bs-filter="popover"] input')
+    const input = document.querySelector('[data-bs-filter="popover"] input')
     expect(input).toBeTruthy()
     change(input, 'ikea')
     expect(container.textContent).toContain('Currys')
     click(buttonByText('Apply'))
-    expect(container.querySelector('[data-bs-filter="popover"]')).toBeFalsy()
+    expect(document.querySelector('[data-bs-filter="popover"]')).toBeFalsy()
     expect(container.textContent).toContain('IKEA')
     expect(container.textContent).not.toContain('Currys')
 
     click(container.querySelector('button[aria-label="Filter Host"]'))
-    expect(container.querySelector('[data-bs-filter="popover"] input').value).toBe('ikea')
+    expect(document.querySelector('[data-bs-filter="popover"] input').value).toBe('ikea')
     click(buttonByText('Clear'))
     expect(container.textContent).toContain('Currys')
   })
@@ -112,7 +112,7 @@ describe('GridTable', () => {
   it('applies a column filter on Enter', () => {
     render(<GridTable columns={columns} rows={rows} getRowId={(row) => row.id} />)
     click(container.querySelector('button[aria-label="Filter Host"]'))
-    const input = container.querySelector('[data-bs-filter="popover"] input')
+    const input = document.querySelector('[data-bs-filter="popover"] input')
     change(input, 'wick')
     act(() => {
       input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
@@ -556,5 +556,71 @@ describe('GridTable', () => {
     expect(scroll.style.maxHeight).toBe('240px')
     expect(scroll.className).toContain('bs-grid-table--sticky')
     expect(scroll.className).toContain('bs-grid-table--stickySummary')
+  })
+
+  it('renders the filter popover and export menu outside the scroll area', () => {
+    render(
+      <GridTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        maxHeight={120}
+        exportCsv={{}}
+        exportXls={{}}
+      />
+    )
+    const scroll = container.querySelector('.bs-grid-table--scroll')
+    click(container.querySelector('button[aria-label="Filter Host"]'))
+    const popover = document.querySelector('[data-bs-filter="popover"]')
+    expect(popover).toBeTruthy()
+    expect(scroll.contains(popover)).toBe(false)
+    expect(popover.style.position).toBe('fixed')
+
+    const exportButton = container.querySelector('button[aria-label="Export"]')
+    act(() => {
+      exportButton.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    })
+    click(exportButton)
+    expect(document.querySelector('[data-bs-filter="popover"]')).toBeFalsy()
+    const menu = document.querySelector('.bs-grid-table--menu')
+    expect(menu).toBeTruthy()
+    expect(container.contains(menu)).toBe(false)
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    })
+    expect(document.querySelector('.bs-grid-table--menu')).toBeFalsy()
+  })
+
+  it('falls back to row indexes when getRowId is omitted', () => {
+    const onChange = jest.fn()
+    render(<GridTable columns={columns} rows={rows} selection={{ mode: 'multiple', onChange }} />)
+    click(container.querySelectorAll('tbody input[type="checkbox"]')[2])
+    expect(onChange).toHaveBeenLastCalledWith([2], [rows[2]])
+    click(container.querySelector('button[aria-label="Sort by Host"]'))
+    click(container.querySelector('button[aria-label="Sort by Host"]'))
+    expect(bodyText(1)).toEqual(['Wickes', 'IKEA', 'Currys'])
+    expect(container.querySelectorAll('tbody input[type="checkbox"]')[0].checked).toBe(true)
+  })
+
+  it('accepts rich empty content, a nested style and a table minimum width', () => {
+    render(
+      <GridTable
+        columns={columns}
+        rows={[]}
+        nested
+        tableMinWidth={1200}
+        title="Hidden in nested"
+        emptyText={
+          <span>
+            Nothing here. <a href="#create">Create one</a>
+          </span>
+        }
+      />
+    )
+    const root = container.querySelector('.bs-grid-table')
+    expect(root.className).toContain('bs-grid-table--nested')
+    expect(root.className).toContain('bs-grid-table--density-compact')
+    expect(container.querySelector('.bs-grid-table--emptyRow a').textContent).toBe('Create one')
+    expect(container.querySelector('.bs-grid-table--table').style.minWidth).toBe('1200px')
   })
 })

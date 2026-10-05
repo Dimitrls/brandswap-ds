@@ -5,6 +5,7 @@ import { Select } from '../../FormElements/Select';
 import { Pagination } from '../../Navigation/Pagination';
 import type { GridTablePageSizeOption } from './GridTable.types';
 import { DEFAULT_PAGE_SIZE_OPTIONS, resolvePageSizeOption } from './GridTable.utils';
+import { GridTableFloating } from './GridTableFloating';
 
 const styles: Record<string, string> = {
   toolbar: 'bs-grid-table--toolbar',
@@ -42,11 +43,13 @@ function ExportControl({
 }) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!open) return undefined;
     const handlePointer = (event: MouseEvent) => {
-      if (wrapperRef.current?.contains(event.target as Node)) return;
+      const target = event.target as Node;
+      if (wrapperRef.current?.contains(target) || menuRef.current?.contains(target)) return;
       setOpen(false);
     };
     const handleKey = (event: KeyboardEvent) => {
@@ -87,7 +90,14 @@ function ExportControl({
         aria-expanded={open}
       />
       {open && (
-        <ul className={styles.menu} role="menu">
+        <GridTableFloating
+          as="ul"
+          anchorRef={wrapperRef}
+          align="right"
+          floatingRef={menuRef}
+          className={styles.menu}
+          role="menu"
+        >
           {formats.map((format) => (
             <li key={format} role="none">
               <button
@@ -103,7 +113,7 @@ function ExportControl({
               </button>
             </li>
           ))}
-        </ul>
+        </GridTableFloating>
       )}
     </div>
   );

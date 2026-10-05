@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from '../../Buttons/Button';
 import { Checkbox } from '../../FormElements/Checkbox';
 import { InputField } from '../../FormElements/InputField';
@@ -22,6 +22,7 @@ import {
   isColumnSortable,
   isEmptyFilterValue,
 } from './GridTable.utils';
+import { GridTableFloating } from './GridTableFloating';
 
 const styles: Record<string, string> = {
   alignLeft: 'bs-grid-table--alignLeft',
@@ -59,6 +60,8 @@ export interface GridTableCellPin {
 
 interface GridTableFilterPopoverProps {
   label: string;
+  anchorRef: React.RefObject<HTMLElement>;
+  align: 'left' | 'right';
   operators: GridTableFilterOperator[];
   initialOperator: GridTableFilterOperator;
   initialValue: string;
@@ -67,6 +70,8 @@ interface GridTableFilterPopoverProps {
 
 function GridTableFilterPopover({
   label,
+  anchorRef,
+  align,
   operators,
   initialOperator,
   initialValue,
@@ -78,7 +83,14 @@ function GridTableFilterPopover({
   const apply = () => onApply(value.trim() === '' ? undefined : { operator, value });
 
   return (
-    <div className={styles.filterPopover} data-bs-filter="popover" role="dialog" aria-label={`Filter ${label}`}>
+    <GridTableFloating
+      anchorRef={anchorRef}
+      align={align}
+      className={styles.filterPopover}
+      data-bs-filter="popover"
+      role="dialog"
+      aria-label={`Filter ${label}`}
+    >
       <Select
         size="small"
         options={operators}
@@ -107,7 +119,64 @@ function GridTableFilterPopover({
         <Button size="small" variant="outline" label="Clear" onClick={() => onApply(undefined)} />
         <Button size="small" variant="filled" label="Apply" onClick={apply} />
       </div>
-    </div>
+    </GridTableFloating>
+  );
+}
+
+interface GridTableFilterControlProps {
+  label: string;
+  align: 'left' | 'right';
+  open: boolean;
+  active: boolean;
+  operators: GridTableFilterOperator[];
+  current: GridTableFilterValue | undefined;
+  onOpenChange: (open: boolean) => void;
+  onApply: (next: GridTableFilterValue | undefined) => void;
+}
+
+function GridTableFilterControl({
+  label,
+  align,
+  open,
+  active,
+  operators,
+  current,
+  onOpenChange,
+  onApply,
+}: GridTableFilterControlProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        type="button"
+        data-bs-filter="button"
+        className={joinClasses(styles.iconBtn, (active || open) && styles.iconBtnActive)}
+        aria-label={`Filter ${label}`}
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        onClick={(event) => {
+          event.stopPropagation();
+          onOpenChange(!open);
+        }}
+      >
+        <Icon name="filter" size={16} />
+      </button>
+      {open && (
+        <GridTableFilterPopover
+          label={label}
+          anchorRef={buttonRef}
+          align={align}
+          operators={operators}
+          initialOperator={current?.operator ?? operators[0] ?? 'contains'}
+          initialValue={current?.value ?? ''}
+          onApply={(next) => {
+            onApply(next);
+            onOpenChange(false);
+          }}
+        />
+      )}
+    </>
   );
 }
 
@@ -194,7 +263,6 @@ export function GridTableHeader<T>({
           const filterActive = !isEmptyFilterValue(currentFilter);
           const operators = defaultFilterOperators(column);
           const align = defaultAlign(column);
-          const operator: GridTableFilterOperator = currentFilter?.operator ?? operators[0] ?? 'contains';
 
           const headerNode = (
             <span className={styles.headerLabel}>
@@ -244,36 +312,18 @@ export function GridTableHeader<T>({
                   headerNode
                 )}
                 {filterable && (
-                  <button
-                    type="button"
-                    data-bs-filter="button"
-                    className={[styles.iconBtn, filterActive || filterOpen ? styles.iconBtnActive : '']
-                      .filter(Boolean)
-                      .join(' ')}
-                    aria-label={`Filter ${headerLabel}`}
-                    aria-expanded={filterOpen}
-                    aria-haspopup="dialog"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onOpenFilter(filterOpen ? null : column.id);
-                    }}
-                  >
-                    <Icon name="filter" size={16} />
-                  </button>
+                  <GridTableFilterControl
+                    label={headerLabel}
+                    align={align === 'right' ? 'right' : 'left'}
+                    open={filterOpen}
+                    active={filterActive}
+                    operators={operators}
+                    current={currentFilter}
+                    onOpenChange={(open) => onOpenFilter(open ? column.id : null)}
+                    onApply={(next) => onFilterChange(column.id, next)}
+                  />
                 )}
               </div>
-              {filterable && filterOpen && (
-                <GridTableFilterPopover
-                  label={headerLabel}
-                  operators={operators}
-                  initialOperator={operator}
-                  initialValue={currentFilter?.value ?? ''}
-                  onApply={(next) => {
-                    onFilterChange(column.id, next);
-                    onOpenFilter(null);
-                  }}
-                />
-              )}
             </th>
           );
         })}

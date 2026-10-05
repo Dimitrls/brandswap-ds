@@ -82,6 +82,7 @@ const styles: Record<string, string> = {
   bulkBar: 'bs-grid-table--bulkBar',
   bulkCount: 'bs-grid-table--bulkCount',
   bulkActions: 'bs-grid-table--bulkActions',
+  nested: 'bs-grid-table--nested',
 };
 
 const INTERACTIVE_SELECTOR = 'button, a, input, label, textarea, select, [data-stop-row-click], [data-bs-filter]';
@@ -186,11 +187,12 @@ function sameOffsets(a: Record<string, number>, b: Record<string, number>): bool
 export function GridTable<T>({
   rows,
   columns,
-  getRowId,
+  getRowId: getRowIdProp,
   title,
   loading = false,
   emptyText = 'No data',
-  density = 'default',
+  nested = false,
+  density = nested ? 'compact' : 'default',
   sorting,
   defaultSorting = null,
   onSortChange,
@@ -212,11 +214,17 @@ export function GridTable<T>({
   onExportXls,
   stickyHeader = false,
   maxHeight,
+  tableMinWidth,
   countryCode = 'GB',
   className,
   ...props
 }: GridTableProps<T>) {
   const displayColumns = useMemo(() => getDisplayColumns(columns), [columns]);
+  const rowIndexes = useMemo(() => new Map(rows.map((row, index) => [row, index])), [rows]);
+  const getRowId = (row: T): GridTableRowId => {
+    const index = rowIndexes.get(row) ?? -1;
+    return getRowIdProp ? getRowIdProp(row, index) : index;
+  };
   const selectionMode = selection?.mode ?? 'none';
   const selectionEnabled = selectionMode === 'single' || selectionMode === 'multiple';
   const expandableEnabled = Boolean(expandable);
@@ -528,6 +536,7 @@ export function GridTable<T>({
         densityClass(density),
         ping.left && styles.pingLeft,
         ping.right && styles.pingRight,
+        nested && styles.nested,
         className
       )}
       {...props}
@@ -566,7 +575,11 @@ export function GridTable<T>({
           style={maxHeight != null ? { maxHeight: toCssSize(maxHeight) } : undefined}
           onScroll={hasPins ? updateScrollState : undefined}
         >
-          <table className={styles.table} ref={tableRef}>
+          <table
+            className={styles.table}
+            ref={tableRef}
+            style={tableMinWidth != null ? { minWidth: toCssSize(tableMinWidth) } : undefined}
+          >
             <colgroup>
               {hoverEnabled && <col className={styles.hoverCol} />}
               {expandableEnabled && <col className={styles.expandCol} />}
