@@ -174,7 +174,11 @@ export function MultiSelectbox<T = string>({
       ) : !labelInside && label ? (
         <span className={`${styles.label} ${getLabelSizeClass()}`}>{label}</span>
       ) : null}
-      <div className={styles.selectWrapper} style={{ position: 'relative' }}>
+      <div
+        className={styles.selectWrapper}
+        style={{ position: 'relative' }}
+        data-dropdown-open={open && !disabled ? dropdownPosition : undefined}
+      >
         {icon && (
           <span
             style={{

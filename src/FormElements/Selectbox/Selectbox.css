@@ -53,6 +53,16 @@
   position: relative;
 }
 
+.bs-selectbox--selectWrapper[data-dropdown-open='top'] > .bs-selectbox--select {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.bs-selectbox--selectWrapper[data-dropdown-open='bottom'] > .bs-selectbox--select {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .bs-selectbox--select {
   border-radius: 6px;
   border: 1px solid transparent;
@@ -122,13 +132,17 @@
   bottom: auto;
   margin-top: 0;
   margin-bottom: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .bs-selectbox--dropdown--top {
   top: auto;
   bottom: 100%;
   margin-top: 0;
-  margin-bottom: 4px;
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .bs-selectbox--dropdown .bs-selectbox--option:has(input) {

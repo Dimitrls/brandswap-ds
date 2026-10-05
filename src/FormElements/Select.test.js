@@ -155,6 +155,22 @@ describe('Select dropdownPosition / dropdownSize', () => {
     expect(dropdown).toBeTruthy()
     expect(selectWrapper.contains(dropdown)).toBe(true)
   })
+
+  it('marks selectWrapper with data-dropdown-open for merged corners', () => {
+    render(
+      <Select
+        options={['A', 'B']}
+        value={null}
+        onChange={() => {}}
+        searchable={false}
+        dropdownPosition="top"
+      />
+    )
+    const selectWrapper = container.querySelector('.bs-selectbox--selectWrapper')
+    expect(selectWrapper.getAttribute('data-dropdown-open')).toBe(null)
+    openSelect()
+    expect(selectWrapper.getAttribute('data-dropdown-open')).toBe('top')
+  })
 })
 
 describe('MultiSelectbox dropdownPosition / dropdownSize', () => {

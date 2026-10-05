@@ -129,7 +129,11 @@ export function Selectbox<T = string>({
       {label && !labelInside && (
         <label className={`${styles.label} ${getLabelSizeClass()}`}>{label}</label>
       )}
-      <div className={styles.selectWrapper} style={{ position: 'relative' }}>
+      <div
+        className={styles.selectWrapper}
+        style={{ position: 'relative' }}
+        data-dropdown-open={open && !disabled ? dropdownPosition : undefined}
+      >
         {icon && (
           <span
             style={{
