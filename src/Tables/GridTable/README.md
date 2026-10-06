@@ -37,13 +37,14 @@ import {
 | `filterMode` | `client` (default) or `server`: skip client quick/column filtering, filter in the API from the filtering callbacks |
 | `pagination` | `mode` (`client` default / `server`), 1-based `page` or `defaultPage`, `pageSize` or `defaultPageSize` (`-1` = All), `total`, `pageSizeOptions`, `onChange`, `placement` (`top` default). Sort / filter changes go back to page 1 |
 | `selection` | `none` / `single` / `multiple`, `selectedIds`, `onChange`, `isRowSelectable` |
-| `bulkActions` | `({ selectedIds, selectedRows, clearSelection }) => ReactNode`, shown in a bar above the grid while rows are selected |
+| `bulkActions` | `({ selectedIds, selectedRows, clearSelection }) => ReactNode`, shown in a floating bar over the bottom of the grid while rows are selected. The count reads `n of total selected` |
 | `onRowClick` | Skips `button`, `a`, `input`, `label`, `[data-stop-row-click]` |
 | `getRowClassName` | e.g. `bs-grid-table--rowMuted` for pending / in-test rows |
 | `hoverActions` / `hoverActionsPosition` | Floating action chip on row hover / focus, aligned `left` / `center` / `right` (default) of the visible area |
 | `expandable` | `renderExpanded` plus either `isExpanded` / `onToggle`, or `expandedIds` / `defaultExpandedIds` / `onExpandedChange` (`onToggle` still fires, handy for lazy loading). Nested `GridTable` supported |
 | `summary` | `tfoot` from **filtered/sorted** rows, not the current page. `row` can be `Partial<T>` or `(processedRows) => Partial<T>`. `sticky` pins it to the bottom |
-| `exportCsv` / `exportXls` | Toolbar export of processed rows. Both enabled → Export menu. CSV has a UTF-8 BOM by default |
+| `exportCsv` / `exportXls` | Top-right actions menu. One format and no `menuItems` exports immediately. Both formats, or any custom item, open a 3-dot menu (`Export as CSV`, `Export as XLS`, then `menuItems`). CSV has a UTF-8 BOM by default |
+| `menuItems` | Extra actions-menu entries `{ label, onClick, icon? }`, after the export items |
 | `onExportCsv` / `onExportXls` | Replace the built-in download (e.g. server-side export of every page) |
 | `stickyHeader` | Sticky header + sticky summary footer |
 | `maxHeight` | Caps the scroll area; header and summary stick inside it |

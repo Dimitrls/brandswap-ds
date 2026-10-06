@@ -1,4 +1,5 @@
 import type React from 'react';
+import type { IconName } from '../../Icons/Icon';
 
 export type GridTableRowId = string | number;
 
@@ -139,6 +140,13 @@ export interface GridTableBulkActionsContext<T> {
   clearSelection: () => void;
 }
 
+/** Extra entries in the top-right actions menu, after Export as CSV / XLS. */
+export interface GridTableMenuItem {
+  label: string;
+  onClick: () => void;
+  icon?: IconName;
+}
+
 export interface GridTableProps<T>
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'title'> {
   rows: T[];
@@ -174,6 +182,8 @@ export interface GridTableProps<T>
   summary?: GridTableSummaryConfig<T> | GridTableSummaryConfig<T>[];
   exportCsv?: GridTableExportCsvConfig;
   exportXls?: GridTableExportXlsConfig;
+  /** Custom entries in the top-right actions menu, after the export items. */
+  menuItems?: GridTableMenuItem[];
   /** Replaces the built-in CSV download, e.g. for a server-side export. Enables the CSV option. */
   onExportCsv?: () => void;
   /** Replaces the built-in XLS download. Enables the XLS option. */

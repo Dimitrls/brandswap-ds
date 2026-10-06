@@ -487,6 +487,138 @@ export const ServerDriven = () => {
   );
 };
 
+type HostStatus = 'Active' | 'Pending' | 'Inactive';
+
+type HostRow = {
+  id: string;
+  host: string;
+  commission: number;
+  payments: number;
+  cpa: number;
+  status: HostStatus;
+  categories: string;
+};
+
+type AdvertiserRow = {
+  id: string;
+  advertiser: string;
+  offer: string;
+  commission: number;
+  ecpm: number;
+};
+
+const hosts: HostRow[] = [
+  { id: 'currys', host: 'Currys', commission: 62, payments: 830, cpa: 0, status: 'Active', categories: 'Food & Beverage' },
+  { id: 'screwfix', host: 'Screwfix', commission: 13, payments: 122, cpa: 1, status: 'Pending', categories: 'Furniture' },
+  { id: 'bq', host: 'B&Q', commission: 45, payments: 540, cpa: 0, status: 'Active', categories: 'Travel & Tourism' },
+  { id: 'kotsovolos', host: 'Kotsovolos', commission: 85, payments: 922, cpa: 2, status: 'Active', categories: 'Household' },
+  { id: 'homebase', host: 'Homebase', commission: 30, payments: 300, cpa: 2, status: 'Pending', categories: 'Travel & Tourism' },
+  { id: 'ikea', host: 'IKEA', commission: 120, payments: 1500, cpa: 3, status: 'Active', categories: 'Telecommunications' },
+  { id: 'wickes', host: 'Wickes', commission: 29, payments: 250, cpa: 5, status: 'Inactive', categories: 'Photography' },
+  { id: 'toolstation', host: 'Toolstation', commission: 20, payments: 200, cpa: 4, status: 'Active', categories: 'Supermarket' },
+  { id: 'argos', host: 'Argos', commission: 18, payments: 160, cpa: 1, status: 'Active', categories: 'Supermarket' },
+];
+
+const advertisers: AdvertiserRow[] = [
+  { id: 'a1', advertiser: 'Lymp Adv', offer: 'Summer offer 9.99', commission: 6, ecpm: 62 },
+  { id: 'a2', advertiser: 'Beer52', offer: '30% discount', commission: 3.2, ecpm: 40 },
+  { id: 'a3', advertiser: 'SnackBox', offer: 'Free shipping on orders over £20', commission: 4.5, ecpm: 50 },
+  { id: 'a4', advertiser: 'FitMeal', offer: 'Buy one get one half price', commission: 5, ecpm: 30 },
+  { id: 'a5', advertiser: 'TechGadgets', offer: '20% off sitewide', commission: 15, ecpm: 150 },
+  { id: 'a6', advertiser: 'EcoHome', offer: 'Exclusive launch at £12.99', commission: 12.99, ecpm: 75 },
+  { id: 'a7', advertiser: 'TravelSmart', offer: 'Last-minute deals', commission: 25, ecpm: 100 },
+];
+
+export const FullFeatures = () => {
+  const [notice, setNotice] = useState('');
+
+  const columns: Column<HostRow>[] = [
+    { id: 'host', header: 'Host', accessor: 'host', type: 'text', sortable: true, filterable: false, width: 216 },
+    { id: 'commission', header: 'Commission', accessor: 'commission', type: 'currency', sortable: true, filterable: false, width: 172 },
+    { id: 'payments', header: 'Payments', accessor: 'payments', type: 'currency', sortable: true, filterable: false, width: 172 },
+    { id: 'cpa', header: 'CPA', accessor: 'cpa', type: 'percent', sortable: true, filterable: false, width: 172 },
+    {
+      id: 'status',
+      header: 'Status',
+      accessor: 'status',
+      type: 'status',
+      width: 120,
+      filterable: false,
+      render: ({ value }) => <StatusCell value={value} />,
+    },
+    { id: 'categories', header: 'Categories', accessor: 'categories', type: 'text', flex: 1, filterable: false },
+  ];
+
+  return (
+    <div>
+      <GridTable
+        title="Table title"
+        rows={hosts}
+        columns={columns}
+        getRowId={(row) => row.id}
+        countryCode="GB"
+        pagination={{ placement: 'bottom', defaultPageSize: 8, pageSizeOptions: [8, 16] }}
+        selection={{
+          mode: 'multiple',
+          defaultSelectedIds: ['currys', 'bq', 'kotsovolos', 'homebase', 'toolstation'],
+        }}
+        expandable={{
+          defaultExpandedIds: ['kotsovolos'],
+          renderExpanded: () => (
+            <GridTable
+              nested
+              rows={advertisers}
+              columns={[
+                { id: 'advertiser', header: 'Advertiser', accessor: 'advertiser', type: 'text', sortable: true, filterable: false },
+                { id: 'offer', header: 'Offer', accessor: 'offer', type: 'text', sortable: true, filterable: false },
+                { id: 'commission', header: 'Commission', accessor: 'commission', type: 'currency', sortable: true, filterable: false },
+                { id: 'ecpm', header: 'eCPM', accessor: 'ecpm', type: 'currency', sortable: true, filterable: false },
+              ]}
+              getRowId={(row) => row.id}
+              countryCode="GB"
+              summary={{
+                label: 'Total',
+                row: (processed) => ({
+                  commission: sumBy(processed, (row) => row.commission),
+                  ecpm: sumBy(processed, (row) => row.ecpm),
+                }),
+              }}
+            />
+          ),
+        }}
+        hoverActions={(row) => (
+          <ActionsCell
+            actions={[
+              { icon: 'pencil', ariaLabel: `Edit ${row.host}`, onClick: () => setNotice(`Edit ${row.host}`), variant: 'outline' },
+              { icon: 'download', ariaLabel: `Download ${row.host}`, onClick: () => setNotice(`Download ${row.host}`), variant: 'outline' },
+              { icon: 'trash', ariaLabel: `Delete ${row.host}`, onClick: () => setNotice(`Delete ${row.host}`), variant: 'filled-warning' },
+            ]}
+          />
+        )}
+        bulkActions={() => (
+          <>
+            <Button size="large" variant="outline" icon="download" label="Download" onClick={() => setNotice('Download')} />
+            <Button size="large" variant="outline" icon="plus" label="Activate" onClick={() => setNotice('Activate')} />
+            <Button size="large" variant="outline-warning" icon="close" label="Deactivate" onClick={() => setNotice('Deactivate')} />
+            <Button size="large" variant="filled-warning" icon="trash" label="Delete" onClick={() => setNotice('Delete')} />
+          </>
+        )}
+        summary={{
+          label: 'Total',
+          row: (processed) => ({
+            commission: sumBy(processed, (row) => row.commission),
+            payments: sumBy(processed, (row) => row.payments),
+          }),
+        }}
+        exportCsv={{ filename: 'hosts.csv' }}
+        exportXls={{ filename: 'hosts.xls' }}
+        menuItems={[{ label: 'Edit columns', icon: 'pencil', onClick: () => setNotice('Edit columns') }]}
+      />
+      {notice ? <p>{notice}</p> : null}
+    </div>
+  );
+};
+
 export const EmptyAndLoading = () => {
   const [loading, setLoading] = useState(true);
   const columns: Column<OfferRow>[] = [

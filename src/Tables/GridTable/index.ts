@@ -10,6 +10,7 @@ export type {
   GridTableBulkActionsContext,
   GridTableExportCsvConfig,
   GridTableExportXlsConfig,
+  GridTableMenuItem,
   GridTableFilterOperator,
   GridTableMode,
   GridTablePinned,

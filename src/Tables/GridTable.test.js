@@ -431,7 +431,7 @@ describe('GridTable', () => {
     click(boxes[0])
     click(boxes[2])
     const bar = container.querySelector('[aria-label="Bulk actions"]')
-    expect(bar.textContent).toContain('2 selected')
+    expect(bar.textContent).toContain('2 of 3 selected')
     expect(bar.textContent).toContain('Archive Currys+Wickes')
     click(buttonByText('Clear selection'))
     expect(container.querySelector('[aria-label="Bulk actions"]')).toBeFalsy()

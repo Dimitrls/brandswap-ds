@@ -12,7 +12,7 @@ import { StatusCell } from './cells/StatusCell';
 import { exportRowsToCsv, exportRowsToXls } from './exportCsv';
 import { GridTableHeader } from './GridTableHeader';
 import type { GridTableCellPin } from './GridTableHeader';
-import { GridTableToolbar } from './GridTableToolbar';
+import { GridTableActionsMenu, GridTableToolbar } from './GridTableToolbar';
 import type { GridTableExportFormat } from './GridTableToolbar';
 import type {
   Column,
@@ -82,6 +82,8 @@ const styles: Record<string, string> = {
   bulkBar: 'bs-grid-table--bulkBar',
   bulkCount: 'bs-grid-table--bulkCount',
   bulkActions: 'bs-grid-table--bulkActions',
+  cornerActions: 'bs-grid-table--cornerActions',
+  hasActions: 'bs-grid-table--hasActions',
   nested: 'bs-grid-table--nested',
 };
 
@@ -210,6 +212,7 @@ export function GridTable<T>({
   summary,
   exportCsv,
   exportXls,
+  menuItems,
   onExportCsv,
   onExportXls,
   stickyHeader = false,
@@ -526,8 +529,9 @@ export function GridTable<T>({
     onPageSizeChange: (nextSize: number) => changePage(1, nextSize),
   };
 
-  const showTopToolbar =
-    Boolean(filtering) || exportFormats.length > 0 || (Boolean(pagination) && paginationPlacement === 'top');
+  const showTopToolbar = Boolean(filtering) || (Boolean(pagination) && paginationPlacement === 'top');
+  const showActionsMenu = exportFormats.length > 0 || (menuItems?.length ?? 0) > 0;
+  const selectionTotal = pagination?.mode === 'server' ? (pagination.total ?? rows.length) : processedRows.length;
 
   const selectedRows = bulkActions ? rows.filter((row) => selectedIds.includes(getRowId(row))) : [];
   const hoverClass = hoverPositionClass(hoverActionsPosition);
@@ -542,6 +546,7 @@ export function GridTable<T>({
         ping.left && styles.pingLeft,
         ping.right && styles.pingRight,
         nested && styles.nested,
+        showActionsMenu && styles.hasActions,
         className
       )}
       {...props}
@@ -554,22 +559,16 @@ export function GridTable<T>({
           showSearch={Boolean(filtering)}
           quickFilter={quickFilter}
           onQuickFilterChange={updateQuickFilter}
-          exportFormats={exportFormats}
-          onExport={handleExport}
           showPagination={Boolean(pagination) && paginationPlacement === 'top'}
           {...toolbarPagingProps}
         />
       )}
-      {bulkActions && selectedIds.length > 0 && (
-        <div className={styles.bulkBar} role="region" aria-label="Bulk actions">
-          <span className={styles.bulkCount}>{`${selectedIds.length} selected`}</span>
-          <div className={styles.bulkActions}>
-            {bulkActions({ selectedIds, selectedRows, clearSelection: () => setSelectedIds([]) })}
-          </div>
-          <Button variant="subtle" size="small" label="Clear selection" onClick={() => setSelectedIds([])} />
-        </div>
-      )}
       <div className={styles.body}>
+        {showActionsMenu && (
+          <div className={styles.cornerActions}>
+            <GridTableActionsMenu formats={exportFormats} menuItems={menuItems} onExport={handleExport} />
+          </div>
+        )}
         <div
           ref={scrollRef}
           className={joinClasses(
@@ -655,7 +654,7 @@ export function GridTable<T>({
                               aria-label={expanded ? `Collapse row ${rowId}` : `Expand row ${rowId}`}
                               onClick={() => handleToggleExpand(row)}
                             >
-                              <Icon name={expanded ? 'chevron-down' : 'chevron-right'} size={16} />
+                              <Icon name={expanded ? 'chevron-down' : 'chevron-right'} size={20} />
                             </button>
                           </td>
                         )}
@@ -747,6 +746,20 @@ export function GridTable<T>({
             <span className={styles.spinner} aria-hidden="true" />
           </div>
         )}
+        {bulkActions && selectedIds.length > 0 && (
+          <div className={styles.bulkBar} role="region" aria-label="Bulk actions">
+            <span className={styles.bulkCount}>
+              <strong>{selectedIds.length}</strong>
+              {` of `}
+              <strong>{selectionTotal}</strong>
+              {` selected`}
+            </span>
+            <div className={styles.bulkActions}>
+              {bulkActions({ selectedIds, selectedRows, clearSelection: () => setSelectedIds([]) })}
+            </div>
+            <Button variant="subtle" size="small" label="Clear selection" onClick={() => setSelectedIds([])} />
+          </div>
+        )}
       </div>
       {pagination && paginationPlacement === 'bottom' && (
         <div className={styles.paginationBottom}>
@@ -754,8 +767,6 @@ export function GridTable<T>({
             showSearch={false}
             quickFilter={quickFilter}
             onQuickFilterChange={updateQuickFilter}
-            exportFormats={[]}
-            onExport={handleExport}
             showPagination
             {...toolbarPagingProps}
           />

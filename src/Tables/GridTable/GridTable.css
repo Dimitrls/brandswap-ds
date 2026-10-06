@@ -1,9 +1,13 @@
 .bs-grid-table {
   display: flex;
   flex-direction: column;
+  gap: 24px;
   width: 100%;
   min-width: 0;
-  background: transparent;
+  box-sizing: border-box;
+  padding: 20px;
+  background: var(--bg-default, #ffffff);
+  border-radius: 8px;
   font-family: var(--bs-font-family, 'Poppins', sans-serif);
   color: var(--text-default, #161616);
   position: relative;
@@ -15,7 +19,6 @@
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 12px;
 }
 
 .bs-grid-table--toolbarStart,
@@ -55,7 +58,7 @@
 }
 
 .bs-grid-table--title {
-  margin-bottom: 12px;
+  margin: 0;
 }
 
 .bs-grid-table--title > h1,
@@ -65,8 +68,39 @@
   margin: 0;
 }
 
+.bs-grid-table--cornerActions {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  z-index: 6;
+}
+
+.bs-grid-table--actionsButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--bg-default, #ffffff);
+  color: var(--text-default, #161616);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.bs-grid-table--actionsButton:focus-visible {
+  outline: 2px solid var(--primary, #3ab78f);
+  outline-offset: 2px;
+}
+
 .bs-grid-table--exportMenu {
   position: relative;
+}
+
+.bs-grid-table--hasActions .bs-grid-table--table thead tr > th:last-child {
+  padding-right: 40px;
 }
 
 .bs-grid-table--menu {
@@ -75,24 +109,28 @@
   min-width: 160px;
   font-family: var(--bs-font-family, 'Poppins', sans-serif);
   margin: 0;
-  padding: 4px;
+  padding: 0;
   list-style: none;
   background: var(--bg-default, #ffffff);
-  border: 1px solid var(--border-default, #d3d5dd);
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm);
+  border: none;
+  border-radius: 6px;
+  box-shadow: var(--shadow-md);
 }
 
 .bs-grid-table--menuItem {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   padding: 8px 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: 0;
   background: transparent;
   color: var(--text-default, #161616);
   font: inherit;
   font-size: var(--font-body, 14px);
+  font-weight: var(--font-weight-regular, 400);
+  line-height: 20px;
   text-align: left;
   white-space: nowrap;
   cursor: pointer;
@@ -105,27 +143,42 @@
 }
 
 .bs-grid-table--bulkBar {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  z-index: 6;
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: var(--primary-10, #3ab78f1a);
+  gap: 8px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--border-default, #d3d5dd);
+  border-radius: 6px;
+  background: var(--bg-default, #ffffff);
+  box-shadow: var(--shadow-xl);
   font-size: var(--font-body, 14px);
+  line-height: 20px;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .bs-grid-table--bulkCount {
-  font-weight: var(--font-weight-bold, 600);
+  width: 140px;
+  font-weight: var(--font-weight-regular, 400);
+  text-align: center;
   white-space: nowrap;
+}
+
+.bs-grid-table--bulkCount strong {
+  font-weight: var(--font-weight-bold, 600);
 }
 
 .bs-grid-table--bulkActions {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .bs-grid-table--table {
@@ -156,22 +209,23 @@
 .bs-grid-table--table thead th {
   position: relative;
   height: auto;
-  min-height: 40px;
-  padding: 12px 16px;
+  min-height: 36px;
+  padding: 0 16px 16px;
   font-size: var(--font-h6, 14px);
   font-weight: var(--font-weight-bold, 600);
   line-height: 16px;
   color: var(--text-default, #161616);
   text-align: left;
+  vertical-align: bottom;
   user-select: none;
-  border-bottom: 1px solid var(--border-default, #d3d5dd);
+  border-bottom: none;
   background: var(--bg-default, #ffffff);
 }
 
 .bs-grid-table--table tbody td {
   height: auto;
-  min-height: 48px;
-  padding: 8px 16px;
+  min-height: 44px;
+  padding: 12px 16px;
   font-size: var(--font-body, 14px);
   font-weight: var(--font-weight-regular, 400);
   line-height: 20px;
@@ -196,7 +250,7 @@
 }
 
 .bs-grid-table--table tbody tr:hover td {
-  background: var(--black-03, rgba(22, 22, 22, 0.03));
+  background: var(--grey050, #fafafa);
 }
 
 .bs-grid-table--table tbody tr.bs-grid-table--expandedRow:hover td,
@@ -214,11 +268,11 @@
 }
 
 .bs-grid-table--selected td {
-  background: var(--primary-10, #3ab78f1a);
+  background: var(--bg-default, #ffffff);
 }
 
 .bs-grid-table--table tbody tr.bs-grid-table--selected:hover td {
-  background: var(--primary-10, #3ab78f1a);
+  background: var(--grey050, #fafafa);
 }
 
 .bs-grid-table--headerInner {
@@ -389,8 +443,9 @@
   white-space: normal;
   height: auto;
   min-height: 0;
-  padding: 8px 16px 16px 48px;
+  padding: 0 0 12px;
   border-bottom: 1px solid var(--border-default, #d3d5dd);
+  background: var(--bg-default, #ffffff);
   overflow: visible;
 }
 
@@ -398,9 +453,11 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  background: var(--bg-xxlight);
-  border-radius: 8px;
-  padding: 4px 12px 8px;
+  gap: 0;
+  background: var(--grey050, #fafafa);
+  border-radius: 12px;
+  box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 16px 0 36px;
 }
 
 .bs-grid-table--expandedCell .bs-grid-table--table {
@@ -409,10 +466,12 @@
 
 .bs-grid-table.bs-grid-table--nested {
   box-sizing: border-box;
-  padding: 0;
-  background: var(--bg-default, #ffffff);
-  border: 1px solid var(--border-default, #d3d5dd);
-  border-radius: 8px;
+  gap: 0;
+  padding: 0 16px 0 36px;
+  background: var(--grey050, #fafafa);
+  border: none;
+  border-radius: 12px;
+  box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -431,14 +490,20 @@
 
 .bs-grid-table--summary td {
   height: auto;
-  min-height: 48px;
+  min-height: 44px;
   padding: 12px 16px;
   font-size: var(--font-body, 14px);
   font-weight: var(--font-weight-bold, 600);
   line-height: 20px;
   color: var(--text-default, #161616);
-  border-top: 1px solid var(--border-default, #d3d5dd);
-  background: var(--bg-xxlight, #f5f5f5);
+  border-top: none;
+  border-bottom: none;
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--nested .bs-grid-table--summary td,
+.bs-grid-table--expandedCell .bs-grid-table--summary td {
+  background: var(--grey050, #fafafa);
 }
 
 .bs-grid-table--table tr.bs-grid-table--emptyRow td {
@@ -477,7 +542,17 @@
 }
 
 .bs-grid-table--paginationBottom {
-  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.bs-grid-table--paginationBottom .bs-grid-table--toolbar {
+  justify-content: center;
+}
+
+.bs-grid-table--paginationBottom .bs-grid-table--pagination {
+  justify-content: center;
 }
 
 .bs-grid-table--sticky thead th {
@@ -519,13 +594,15 @@
 }
 
 .bs-grid-table--table tbody tr:hover td.bs-grid-table--pinned {
-  background: linear-gradient(var(--black-03, rgba(22, 22, 22, 0.03)), var(--black-03, rgba(22, 22, 22, 0.03))),
-    var(--bg-default, #ffffff);
+  background: var(--grey050, #fafafa);
 }
 
 .bs-grid-table--table tbody tr.bs-grid-table--selected td.bs-grid-table--pinned {
-  background: linear-gradient(var(--primary-10, #3ab78f1a), var(--primary-10, #3ab78f1a)),
-    var(--bg-default, #ffffff);
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--table tbody tr.bs-grid-table--selected:hover td.bs-grid-table--pinned {
+  background: var(--grey050, #fafafa);
 }
 
 .bs-grid-table--pingLeft .bs-grid-table--pinnedLeftEdge::after,
@@ -609,11 +686,10 @@
 .bs-grid-table--hoverChip {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 8px;
+  gap: 12px;
+  padding: 0 4px;
+  border-radius: 0;
   background: var(--bg-default, #ffffff);
-  box-shadow: var(--shadow-sm);
   white-space: nowrap;
   pointer-events: auto;
 }
@@ -628,6 +704,7 @@
   background: rgba(19, 22, 26, 0.72);
 }
 
-[data-theme='dark'] .bs-grid-table--table tbody tr:hover td {
+[data-theme='dark'] .bs-grid-table--table tbody tr:hover td,
+[data-theme='dark'] .bs-grid-table--table tbody tr.bs-grid-table--selected:hover td {
   background: var(--bg-xlight, #181c21);
 }

@@ -304,7 +304,7 @@ export function GridTableHeader<T>({
                     >
                       <Icon
                         name={isSorted && sort.direction === 'asc' ? 'chevron-up' : 'chevron-down'}
-                        size={14}
+                        size={16}
                       />
                     </span>
                   </button>

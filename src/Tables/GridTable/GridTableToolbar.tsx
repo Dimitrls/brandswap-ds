@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '../../Buttons/Button';
 import { InputField } from '../../FormElements/InputField';
 import { Select } from '../../FormElements/Select';
+import { Icon } from '../../Icons/Icon';
+import type { IconName } from '../../Icons/Icon';
 import { Pagination } from '../../Navigation/Pagination';
-import type { GridTablePageSizeOption } from './GridTable.types';
+import type { GridTableMenuItem, GridTablePageSizeOption } from './GridTable.types';
 import { DEFAULT_PAGE_SIZE_OPTIONS, resolvePageSizeOption } from './GridTable.utils';
 import { GridTableFloating } from './GridTableFloating';
 
@@ -15,11 +17,28 @@ const styles: Record<string, string> = {
   pageSize: 'bs-grid-table--pageSize',
   pagination: 'bs-grid-table--pagination',
   exportMenu: 'bs-grid-table--exportMenu',
+  actionsButton: 'bs-grid-table--actionsButton',
   menu: 'bs-grid-table--menu',
   menuItem: 'bs-grid-table--menuItem',
 };
 
 export type GridTableExportFormat = 'csv' | 'xls';
+
+function MenuRow({
+  icon,
+  label,
+  onClick,
+}: {
+  icon?: IconName;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button type="button" role="menuitem" className={styles.menuItem} onClick={onClick}>
+      {icon ? [<Icon key="icon" name={icon} size={16} />, label] : label}
+    </button>
+  );
+}
 
 function exportFormatLabel(format: GridTableExportFormat): string {
   switch (format) {
@@ -34,11 +53,13 @@ function exportFormatLabel(format: GridTableExportFormat): string {
   }
 }
 
-function ExportControl({
+export function GridTableActionsMenu({
   formats,
+  menuItems = [],
   onExport,
 }: {
   formats: GridTableExportFormat[];
+  menuItems?: GridTableMenuItem[];
   onExport: (format: GridTableExportFormat) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -63,7 +84,7 @@ function ExportControl({
     };
   }, [open]);
 
-  if (formats.length === 1) {
+  if (formats.length === 1 && menuItems.length === 0) {
     const [format] = formats;
     return (
       <Button
@@ -77,18 +98,20 @@ function ExportControl({
     );
   }
 
+  const menuLabel = formats.length > 0 ? 'Export' : 'Table actions';
+
   return (
     <div className={styles.exportMenu} ref={wrapperRef}>
-      <Button
-        variant="outline"
-        size="small"
-        label="Export"
-        icon="file-export"
+      <button
+        type="button"
+        className={styles.actionsButton}
         onClick={() => setOpen((value) => !value)}
-        aria-label="Export"
+        aria-label={menuLabel}
         aria-haspopup="menu"
         aria-expanded={open}
-      />
+      >
+        <Icon name="dots-vertical" size={16} />
+      </button>
       {open && (
         <GridTableFloating
           as="ul"
@@ -100,17 +123,26 @@ function ExportControl({
         >
           {formats.map((format) => (
             <li key={format} role="none">
-              <button
-                type="button"
-                role="menuitem"
-                className={styles.menuItem}
+              <MenuRow
+                icon="file-export"
+                label={`Export as ${exportFormatLabel(format)}`}
                 onClick={() => {
                   onExport(format);
                   setOpen(false);
                 }}
-              >
-                {`Export as ${exportFormatLabel(format)}`}
-              </button>
+              />
+            </li>
+          ))}
+          {menuItems.map((item) => (
+            <li key={item.label} role="none">
+              <MenuRow
+                icon={item.icon}
+                label={item.label}
+                onClick={() => {
+                  item.onClick();
+                  setOpen(false);
+                }}
+              />
             </li>
           ))}
         </GridTableFloating>
@@ -123,8 +155,6 @@ export interface GridTableToolbarProps {
   showSearch: boolean;
   quickFilter: string;
   onQuickFilterChange: (value: string) => void;
-  exportFormats: GridTableExportFormat[];
-  onExport: (format: GridTableExportFormat) => void;
   showPagination: boolean;
   page: number;
   pageSize: number;
@@ -138,8 +168,6 @@ export function GridTableToolbar({
   showSearch,
   quickFilter,
   onQuickFilterChange,
-  exportFormats,
-  onExport,
   showPagination,
   page,
   pageSize,
@@ -148,8 +176,7 @@ export function GridTableToolbar({
   onPageChange,
   onPageSizeChange,
 }: GridTableToolbarProps) {
-  const showExport = exportFormats.length > 0;
-  if (!showSearch && !showExport && !showPagination) return null;
+  if (!showSearch && !showPagination) return null;
 
   const options = (pageSizeOptions.length > 0 ? pageSizeOptions : DEFAULT_PAGE_SIZE_OPTIONS).map(
     resolvePageSizeOption
@@ -174,7 +201,6 @@ export function GridTableToolbar({
         )}
       </div>
       <div className={styles.toolbarEnd}>
-        {showExport && <ExportControl formats={exportFormats} onExport={onExport} />}
         {showPagination && (
           <div className={styles.pagination}>
             <div className={styles.pageSize}>
