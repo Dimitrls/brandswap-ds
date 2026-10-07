@@ -162,7 +162,7 @@ export interface GridTableToolbarProps {
   pageSizeOptions: GridTablePageSizeOption[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
-  /** Sits in the pagination row, after the page buttons. */
+  /** Rendered in the toolbar, before pagination. */
   actions?: React.ReactNode;
 }
 
@@ -204,6 +204,7 @@ export function GridTableToolbar({
         )}
       </div>
       <div className={styles.toolbarEnd}>
+        {actions}
         {showPagination && (
           <div className={styles.pagination}>
             <div className={styles.pageSize}>
@@ -221,10 +222,8 @@ export function GridTableToolbar({
               />
             </div>
             <Pagination totalPages={totalPages} currentPage={page} onChange={onPageChange} />
-            {actions}
           </div>
         )}
-        {!showPagination && actions}
       </div>
     </div>
   );

@@ -643,7 +643,7 @@ describe('GridTable', () => {
     expect(container.querySelector('.bs-grid-table--table').style.minWidth).toBe('1200px')
   })
 
-  it('renders the export action after the pagination when the top toolbar is shown', () => {
+  it('renders the export action in the toolbar before pagination', () => {
     render(
       <GridTable
         columns={columns}
@@ -654,19 +654,19 @@ describe('GridTable', () => {
         exportCsv={{}}
       />
     )
-    const toolbarEnd = container.querySelector('.bs-grid-table--toolbarEnd')
-    const exportButton = container.querySelector('button[aria-label="Export CSV"]')
-    expect(toolbarEnd.contains(exportButton)).toBe(true)
-    expect(toolbarEnd.lastElementChild.contains(exportButton)).toBe(true)
-    expect(container.querySelector('.bs-grid-table--cornerActions')).toBeFalsy()
-    expect(container.querySelector('.bs-grid-table').className).not.toContain('bs-grid-table--hasActions')
+    const toolbar = container.querySelector('.bs-grid-table--toolbar')
+    const corner = toolbar.querySelector('.bs-grid-table--cornerActions')
+    const pagination = toolbar.querySelector('.bs-grid-table--pagination')
+    expect(corner.querySelector('button[aria-label="Export CSV"]')).toBeTruthy()
+    expect(corner.compareDocumentPosition(pagination) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(container.querySelector('.bs-grid-table--body .bs-grid-table--cornerActions')).toBeFalsy()
   })
 
-  it('keeps the export action in the table corner without a top toolbar', () => {
+  it('keeps the export action in the toolbar when there is no pagination', () => {
     render(<GridTable columns={columns} rows={rows} getRowId={(row) => row.id} exportCsv={{}} />)
-    const corner = container.querySelector('.bs-grid-table--cornerActions')
+    const toolbar = container.querySelector('.bs-grid-table--toolbar')
+    const corner = toolbar.querySelector('.bs-grid-table--cornerActions')
     expect(corner.querySelector('button[aria-label="Export CSV"]')).toBeTruthy()
-    expect(container.querySelector('.bs-grid-table--toolbar')).toBeFalsy()
-    expect(container.querySelector('.bs-grid-table').className).toContain('bs-grid-table--hasActions')
+    expect(toolbar.querySelector('.bs-grid-table--pagination')).toBeFalsy()
   })
 })

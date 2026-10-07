@@ -83,7 +83,6 @@ const styles: Record<string, string> = {
   bulkCount: 'bs-grid-table--bulkCount',
   bulkActions: 'bs-grid-table--bulkActions',
   cornerActions: 'bs-grid-table--cornerActions',
-  hasActions: 'bs-grid-table--hasActions',
   nested: 'bs-grid-table--nested',
 };
 
@@ -531,11 +530,12 @@ export function GridTable<T>({
 
   const paginationAtTop = Boolean(pagination) && paginationPlacement === 'top';
   const paginationAtBottom = Boolean(pagination) && paginationPlacement === 'bottom';
-  const showTopToolbar = Boolean(filtering) || paginationAtTop;
   const showActionsMenu = exportFormats.length > 0 || (menuItems?.length ?? 0) > 0;
-  const actionsWithPagination = showActionsMenu && (paginationAtTop || paginationAtBottom);
-  const actionsMenu = showActionsMenu ? (
-    <GridTableActionsMenu formats={exportFormats} menuItems={menuItems} onExport={handleExport} />
+  const showTopToolbar = Boolean(filtering) || paginationAtTop || (showActionsMenu && !paginationAtBottom);
+  const actionsNode = showActionsMenu ? (
+    <div className={styles.cornerActions}>
+      <GridTableActionsMenu formats={exportFormats} menuItems={menuItems} onExport={handleExport} />
+    </div>
   ) : null;
   const selectionTotal = pagination?.mode === 'server' ? (pagination.total ?? rows.length) : processedRows.length;
 
@@ -552,7 +552,6 @@ export function GridTable<T>({
         ping.left && styles.pingLeft,
         ping.right && styles.pingRight,
         nested && styles.nested,
-        showActionsMenu && !actionsWithPagination && styles.hasActions,
         className
       )}
       {...props}
@@ -566,14 +565,11 @@ export function GridTable<T>({
           quickFilter={quickFilter}
           onQuickFilterChange={updateQuickFilter}
           showPagination={paginationAtTop}
-          actions={paginationAtTop ? actionsMenu : undefined}
+          actions={paginationAtBottom ? undefined : actionsNode}
           {...toolbarPagingProps}
         />
       )}
       <div className={styles.body}>
-        {showActionsMenu && !actionsWithPagination && (
-          <div className={styles.cornerActions}>{actionsMenu}</div>
-        )}
         <div
           ref={scrollRef}
           className={joinClasses(
@@ -773,7 +769,7 @@ export function GridTable<T>({
             quickFilter={quickFilter}
             onQuickFilterChange={updateQuickFilter}
             showPagination
-            actions={actionsMenu}
+            actions={actionsNode}
             {...toolbarPagingProps}
           />
         </div>

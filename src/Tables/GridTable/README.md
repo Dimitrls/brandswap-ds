@@ -43,7 +43,7 @@ import {
 | `hoverActions` / `hoverActionsPosition` | Floating action chip on row hover / focus, aligned `left` / `center` / `right` (default) of the visible area |
 | `expandable` | `renderExpanded` plus either `isExpanded` / `onToggle`, or `expandedIds` / `defaultExpandedIds` / `onExpandedChange` (`onToggle` still fires, handy for lazy loading). Nested `GridTable` supported |
 | `summary` | `tfoot` from **filtered/sorted** rows, not the current page. `row` can be `Partial<T>` or `(processedRows) => Partial<T>`. `sticky` pins it to the bottom |
-| `exportCsv` / `exportXls` | Sits in the pagination row, after the page buttons (top or bottom). With no pagination it sits in the table's top-right corner. One format and no `menuItems` exports immediately. Both formats, or any custom item, open a 3-dot menu (`Export as CSV`, `Export as XLS`, then `menuItems`). CSV has a UTF-8 BOM by default |
+| `exportCsv` / `exportXls` | Toolbar actions, in `bs-grid-table--cornerActions`, immediately before pagination (top or bottom). With no pagination the toolbar is just that control. One format and no `menuItems` exports immediately. Both formats, or any custom item, open a 3-dot menu (`Export as CSV`, `Export as XLS`, then `menuItems`). CSV has a UTF-8 BOM by default |
 | `menuItems` | Extra actions-menu entries `{ label, onClick, icon? }`, after the export items |
 | `onExportCsv` / `onExportXls` | Replace the built-in download (e.g. server-side export of every page) |
 | `stickyHeader` | Sticky header + sticky summary footer |

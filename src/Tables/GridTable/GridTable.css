@@ -78,10 +78,10 @@
 }
 
 .bs-grid-table--cornerActions {
-  position: absolute;
-  top: 1px;
-  right: 0;
-  z-index: 6;
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
 }
 
 .bs-grid-table--actionsButton {
@@ -106,10 +106,6 @@
 
 .bs-grid-table--exportMenu {
   position: relative;
-}
-
-.bs-grid-table--hasActions .bs-grid-table--table thead tr > th:last-child {
-  padding-right: 40px;
 }
 
 .bs-grid-table--menu {
