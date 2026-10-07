@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .bs-grid-table--toolbarStart,
@@ -26,13 +26,22 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   min-width: 0;
+}
+
+.bs-grid-table--toolbarStart {
+  flex: 1 1 auto;
+}
+
+.bs-grid-table--toolbarEnd {
+  flex: 0 0 auto;
 }
 
 .bs-grid-table--search {
   width: 220px;
   max-width: 100%;
+  min-width: 0;
 }
 
 .bs-grid-table--pageSize {
