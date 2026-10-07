@@ -531,6 +531,10 @@ export function GridTable<T>({
 
   const showTopToolbar = Boolean(filtering) || (Boolean(pagination) && paginationPlacement === 'top');
   const showActionsMenu = exportFormats.length > 0 || (menuItems?.length ?? 0) > 0;
+  const actionsInToolbar = showActionsMenu && showTopToolbar;
+  const actionsMenu = showActionsMenu ? (
+    <GridTableActionsMenu formats={exportFormats} menuItems={menuItems} onExport={handleExport} />
+  ) : null;
   const selectionTotal = pagination?.mode === 'server' ? (pagination.total ?? rows.length) : processedRows.length;
 
   const selectedRows = bulkActions ? rows.filter((row) => selectedIds.includes(getRowId(row))) : [];
@@ -546,7 +550,7 @@ export function GridTable<T>({
         ping.left && styles.pingLeft,
         ping.right && styles.pingRight,
         nested && styles.nested,
-        showActionsMenu && styles.hasActions,
+        showActionsMenu && !actionsInToolbar && styles.hasActions,
         className
       )}
       {...props}
@@ -560,15 +564,12 @@ export function GridTable<T>({
           quickFilter={quickFilter}
           onQuickFilterChange={updateQuickFilter}
           showPagination={Boolean(pagination) && paginationPlacement === 'top'}
+          actions={actionsInToolbar ? actionsMenu : undefined}
           {...toolbarPagingProps}
         />
       )}
       <div className={styles.body}>
-        {showActionsMenu && (
-          <div className={styles.cornerActions}>
-            <GridTableActionsMenu formats={exportFormats} menuItems={menuItems} onExport={handleExport} />
-          </div>
-        )}
+        {showActionsMenu && !actionsInToolbar && <div className={styles.cornerActions}>{actionsMenu}</div>}
         <div
           ref={scrollRef}
           className={joinClasses(

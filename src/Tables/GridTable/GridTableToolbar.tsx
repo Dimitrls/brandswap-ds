@@ -162,6 +162,8 @@ export interface GridTableToolbarProps {
   pageSizeOptions: GridTablePageSizeOption[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
+  /** Rendered at the end of the toolbar, after the pagination. */
+  actions?: React.ReactNode;
 }
 
 export function GridTableToolbar({
@@ -175,8 +177,9 @@ export function GridTableToolbar({
   pageSizeOptions,
   onPageChange,
   onPageSizeChange,
+  actions,
 }: GridTableToolbarProps) {
-  if (!showSearch && !showPagination) return null;
+  if (!showSearch && !showPagination && !actions) return null;
 
   const options = (pageSizeOptions.length > 0 ? pageSizeOptions : DEFAULT_PAGE_SIZE_OPTIONS).map(
     resolvePageSizeOption
@@ -220,6 +223,7 @@ export function GridTableToolbar({
             <Pagination totalPages={totalPages} currentPage={page} onChange={onPageChange} />
           </div>
         )}
+        {actions}
       </div>
     </div>
   );
