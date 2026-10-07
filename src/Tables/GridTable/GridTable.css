@@ -538,7 +538,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .bs-grid-table--paginationBottom {

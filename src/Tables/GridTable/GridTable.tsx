@@ -529,9 +529,11 @@ export function GridTable<T>({
     onPageSizeChange: (nextSize: number) => changePage(1, nextSize),
   };
 
-  const showTopToolbar = Boolean(filtering) || (Boolean(pagination) && paginationPlacement === 'top');
+  const paginationAtTop = Boolean(pagination) && paginationPlacement === 'top';
+  const paginationAtBottom = Boolean(pagination) && paginationPlacement === 'bottom';
+  const showTopToolbar = Boolean(filtering) || paginationAtTop;
   const showActionsMenu = exportFormats.length > 0 || (menuItems?.length ?? 0) > 0;
-  const actionsInToolbar = showActionsMenu && showTopToolbar;
+  const actionsWithPagination = showActionsMenu && (paginationAtTop || paginationAtBottom);
   const actionsMenu = showActionsMenu ? (
     <GridTableActionsMenu formats={exportFormats} menuItems={menuItems} onExport={handleExport} />
   ) : null;
@@ -550,7 +552,7 @@ export function GridTable<T>({
         ping.left && styles.pingLeft,
         ping.right && styles.pingRight,
         nested && styles.nested,
-        showActionsMenu && !actionsInToolbar && styles.hasActions,
+        showActionsMenu && !actionsWithPagination && styles.hasActions,
         className
       )}
       {...props}
@@ -563,13 +565,15 @@ export function GridTable<T>({
           showSearch={Boolean(filtering)}
           quickFilter={quickFilter}
           onQuickFilterChange={updateQuickFilter}
-          showPagination={Boolean(pagination) && paginationPlacement === 'top'}
-          actions={actionsInToolbar ? actionsMenu : undefined}
+          showPagination={paginationAtTop}
+          actions={paginationAtTop ? actionsMenu : undefined}
           {...toolbarPagingProps}
         />
       )}
       <div className={styles.body}>
-        {showActionsMenu && !actionsInToolbar && <div className={styles.cornerActions}>{actionsMenu}</div>}
+        {showActionsMenu && !actionsWithPagination && (
+          <div className={styles.cornerActions}>{actionsMenu}</div>
+        )}
         <div
           ref={scrollRef}
           className={joinClasses(
@@ -769,6 +773,7 @@ export function GridTable<T>({
             quickFilter={quickFilter}
             onQuickFilterChange={updateQuickFilter}
             showPagination
+            actions={actionsMenu}
             {...toolbarPagingProps}
           />
         </div>
