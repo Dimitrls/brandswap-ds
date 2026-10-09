@@ -5,4 +5,6 @@ export type {
   SelectMultiProps,
   SelectSharedProps,
   SelectOptionVariant,
+  DropdownPosition,
+  DropdownSize,
 } from './Select';

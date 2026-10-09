@@ -57,3 +57,15 @@ export const WithIconSmall = () => (
   />
 );
 
+export const SmallDropdownTop = () => (
+  <div style={{ paddingTop: 180 }}>
+    <Selectbox
+      label="Top + small dropdown"
+      options={['Option 1', 'Option 2', 'Option 3']}
+      size="small"
+      dropdownSize="small"
+      dropdownPosition="top"
+    />
+  </div>
+);
+
