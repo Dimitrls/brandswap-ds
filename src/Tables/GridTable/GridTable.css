@@ -1,0 +1,715 @@
+.bs-grid-table {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 20px;
+  background: var(--bg-default, #ffffff);
+  border-radius: 8px;
+  font-family: var(--bs-font-family, 'Poppins', sans-serif);
+  color: var(--text-default, #161616);
+  position: relative;
+}
+
+.bs-grid-table--toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.bs-grid-table--toolbarStart,
+.bs-grid-table--toolbarEnd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.bs-grid-table--toolbarStart {
+  flex: 1 1 auto;
+}
+
+.bs-grid-table--toolbarEnd {
+  flex: 0 0 auto;
+}
+
+.bs-grid-table--search {
+  width: 220px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.bs-grid-table--pageSize {
+  width: 108px;
+}
+
+.bs-grid-table--body {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.bs-grid-table--scroll {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: auto;
+}
+
+.bs-grid-table--scroll.bs-grid-table--sticky,
+.bs-grid-table--scroll.bs-grid-table--stickySummary {
+  overflow: auto;
+}
+
+.bs-grid-table--title {
+  margin: 0;
+}
+
+.bs-grid-table--title > h1,
+.bs-grid-table--title > h2,
+.bs-grid-table--title > h3,
+.bs-grid-table--title > h4 {
+  margin: 0;
+}
+
+.bs-grid-table--cornerActions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.bs-grid-table--actionsButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--bg-default, #ffffff);
+  color: var(--text-default, #161616);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.bs-grid-table--actionsButton:focus-visible {
+  outline: 2px solid var(--primary, #3ab78f);
+  outline-offset: 2px;
+}
+
+.bs-grid-table--exportMenu {
+  position: relative;
+}
+
+.bs-grid-table--menu {
+  z-index: 1000;
+  box-sizing: border-box;
+  min-width: 160px;
+  font-family: var(--bs-font-family, 'Poppins', sans-serif);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--bg-default, #ffffff);
+  border: none;
+  border-radius: 6px;
+  box-shadow: var(--shadow-md);
+}
+
+.bs-grid-table--menuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-default, #161616);
+  font: inherit;
+  font-size: var(--font-body, 14px);
+  font-weight: var(--font-weight-regular, 400);
+  line-height: 20px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.bs-grid-table--menuItem:hover,
+.bs-grid-table--menuItem:focus-visible {
+  background: var(--bg-xxlight, #f5f5f5);
+  outline: none;
+}
+
+.bs-grid-table--bulkBar {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--border-default, #d3d5dd);
+  border-radius: 6px;
+  background: var(--bg-default, #ffffff);
+  box-shadow: var(--shadow-xl);
+  font-size: var(--font-body, 14px);
+  line-height: 20px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.bs-grid-table--bulkCount {
+  width: 140px;
+  font-weight: var(--font-weight-regular, 400);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.bs-grid-table--bulkCount strong {
+  font-weight: var(--font-weight-bold, 600);
+}
+
+.bs-grid-table--bulkActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.bs-grid-table--table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  font-family: inherit;
+  table-layout: auto;
+}
+
+.bs-grid-table--col {
+  width: var(--bs-grid-col-width, auto);
+  min-width: var(--bs-grid-col-min-width, 72px);
+}
+
+.bs-grid-table--colFlex {
+  width: auto;
+}
+
+.bs-grid-table--table th,
+.bs-grid-table--table td {
+  box-sizing: border-box;
+  vertical-align: middle;
+  min-width: 72px;
+  white-space: nowrap;
+}
+
+.bs-grid-table--table thead th {
+  position: relative;
+  height: auto;
+  min-height: 36px;
+  padding: 0 16px 16px;
+  font-size: var(--font-h6, 14px);
+  font-weight: var(--font-weight-bold, 600);
+  line-height: 16px;
+  color: var(--text-default, #161616);
+  text-align: left;
+  vertical-align: bottom;
+  user-select: none;
+  border-bottom: none;
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--table tbody td {
+  height: auto;
+  min-height: 44px;
+  padding: 12px 16px;
+  font-size: var(--font-body, 14px);
+  font-weight: var(--font-weight-regular, 400);
+  line-height: 20px;
+  color: var(--text-default, #161616);
+  border-bottom: 1px solid var(--border-default, #d3d5dd);
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--density-compact .bs-grid-table--table tbody td {
+  min-height: 36px;
+  padding: 4px 12px;
+}
+
+.bs-grid-table--density-compact .bs-grid-table--table thead th {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.bs-grid-table--density-media .bs-grid-table--table tbody td {
+  min-height: 70px;
+  height: 70px;
+}
+
+.bs-grid-table--table tbody tr:hover td {
+  background: var(--grey050, #fafafa);
+}
+
+.bs-grid-table--table tbody tr.bs-grid-table--expandedRow:hover td,
+.bs-grid-table--table tbody tr.bs-grid-table--emptyRow:hover td {
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--clickable {
+  cursor: pointer;
+}
+
+.bs-grid-table--rowMuted {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.bs-grid-table--selected td {
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--table tbody tr.bs-grid-table--selected:hover td {
+  background: var(--grey050, #fafafa);
+}
+
+.bs-grid-table--headerInner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 16px;
+}
+
+.bs-grid-table--headerLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bs-grid-table--alignLeft {
+  text-align: left;
+}
+
+.bs-grid-table--alignCenter {
+  text-align: center;
+}
+
+.bs-grid-table--alignCenter .bs-grid-table--headerInner {
+  justify-content: center;
+}
+
+.bs-grid-table--alignRight {
+  text-align: right;
+}
+
+.bs-grid-table--alignRight .bs-grid-table--headerInner {
+  justify-content: flex-end;
+}
+
+.bs-grid-table--sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--font-weight-bold, 600);
+  font-size: var(--font-h6, 14px);
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.bs-grid-table--sortActive,
+.bs-grid-table--sortActive .bs-grid-table--sortButton {
+  color: var(--primary, #3ab78f);
+}
+
+.bs-grid-table--sortButton:focus-visible,
+.bs-grid-table--iconBtn:focus-visible {
+  outline: 2px solid var(--primary, #3ab78f);
+  outline-offset: 2px;
+}
+
+.bs-grid-table--sortIcon {
+  display: inline-flex;
+  color: var(--text-weak, #a0a2a7);
+}
+
+.bs-grid-table--sortIconActive {
+  color: var(--primary, #3ab78f);
+}
+
+.bs-grid-table--iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted, #77787e);
+  cursor: pointer;
+}
+
+.bs-grid-table--iconBtnActive {
+  color: var(--primary, #3ab78f);
+}
+
+.bs-grid-table--filterPopover {
+  z-index: 1000;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+  padding: 8px;
+  background: var(--bg-default, #ffffff);
+  border: 1px solid var(--border-default, #d3d5dd);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  font-family: var(--bs-font-family, 'Poppins', sans-serif);
+  color: var(--text-default, #161616);
+}
+
+.bs-grid-table--filterActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.bs-grid-table--selectCol,
+.bs-grid-table--expandCol,
+.bs-grid-table--actionsCol {
+  width: 1px;
+}
+
+/* Selectors below are (0,2,2) so they beat the base cell and density padding / min-width rules. */
+.bs-grid-table--table tr > th.bs-grid-table--selectCol,
+.bs-grid-table--table tr > td.bs-grid-table--selectCol,
+.bs-grid-table--table tr > th.bs-grid-table--expandCol,
+.bs-grid-table--table tr > td.bs-grid-table--expandCol,
+.bs-grid-table--table tr > th.bs-grid-table--actionsCol,
+.bs-grid-table--table tr > td.bs-grid-table--actionsCol {
+  min-width: 0;
+}
+
+.bs-grid-table--table tr > th.bs-grid-table--expandCol,
+.bs-grid-table--table tr > td.bs-grid-table--expandCol {
+  padding-right: 4px;
+}
+
+.bs-grid-table--table tr > th.bs-grid-table--selectCol,
+.bs-grid-table--table tr > td.bs-grid-table--selectCol {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.bs-grid-table--table tr > th.bs-grid-table--actionsCol,
+.bs-grid-table--table tr > td.bs-grid-table--actionsCol {
+  text-align: right;
+}
+
+.bs-grid-table--table tr > th:first-child,
+.bs-grid-table--table tr > td:first-child {
+  padding-left: 16px;
+}
+
+.bs-grid-table--selectCol .bs-checkbox--wrapper {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.bs-grid-table--actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.bs-grid-table--table td.bs-grid-table--cellWrap {
+  min-width: 160px;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.bs-grid-table--table tr > td.bs-grid-table--expandedCell {
+  white-space: normal;
+  height: auto;
+  min-height: 0;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--border-default, #d3d5dd);
+  background: var(--bg-default, #ffffff);
+  overflow: visible;
+}
+
+.bs-grid-table--expandedCell .bs-grid-table {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  gap: 0;
+  background: var(--grey050, #fafafa);
+  border-radius: 12px;
+  box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 16px 0 36px;
+}
+
+.bs-grid-table--expandedCell .bs-grid-table--table {
+  min-width: 100%;
+}
+
+.bs-grid-table.bs-grid-table--nested {
+  box-sizing: border-box;
+  gap: 0;
+  padding: 0 16px 0 36px;
+  background: var(--grey050, #fafafa);
+  border: none;
+  border-radius: 12px;
+  box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.bs-grid-table--nested .bs-grid-table--title {
+  display: none;
+}
+
+.bs-grid-table--nested .bs-grid-table--table thead th,
+.bs-grid-table--nested .bs-grid-table--table tbody td {
+  height: 40px;
+}
+
+.bs-grid-table--nested .bs-grid-table--table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.bs-grid-table--summary td {
+  height: auto;
+  min-height: 44px;
+  padding: 12px 16px;
+  font-size: var(--font-body, 14px);
+  font-weight: var(--font-weight-bold, 600);
+  line-height: 20px;
+  color: var(--text-default, #161616);
+  border-top: none;
+  border-bottom: none;
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--nested .bs-grid-table--summary td,
+.bs-grid-table--expandedCell .bs-grid-table--summary td {
+  background: var(--grey050, #fafafa);
+}
+
+.bs-grid-table--table tr.bs-grid-table--emptyRow td {
+  height: 72px;
+  text-align: center;
+  color: var(--text-muted, #77787e);
+  border-bottom: none;
+}
+
+.bs-grid-table--overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white-75, rgba(255, 255, 255, 0.75));
+  border-radius: 8px;
+}
+
+.bs-grid-table--spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--primary-25, #3ab78f40);
+  border-top-color: var(--primary, #3ab78f);
+  border-radius: 50%;
+  animation: bs-grid-table-spin 0.8s linear infinite;
+}
+
+.bs-grid-table--pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.bs-grid-table--paginationBottom {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.bs-grid-table--paginationBottom .bs-grid-table--toolbar {
+  justify-content: center;
+}
+
+.bs-grid-table--paginationBottom .bs-grid-table--pagination {
+  justify-content: center;
+}
+
+.bs-grid-table--sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--stickySummary tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+}
+
+.bs-grid-table--stickySummary tfoot tr:not(:last-child) td {
+  position: static;
+}
+
+.bs-grid-table--stickySummary tfoot tr:not(:last-child) td.bs-grid-table--pinned {
+  position: sticky;
+  bottom: auto;
+}
+
+/* Pinned columns. Offsets come from inline left/right; backgrounds must be opaque. */
+.bs-grid-table--table th.bs-grid-table--pinned,
+.bs-grid-table--table td.bs-grid-table--pinned {
+  position: sticky;
+  z-index: 2;
+}
+
+.bs-grid-table--table thead th.bs-grid-table--pinned,
+.bs-grid-table--stickySummary tfoot td.bs-grid-table--pinned {
+  z-index: 4;
+}
+
+.bs-grid-table--sticky thead th.bs-grid-table--pinned {
+  z-index: 5;
+}
+
+.bs-grid-table--table tbody tr:hover td.bs-grid-table--pinned {
+  background: var(--grey050, #fafafa);
+}
+
+.bs-grid-table--table tbody tr.bs-grid-table--selected td.bs-grid-table--pinned {
+  background: var(--bg-default, #ffffff);
+}
+
+.bs-grid-table--table tbody tr.bs-grid-table--selected:hover td.bs-grid-table--pinned {
+  background: var(--grey050, #fafafa);
+}
+
+.bs-grid-table--pingLeft .bs-grid-table--pinnedLeftEdge::after,
+.bs-grid-table--pingRight .bs-grid-table--pinnedRightEdge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  pointer-events: none;
+}
+
+.bs-grid-table--pingLeft .bs-grid-table--pinnedLeftEdge::after {
+  right: -8px;
+  background: linear-gradient(to right, rgba(22, 22, 22, 0.1), rgba(22, 22, 22, 0));
+}
+
+.bs-grid-table--pingRight .bs-grid-table--pinnedRightEdge::before {
+  left: -8px;
+  background: linear-gradient(to left, rgba(22, 22, 22, 0.1), rgba(22, 22, 22, 0));
+}
+
+/* Hover actions: a zero-width sticky anchor cell hosts a chip spanning the visible scroll width. */
+.bs-grid-table--hoverCol {
+  width: 0;
+}
+
+.bs-grid-table--table tr > th.bs-grid-table--hoverAnchor,
+.bs-grid-table--table tr > td.bs-grid-table--hoverAnchor {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 0;
+  min-width: 0;
+  max-width: 0;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: transparent;
+  pointer-events: none;
+}
+
+.bs-grid-table--table tr > .bs-grid-table--hoverAnchor + th,
+.bs-grid-table--table tr > .bs-grid-table--hoverAnchor + td {
+  padding-left: 16px;
+}
+
+.bs-grid-table--table tbody tr:hover td.bs-grid-table--hoverAnchor {
+  background: transparent;
+}
+
+.bs-grid-table--hoverActions {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--bs-grid-scroll-width, 100%);
+  display: none;
+  align-items: center;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+.bs-grid-table--hoverRow:hover .bs-grid-table--hoverActions,
+.bs-grid-table--hoverRow:focus-within .bs-grid-table--hoverActions {
+  display: flex;
+}
+
+.bs-grid-table--hoverLeft {
+  justify-content: flex-start;
+}
+
+.bs-grid-table--hoverCenter {
+  justify-content: center;
+}
+
+.bs-grid-table--hoverRight {
+  justify-content: flex-end;
+}
+
+.bs-grid-table--hoverChip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+  border-radius: 0;
+  background: var(--bg-default, #ffffff);
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+@keyframes bs-grid-table-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[data-theme='dark'] .bs-grid-table--overlay {
+  background: rgba(19, 22, 26, 0.72);
+}
+
+[data-theme='dark'] .bs-grid-table--table tbody tr:hover td,
+[data-theme='dark'] .bs-grid-table--table tbody tr.bs-grid-table--selected:hover td {
+  background: var(--bg-xlight, #181c21);
+}
