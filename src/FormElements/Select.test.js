@@ -207,3 +207,58 @@ describe('MultiSelectbox dropdownPosition / dropdownSize', () => {
     expect(dropdown.className).toContain('bs-selectbox--dropdown--small')
   })
 })
+
+describe('selected options appear first', () => {
+  beforeAll(() => {
+    global.ResizeObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+  })
+
+  function optionLabels() {
+    return Array.from(
+      container.querySelectorAll('.bs-selectbox--option')
+    ).map((el) => el.textContent.trim())
+  }
+
+  it('Select moves the selected value to the top, keeping other order', () => {
+    render(
+      <Select
+        options={['A', 'B', 'C', 'D']}
+        value="C"
+        onChange={() => {}}
+        searchable={false}
+      />
+    )
+    openSelect()
+    expect(optionLabels()).toEqual(['C', 'A', 'B', 'D'])
+  })
+
+  it('Select multiple keeps selected items first in options order', () => {
+    render(
+      <Select
+        options={['A', 'B', 'C', 'D']}
+        multiple
+        value={['C', 'A']}
+        onChange={() => {}}
+        searchable={false}
+      />
+    )
+    openSelect()
+    expect(optionLabels()).toEqual(['A', 'C', 'B', 'D'])
+  })
+
+  it('MultiSelectbox moves selected items to the top', () => {
+    render(
+      <MultiSelectbox
+        options={['A', 'B', 'C', 'D']}
+        selected={['D', 'B']}
+        onChange={() => {}}
+      />
+    )
+    openSelect()
+    expect(optionLabels()).toEqual(['B', 'D', 'A', 'C'])
+  })
+})

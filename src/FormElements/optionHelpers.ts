@@ -24,3 +24,25 @@ export function defaultGetOptionKey<T>(option: T, index = 0): string | number {
   }
   return index;
 }
+
+/**
+ * Puts selected options first while preserving relative order within each group
+ * (based on the original options array order).
+ */
+export function sortSelectedOptionsFirst<T>(
+  options: T[],
+  isSelected: (option: T) => boolean
+): T[] {
+  if (options.length === 0) return options;
+  const selected: T[] = [];
+  const unselected: T[] = [];
+  for (const option of options) {
+    if (isSelected(option)) {
+      selected.push(option);
+    } else {
+      unselected.push(option);
+    }
+  }
+  if (selected.length === 0) return options;
+  return [...selected, ...unselected];
+}
