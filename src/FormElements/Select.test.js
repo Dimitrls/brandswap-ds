@@ -261,4 +261,43 @@ describe('selected options appear first', () => {
     openSelect()
     expect(optionLabels()).toEqual(['B', 'D', 'A', 'C'])
   })
+
+  it('does not reshuffle list order while the dropdown stays open', () => {
+    let value = []
+    const onChange = (next) => {
+      value = next
+      act(() => {
+        ReactDOM.render(
+          <Select
+            options={['A', 'B', 'C', 'D']}
+            multiple
+            value={value}
+            onChange={onChange}
+            searchable={false}
+          />,
+          container
+        )
+      })
+    }
+
+    render(
+      <Select
+        options={['A', 'B', 'C', 'D']}
+        multiple
+        value={value}
+        onChange={onChange}
+        searchable={false}
+      />
+    )
+    openSelect()
+    expect(optionLabels()).toEqual(['A', 'B', 'C', 'D'])
+
+    const options = container.querySelectorAll('.bs-selectbox--option')
+    act(() => {
+      options[2].dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    })
+    expect(value).toEqual(['C'])
+    // Order stays as at open time (C does not jump to top until reopen)
+    expect(optionLabels()).toEqual(['A', 'B', 'C', 'D'])
+  })
 })
