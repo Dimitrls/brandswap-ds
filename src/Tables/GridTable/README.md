@@ -29,7 +29,7 @@ import {
 | `title` | Heading above the toolbar (string renders an `h3`) |
 | `loading` | Overlay spinner over the grid body |
 | `emptyText` | Any `ReactNode`. Default `"No data"` |
-| `density` | `default` is 48px. `compact` (~36px) and `media` (70px) are opt-in. Nested grids stay 40px |
+| `density` | `default` uses 12px vertical padding. `compact` (~36px) and `media` (70px) are opt-in. Nested grids stay 40px |
 | `nested` | For a grid inside `renderExpanded`: grey rounded card, 40px rows, title hidden |
 | `sorting` / `defaultSorting` / `onSortChange` | Sort `{ field, direction }`. Click cycles unsorted → asc → desc |
 | `sortMode` | `client` (default) or `server`: skip client sorting, sort in the API from `onSortChange` |

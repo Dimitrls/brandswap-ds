@@ -45,7 +45,7 @@
 }
 
 .bs-grid-table--pageSize {
-  width: 128px;
+  width: 108px;
 }
 
 .bs-grid-table--body {
@@ -72,6 +72,10 @@
 
 .bs-grid-table--title {
   margin: 0;
+  font-size: var(--font-h3, 19px);
+  font-weight: var(--font-weight-bold, 600);
+  line-height: 24px;
+  color: var(--text-default, #161616);
 }
 
 .bs-grid-table--title > h1,
@@ -175,7 +179,9 @@
 }
 
 .bs-grid-table--bulkCount {
+  width: 124px;
   font-weight: var(--font-weight-regular, 400);
+  text-align: right;
   white-space: nowrap;
 }
 
@@ -185,10 +191,11 @@
   justify-content: center;
   width: 28px;
   height: 28px;
+  margin-right: 8px;
   padding: 0;
   border: none;
   border-radius: 6px;
-  background: var(--bg1, var(--grey050, #fafafa));
+  background: var(--bg1, #f2f2f2);
   color: var(--text-default, #161616);
   cursor: pointer;
 }
@@ -233,7 +240,7 @@
   position: relative;
   height: auto;
   min-height: 36px;
-  padding: 0 16px 16px;
+  padding: 0 12px 16px;
   font-size: var(--font-h6, 14px);
   font-weight: var(--font-weight-bold, 600);
   line-height: 16px;
@@ -246,8 +253,8 @@
 }
 
 .bs-grid-table--table tbody td {
-  height: 48px;
-  padding: 0 16px;
+  height: auto;
+  padding: 12px;
   font-size: var(--font-body, 14px);
   font-weight: var(--font-weight-regular, 400);
   line-height: 20px;
@@ -444,6 +451,11 @@
   padding-left: 16px;
 }
 
+.bs-grid-table:not(.bs-grid-table--nested) .bs-grid-table--table tr > th:last-child,
+.bs-grid-table:not(.bs-grid-table--nested) .bs-grid-table--table tr > td:last-child:not(.bs-grid-table--expandedCell) {
+  padding-right: 16px;
+}
+
 .bs-grid-table--selectCol .bs-checkbox--wrapper {
   display: inline-flex;
   vertical-align: middle;
@@ -462,11 +474,15 @@
   overflow-wrap: break-word;
 }
 
+.bs-grid-table--table tbody tr:has(+ tr.bs-grid-table--expandedRow) td {
+  border-bottom-color: transparent;
+}
+
 .bs-grid-table .bs-grid-table--table > tbody > tr > td.bs-grid-table--expandedCell {
   white-space: normal;
   height: auto;
   min-height: 0;
-  padding: 8px 16px 12px;
+  padding: 0 0 12px;
   border-bottom: 1px solid var(--border-default, #d3d5dd);
   background: var(--bg-default, #ffffff);
   overflow: visible;
@@ -515,8 +531,8 @@
 .bs-grid-table--nested .bs-grid-table--table tbody td,
 .bs-grid-table--nested .bs-grid-table--summary td {
   height: 40px;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding: 0 12px;
+  vertical-align: middle;
 }
 
 .bs-grid-table--nested .bs-grid-table--table tbody tr:last-child td {
@@ -524,8 +540,8 @@
 }
 
 .bs-grid-table--summary td {
-  height: 48px;
-  padding: 0 16px;
+  height: auto;
+  padding: 12px;
   font-size: var(--font-body, 14px);
   font-weight: var(--font-weight-bold, 600);
   line-height: 20px;
@@ -571,8 +587,37 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: nowrap;
+}
+
+.bs-grid-table--pagination .bs-selectbox--selectSmall {
+  height: 28px;
+  padding: 4px 28px 4px 12px;
+  border-radius: 6px;
+  background: var(--bg1, #f2f2f2);
+  font-size: var(--font-body, 14px);
+  line-height: 20px;
+}
+
+.bs-grid-table--pagination .bs-pagination--pagination {
+  gap: 8px;
+}
+
+.bs-grid-table--pagination .bs-pagination--page,
+.bs-grid-table--pagination .bs-pagination--arrow {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: var(--font-body, 14px);
+  line-height: 20px;
+}
+
+.bs-grid-table--pagination .bs-pagination--ellipsis {
+  padding: 0;
+  font-size: var(--font-body, 14px);
+  line-height: 20px;
+  color: var(--text-muted, #77787e);
 }
 
 .bs-grid-table--paginationBottom {
@@ -726,6 +771,30 @@
   background: var(--bg-default, #ffffff);
   white-space: nowrap;
   pointer-events: auto;
+}
+
+.bs-grid-table--hoverChip .bs-grid-table--actions {
+  gap: 12px;
+}
+
+.bs-grid-table--hoverChip .bs-icon-button.bs-button--subtle {
+  background-color: var(--primary-10, rgba(58, 183, 143, 0.1));
+  color: var(--primary, #3ab78f);
+}
+
+.bs-grid-table--bulkButton.bs-button {
+  gap: 6px;
+  font-size: var(--font-body, 14px);
+  line-height: 20px;
+}
+
+.bs-grid-table--bulkButton.bs-button--outline {
+  border-color: transparent;
+  color: var(--primary, #3ab78f);
+}
+
+.bs-grid-table--bulkButton.bs-button--outline-warning {
+  border-color: transparent;
 }
 
 @keyframes bs-grid-table-spin {

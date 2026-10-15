@@ -552,10 +552,11 @@ export const FullFeatures = () => {
       accessor: 'status',
       type: 'status',
       width: 120,
+      sortable: false,
       filterable: false,
       render: ({ value }) => <StatusCell value={value} />,
     },
-    { id: 'categories', header: 'Categories', accessor: 'categories', type: 'text', flex: 1, filterable: false },
+    { id: 'categories', header: 'Categories', accessor: 'categories', type: 'text', flex: 1, sortable: false, filterable: false },
   ];
 
   return (
@@ -598,18 +599,18 @@ export const FullFeatures = () => {
         hoverActions={(row) => (
           <ActionsCell
             actions={[
-              { icon: 'pencil', ariaLabel: `Edit ${row.host}`, onClick: () => setNotice(`Edit ${row.host}`), variant: 'outline' },
-              { icon: 'download', ariaLabel: `Download ${row.host}`, onClick: () => setNotice(`Download ${row.host}`), variant: 'outline' },
+              { icon: 'pencil', ariaLabel: `Edit ${row.host}`, onClick: () => setNotice(`Edit ${row.host}`), variant: 'subtle' },
+              { icon: 'download', ariaLabel: `Download ${row.host}`, onClick: () => setNotice(`Download ${row.host}`), variant: 'subtle' },
               { icon: 'trash', ariaLabel: `Delete ${row.host}`, onClick: () => setNotice(`Delete ${row.host}`), variant: 'filled-warning' },
             ]}
           />
         )}
         bulkActions={() => (
           <>
-            <Button size="large" variant="outline" icon="download" label="Download" onClick={() => setNotice('Download')} />
-            <Button size="large" variant="outline" icon="plus" label="Activate" onClick={() => setNotice('Activate')} />
-            <Button size="large" variant="outline-warning" icon="close" label="Deactivate" onClick={() => setNotice('Deactivate')} />
-            <Button size="large" variant="filled-warning" icon="trash" label="Delete" onClick={() => setNotice('Delete')} />
+            <Button className="bs-grid-table--bulkButton" size="large" variant="outline" icon="download" label="Download" onClick={() => setNotice('Download')} />
+            <Button className="bs-grid-table--bulkButton" size="large" variant="outline" icon="plus" label="Activate" onClick={() => setNotice('Activate')} />
+            <Button className="bs-grid-table--bulkButton" size="large" variant="outline-warning" icon="close" label="Deactivate" onClick={() => setNotice('Deactivate')} />
+            <Button className="bs-grid-table--bulkButton" size="large" variant="filled-warning" icon="trash" label="Delete" onClick={() => setNotice('Delete')} />
           </>
         )}
         summary={{
