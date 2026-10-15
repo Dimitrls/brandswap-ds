@@ -20,7 +20,7 @@ export default {
     docs: {
       description: {
         component:
-          'Admin-ready grid for BrandSwopAdmin entity lists, insight reports, pickers, and nested rows. Place FiltersBar above the table. See src/Tables/GridTable/README.md.',
+          'Admin-ready grid for BrandSwopAdmin entity lists, insight reports, pickers, and nested rows. Keep page-level search and filters together in one FiltersBar outside the table. See src/Tables/GridTable/README.md.',
       },
     },
     backgrounds: {
@@ -129,13 +129,22 @@ const nestedOffers: Record<string, NestedOffer[]> = {
 
 export const EntityList = () => {
   const [status, setStatus] = useState('All');
+  const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const rows = useMemo(
-    () => (status === 'All' ? offers : offers.filter((row) => row.status === status)),
-    [status]
-  );
+  const rows = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return offers.filter((row) => {
+      const matchesStatus = status === 'All' || row.status === status;
+      const matchesQuery =
+        !needle ||
+        row.name.toLowerCase().includes(needle) ||
+        row.advertiser.toLowerCase().includes(needle) ||
+        row.status.toLowerCase().includes(needle);
+      return matchesStatus && matchesQuery;
+    });
+  }, [query, status]);
 
   const columns: Column<OfferRow>[] = [
     { id: 'name', header: 'Offer', accessor: 'name', type: 'text', minWidth: 220, flex: 1 },
@@ -165,8 +174,12 @@ export const EntityList = () => {
   ];
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <FiltersBar
+        searchbox
+        searchValue={query}
+        onSearchChange={setQuery}
+        searchPlaceholder="Search"
         filters={[
           {
             label: 'Status',
@@ -180,8 +193,6 @@ export const EntityList = () => {
         rows={rows}
         columns={columns}
         getRowId={(row) => row.id}
-        density="media"
-        filtering={{}}
         pagination={{
           mode: 'server',
           page,
@@ -273,7 +284,6 @@ export const ModalPicker = () => {
         { id: 'advertiser', header: 'Advertiser', accessor: 'advertiser', type: 'text' },
       ]}
       getRowId={(row) => row.id}
-      density="compact"
       selection={{
         mode: 'multiple',
         selectedIds,
@@ -384,7 +394,6 @@ export const PinnedWideReport = () => {
         rows={wideRows}
         columns={columns}
         getRowId={(row) => row.id}
-        density="compact"
         maxHeight={360}
         tableMinWidth={1400}
         filtering={{}}

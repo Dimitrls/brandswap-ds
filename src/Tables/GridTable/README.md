@@ -2,7 +2,7 @@
 
 Admin-ready data grid for BrandSwap. It is a new export alongside the existing presentational `Table` and generic `DataTable`. Import this when replacing MUI X DataGrid or Ant Design `Table` in BrandSwopAdmin.
 
-`FiltersBar` stays **above** the grid. Permission checks, server fetch, API CSV/PDF downloads, and confirmation modals stay in the app.
+Page-level search and filters stay together in one `FiltersBar`, outside the grid. A search that belongs only to this table uses the grid's quick filter, inside the panel. Permission checks, server fetch, API CSV/PDF downloads, and confirmation modals stay in the app.
 
 ## Import
 
@@ -29,21 +29,21 @@ import {
 | `title` | Heading above the toolbar (string renders an `h3`) |
 | `loading` | Overlay spinner over the grid body |
 | `emptyText` | Any `ReactNode`. Default `"No data"` |
-| `density` | `compact` (~36px), `default` (~48px), `media` (70px) |
-| `nested` | For a grid inside `renderExpanded`: bordered card, compact 40px rows, title hidden |
+| `density` | `default` is 48px. `compact` (~36px) and `media` (70px) are opt-in. Nested grids stay 40px |
+| `nested` | For a grid inside `renderExpanded`: grey rounded card, 40px rows, title hidden |
 | `sorting` / `defaultSorting` / `onSortChange` | Sort `{ field, direction }`. Click cycles unsorted → asc → desc |
 | `sortMode` | `client` (default) or `server`: skip client sorting, sort in the API from `onSortChange` |
 | `filtering` | Column filters + `quickFilter` across primitive cell values. Column filters apply on **Apply** / Enter; **Clear** removes them |
 | `filterMode` | `client` (default) or `server`: skip client quick/column filtering, filter in the API from the filtering callbacks |
-| `pagination` | `mode` (`client` default / `server`), 1-based `page` or `defaultPage`, `pageSize` or `defaultPageSize` (`-1` = All), `total`, `pageSizeOptions`, `onChange`, `placement` (`top` default). Sort / filter changes go back to page 1 |
+| `pagination` | `mode` (`client` default / `server`), 1-based `page` or `defaultPage`, `pageSize` or `defaultPageSize` (`-1` = All), `total`, `pageSizeOptions`, `onChange`, `placement` (`bottom` default). The page-size control reads `10 / page` and opens upward when placement is bottom. Sort / filter changes go back to page 1 |
 | `selection` | `none` / `single` / `multiple`, `selectedIds`, `onChange`, `isRowSelectable` |
-| `bulkActions` | `({ selectedIds, selectedRows, clearSelection }) => ReactNode`, shown in a floating bar over the bottom of the grid while rows are selected. The count reads `n of total selected` |
+| `bulkActions` | `({ selectedIds, selectedRows, clearSelection }) => ReactNode`, shown in a floating bar over the bottom of the grid while rows are selected. The count reads `n of total selected`, with an X button beside it that clears the selection |
 | `onRowClick` | Skips `button`, `a`, `input`, `label`, `[data-stop-row-click]` |
 | `getRowClassName` | e.g. `bs-grid-table--rowMuted` for pending / in-test rows |
 | `hoverActions` / `hoverActionsPosition` | Floating action chip on row hover / focus, aligned `left` / `center` / `right` (default) of the visible area |
 | `expandable` | `renderExpanded` plus either `isExpanded` / `onToggle`, or `expandedIds` / `defaultExpandedIds` / `onExpandedChange` (`onToggle` still fires, handy for lazy loading). Nested `GridTable` supported |
 | `summary` | `tfoot` from **filtered/sorted** rows, not the current page. `row` can be `Partial<T>` or `(processedRows) => Partial<T>`. `sticky` pins it to the bottom |
-| `exportCsv` / `exportXls` | Toolbar actions, in `bs-grid-table--cornerActions`, immediately before pagination (top or bottom). With no pagination the toolbar is just that control. One format and no `menuItems` exports immediately. Both formats, or any custom item, open a 3-dot menu (`Export as CSV`, `Export as XLS`, then `menuItems`). CSV has a UTF-8 BOM by default |
+| `exportCsv` / `exportXls` | Top-right of the table, in `bs-grid-table--cornerActions`. The table body keeps 24px of padding on the right for that button. One format and no `menuItems` exports immediately. Both formats, or any custom item, open a 3-dot menu (`Export as CSV`, `Export as XLS`, then `menuItems`). CSV has a UTF-8 BOM by default |
 | `menuItems` | Extra actions-menu entries `{ label, onClick, icon? }`, after the export items |
 | `onExportCsv` / `onExportXls` | Replace the built-in download (e.g. server-side export of every page) |
 | `stickyHeader` | Sticky header + sticky summary footer |

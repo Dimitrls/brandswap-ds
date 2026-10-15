@@ -162,8 +162,8 @@ export interface GridTableToolbarProps {
   pageSizeOptions: GridTablePageSizeOption[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
-  /** Rendered in the toolbar, before pagination. */
-  actions?: React.ReactNode;
+  /** Page-size menu opens upward when pagination sits at the bottom of the table. */
+  pageSizeDropdownPosition?: 'top' | 'bottom';
 }
 
 export function GridTableToolbar({
@@ -177,9 +177,9 @@ export function GridTableToolbar({
   pageSizeOptions,
   onPageChange,
   onPageSizeChange,
-  actions,
+  pageSizeDropdownPosition = 'bottom',
 }: GridTableToolbarProps) {
-  if (!showSearch && !showPagination && !actions) return null;
+  if (!showSearch && !showPagination) return null;
 
   const options = (pageSizeOptions.length > 0 ? pageSizeOptions : DEFAULT_PAGE_SIZE_OPTIONS).map(
     resolvePageSizeOption
@@ -204,7 +204,6 @@ export function GridTableToolbar({
         )}
       </div>
       <div className={styles.toolbarEnd}>
-        {actions}
         {showPagination && (
           <div className={styles.pagination}>
             <div className={styles.pageSize}>
@@ -218,6 +217,7 @@ export function GridTableToolbar({
                   if (next) onPageSizeChange(next.value);
                 }}
                 searchable={false}
+                dropdownPosition={pageSizeDropdownPosition}
                 aria-label="Rows per page"
               />
             </div>

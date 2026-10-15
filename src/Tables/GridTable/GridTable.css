@@ -45,13 +45,17 @@
 }
 
 .bs-grid-table--pageSize {
-  width: 108px;
+  width: 128px;
 }
 
 .bs-grid-table--body {
   position: relative;
   width: 100%;
   min-width: 0;
+}
+
+.bs-grid-table--hasActions .bs-grid-table--body {
+  padding-right: 24px;
 }
 
 .bs-grid-table--scroll {
@@ -78,10 +82,12 @@
 }
 
 .bs-grid-table--cornerActions {
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 6;
   display: flex;
   align-items: center;
-  flex: 0 0 auto;
 }
 
 .bs-grid-table--actionsButton {
@@ -169,10 +175,22 @@
 }
 
 .bs-grid-table--bulkCount {
-  width: 140px;
   font-weight: var(--font-weight-regular, 400);
-  text-align: center;
   white-space: nowrap;
+}
+
+.bs-grid-table--bulkClear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--bg1, var(--grey050, #fafafa));
+  color: var(--text-default, #161616);
+  cursor: pointer;
 }
 
 .bs-grid-table--bulkCount strong {
@@ -228,9 +246,8 @@
 }
 
 .bs-grid-table--table tbody td {
-  height: auto;
-  min-height: 44px;
-  padding: 12px 16px;
+  height: 48px;
+  padding: 0 16px;
   font-size: var(--font-body, 14px);
   font-weight: var(--font-weight-regular, 400);
   line-height: 20px;
@@ -355,6 +372,7 @@
   justify-content: center;
   width: 24px;
   height: 24px;
+  vertical-align: middle;
   padding: 0;
   border: none;
   border-radius: 4px;
@@ -444,11 +462,11 @@
   overflow-wrap: break-word;
 }
 
-.bs-grid-table--table tr > td.bs-grid-table--expandedCell {
+.bs-grid-table .bs-grid-table--table > tbody > tr > td.bs-grid-table--expandedCell {
   white-space: normal;
   height: auto;
   min-height: 0;
-  padding: 0 0 12px;
+  padding: 8px 16px 12px;
   border-bottom: 1px solid var(--border-default, #d3d5dd);
   background: var(--bg-default, #ffffff);
   overflow: visible;
@@ -484,9 +502,21 @@
   display: none;
 }
 
+.bs-grid-table--nested .bs-grid-table--table,
 .bs-grid-table--nested .bs-grid-table--table thead th,
-.bs-grid-table--nested .bs-grid-table--table tbody td {
+.bs-grid-table--nested .bs-grid-table--table tbody td,
+.bs-grid-table--nested .bs-grid-table--summary td {
+  background: transparent;
+}
+
+.bs-grid-table--nested.bs-grid-table--density-compact .bs-grid-table--table thead th,
+.bs-grid-table--nested.bs-grid-table--density-compact .bs-grid-table--table tbody td,
+.bs-grid-table--nested .bs-grid-table--table thead th,
+.bs-grid-table--nested .bs-grid-table--table tbody td,
+.bs-grid-table--nested .bs-grid-table--summary td {
   height: 40px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .bs-grid-table--nested .bs-grid-table--table tbody tr:last-child td {
@@ -494,9 +524,8 @@
 }
 
 .bs-grid-table--summary td {
-  height: auto;
-  min-height: 44px;
-  padding: 12px 16px;
+  height: 48px;
+  padding: 0 16px;
   font-size: var(--font-body, 14px);
   font-weight: var(--font-weight-bold, 600);
   line-height: 20px;

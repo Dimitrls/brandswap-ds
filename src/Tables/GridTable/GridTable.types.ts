@@ -93,6 +93,7 @@ export interface GridTablePaginationConfig {
   total?: number;
   pageSizeOptions?: GridTablePageSizeOption[];
   onChange?: (next: { page: number; pageSize: number }) => void;
+  /** Defaults to `bottom`. The page-size menu opens upward in that position. */  
   placement?: 'top' | 'bottom';
 }
 

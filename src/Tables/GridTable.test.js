@@ -433,7 +433,11 @@ describe('GridTable', () => {
     const bar = container.querySelector('[aria-label="Bulk actions"]')
     expect(bar.textContent).toContain('2 of 3 selected')
     expect(bar.textContent).toContain('Archive Currys+Wickes')
-    click(buttonByText('Clear selection'))
+    const clearSelection = bar.querySelector('button[aria-label="Clear selection"]')
+    const count = bar.querySelector('.bs-grid-table--bulkCount')
+    expect(count.compareDocumentPosition(clearSelection) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(clearSelection.nextElementSibling.className).toContain('bs-grid-table--bulkActions')
+    click(clearSelection)
     expect(container.querySelector('[aria-label="Bulk actions"]')).toBeFalsy()
     expect(container.querySelectorAll('tbody input:checked').length).toBe(0)
   })
@@ -643,7 +647,7 @@ describe('GridTable', () => {
     expect(container.querySelector('.bs-grid-table--table').style.minWidth).toBe('1200px')
   })
 
-  it('renders the export action in the toolbar before pagination', () => {
+  it('places pagination under the table and the export action in the top-right corner', () => {
     render(
       <GridTable
         columns={columns}
@@ -654,19 +658,21 @@ describe('GridTable', () => {
         exportCsv={{}}
       />
     )
-    const toolbar = container.querySelector('.bs-grid-table--toolbar')
-    const corner = toolbar.querySelector('.bs-grid-table--cornerActions')
-    const pagination = toolbar.querySelector('.bs-grid-table--pagination')
+    const bottom = container.querySelector('.bs-grid-table--paginationBottom')
+    const corner = container.querySelector('.bs-grid-table--body .bs-grid-table--cornerActions')
+    expect(bottom.querySelector('.bs-grid-table--pagination')).toBeTruthy()
+    expect(bottom.contains(corner)).toBe(false)
     expect(corner.querySelector('button[aria-label="Export CSV"]')).toBeTruthy()
-    expect(corner.compareDocumentPosition(pagination) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    expect(container.querySelector('.bs-grid-table--body .bs-grid-table--cornerActions')).toBeFalsy()
+    expect(container.querySelector('.bs-grid-table').className).toContain('bs-grid-table--hasActions')
+    click(container.querySelector('[aria-label="Rows per page"] [role="combobox"]'))
+    expect(document.querySelector('[data-dropdown-position="top"]')).toBeTruthy()
   })
 
-  it('keeps the export action in the toolbar when there is no pagination', () => {
+  it('keeps the export action in the top-right corner when there is no pagination', () => {
     render(<GridTable columns={columns} rows={rows} getRowId={(row) => row.id} exportCsv={{}} />)
-    const toolbar = container.querySelector('.bs-grid-table--toolbar')
-    const corner = toolbar.querySelector('.bs-grid-table--cornerActions')
+    const corner = container.querySelector('.bs-grid-table--body .bs-grid-table--cornerActions')
     expect(corner.querySelector('button[aria-label="Export CSV"]')).toBeTruthy()
-    expect(toolbar.querySelector('.bs-grid-table--pagination')).toBeFalsy()
+    expect(container.querySelector('.bs-grid-table--paginationBottom')).toBeFalsy()
+    expect(container.querySelector('.bs-grid-table--toolbar')).toBeFalsy()
   })
 })
