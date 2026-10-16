@@ -607,7 +607,8 @@ describe('GridTable', () => {
     expect(document.querySelector('[data-bs-filter="popover"]')).toBeFalsy()
     const menu = document.querySelector('.bs-grid-table--menu')
     expect(menu).toBeTruthy()
-    expect(container.contains(menu)).toBe(false)
+    expect(scroll.contains(menu)).toBe(false)
+    expect(container.querySelector('.bs-grid-table--cornerActions').contains(menu)).toBe(true)
     act(() => {
       document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
     })

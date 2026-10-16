@@ -87,11 +87,11 @@
 
 .bs-grid-table--cornerActions {
   position: absolute;
-  top: 0;
+  top: 1px;
   right: 0;
   z-index: 6;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .bs-grid-table--actionsButton {
@@ -119,9 +119,12 @@
 }
 
 .bs-grid-table--menu {
-  z-index: 1000;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 7;
   box-sizing: border-box;
-  min-width: 160px;
+  width: 160px;
   font-family: var(--bs-font-family, 'Poppins', sans-serif);
   margin: 0;
   padding: 0;

@@ -55,7 +55,7 @@ import {
 
 `pinned: 'left'` columns move to the start (after the expand / select columns, which pin with them); `pinned: 'right'` columns move to the end. Offsets are measured from the rendered header, so `width` is optional. A shadow shows on the pinned edge while content is scrolled underneath.
 
-Column filter popovers and the export menu render into `document.body`, so `maxHeight` and pinned scroll areas never clip them.
+Column filter popovers render into `document.body`, so `maxHeight` and pinned scroll areas never clip them. The export menu hangs from the top-right actions button, outside the scroll area.
 
 ### Column `type`
 
