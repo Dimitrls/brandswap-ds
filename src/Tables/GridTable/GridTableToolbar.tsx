@@ -7,7 +7,6 @@ import type { IconName } from '../../Icons/Icon';
 import { Pagination } from '../../Navigation/Pagination';
 import type { GridTableMenuItem, GridTablePageSizeOption } from './GridTable.types';
 import { DEFAULT_PAGE_SIZE_OPTIONS, resolvePageSizeOption } from './GridTable.utils';
-import { GridTableFloating } from './GridTableFloating';
 
 const styles: Record<string, string> = {
   toolbar: 'bs-grid-table--toolbar',
@@ -64,13 +63,12 @@ export function GridTableActionsMenu({
 }) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!open) return undefined;
     const handlePointer = (event: MouseEvent) => {
       const target = event.target as Node;
-      if (wrapperRef.current?.contains(target) || menuRef.current?.contains(target)) return;
+      if (wrapperRef.current?.contains(target)) return;
       setOpen(false);
     };
     const handleKey = (event: KeyboardEvent) => {
@@ -113,14 +111,7 @@ export function GridTableActionsMenu({
         <Icon name="dots-vertical" size={16} />
       </button>
       {open && (
-        <GridTableFloating
-          as="ul"
-          anchorRef={wrapperRef}
-          align="right"
-          floatingRef={menuRef}
-          className={styles.menu}
-          role="menu"
-        >
+        <ul className={styles.menu} role="menu">
           {formats.map((format) => (
             <li key={format} role="none">
               <MenuRow
@@ -145,7 +136,7 @@ export function GridTableActionsMenu({
               />
             </li>
           ))}
-        </GridTableFloating>
+        </ul>
       )}
     </div>
   );
@@ -162,8 +153,8 @@ export interface GridTableToolbarProps {
   pageSizeOptions: GridTablePageSizeOption[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
-  /** Rendered in the toolbar, before pagination. */
-  actions?: React.ReactNode;
+  /** Page-size menu opens upward when pagination sits at the bottom of the table. */
+  pageSizeDropdownPosition?: 'top' | 'bottom';
 }
 
 export function GridTableToolbar({
@@ -177,9 +168,9 @@ export function GridTableToolbar({
   pageSizeOptions,
   onPageChange,
   onPageSizeChange,
-  actions,
+  pageSizeDropdownPosition = 'bottom',
 }: GridTableToolbarProps) {
-  if (!showSearch && !showPagination && !actions) return null;
+  if (!showSearch && !showPagination) return null;
 
   const options = (pageSizeOptions.length > 0 ? pageSizeOptions : DEFAULT_PAGE_SIZE_OPTIONS).map(
     resolvePageSizeOption
@@ -204,7 +195,6 @@ export function GridTableToolbar({
         )}
       </div>
       <div className={styles.toolbarEnd}>
-        {actions}
         {showPagination && (
           <div className={styles.pagination}>
             <div className={styles.pageSize}>
@@ -218,6 +208,7 @@ export function GridTableToolbar({
                   if (next) onPageSizeChange(next.value);
                 }}
                 searchable={false}
+                dropdownPosition={pageSizeDropdownPosition}
                 aria-label="Rows per page"
               />
             </div>

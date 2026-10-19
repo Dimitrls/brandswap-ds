@@ -287,7 +287,7 @@ export function resolvePageSizeOption(option: GridTablePageSizeOption): {
   value: number;
   label: string;
 } {
-  if (typeof option === 'number') return { value: option, label: String(option) };
+  if (typeof option === 'number') return { value: option, label: `${option} / page` };
   return { value: option.value, label: option.label };
 }
 

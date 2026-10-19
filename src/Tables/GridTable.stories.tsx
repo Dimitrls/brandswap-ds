@@ -20,7 +20,7 @@ export default {
     docs: {
       description: {
         component:
-          'Admin-ready grid for BrandSwopAdmin entity lists, insight reports, pickers, and nested rows. Place FiltersBar above the table. See src/Tables/GridTable/README.md.',
+          'Admin-ready grid for BrandSwopAdmin entity lists, insight reports, pickers, and nested rows. Keep page-level search and filters together in one FiltersBar outside the table. See src/Tables/GridTable/README.md.',
       },
     },
     backgrounds: {
@@ -129,13 +129,22 @@ const nestedOffers: Record<string, NestedOffer[]> = {
 
 export const EntityList = () => {
   const [status, setStatus] = useState('All');
+  const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const rows = useMemo(
-    () => (status === 'All' ? offers : offers.filter((row) => row.status === status)),
-    [status]
-  );
+  const rows = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return offers.filter((row) => {
+      const matchesStatus = status === 'All' || row.status === status;
+      const matchesQuery =
+        !needle ||
+        row.name.toLowerCase().includes(needle) ||
+        row.advertiser.toLowerCase().includes(needle) ||
+        row.status.toLowerCase().includes(needle);
+      return matchesStatus && matchesQuery;
+    });
+  }, [query, status]);
 
   const columns: Column<OfferRow>[] = [
     { id: 'name', header: 'Offer', accessor: 'name', type: 'text', minWidth: 220, flex: 1 },
@@ -165,8 +174,12 @@ export const EntityList = () => {
   ];
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <FiltersBar
+        searchbox
+        searchValue={query}
+        onSearchChange={setQuery}
+        searchPlaceholder="Search"
         filters={[
           {
             label: 'Status',
@@ -180,8 +193,6 @@ export const EntityList = () => {
         rows={rows}
         columns={columns}
         getRowId={(row) => row.id}
-        density="media"
-        filtering={{}}
         pagination={{
           mode: 'server',
           page,
@@ -273,7 +284,6 @@ export const ModalPicker = () => {
         { id: 'advertiser', header: 'Advertiser', accessor: 'advertiser', type: 'text' },
       ]}
       getRowId={(row) => row.id}
-      density="compact"
       selection={{
         mode: 'multiple',
         selectedIds,
@@ -384,7 +394,6 @@ export const PinnedWideReport = () => {
         rows={wideRows}
         columns={columns}
         getRowId={(row) => row.id}
-        density="compact"
         maxHeight={360}
         tableMinWidth={1400}
         filtering={{}}
@@ -543,10 +552,11 @@ export const FullFeatures = () => {
       accessor: 'status',
       type: 'status',
       width: 120,
+      sortable: false,
       filterable: false,
       render: ({ value }) => <StatusCell value={value} />,
     },
-    { id: 'categories', header: 'Categories', accessor: 'categories', type: 'text', flex: 1, filterable: false },
+    { id: 'categories', header: 'Categories', accessor: 'categories', type: 'text', flex: 1, sortable: false, filterable: false },
   ];
 
   return (
@@ -589,18 +599,18 @@ export const FullFeatures = () => {
         hoverActions={(row) => (
           <ActionsCell
             actions={[
-              { icon: 'pencil', ariaLabel: `Edit ${row.host}`, onClick: () => setNotice(`Edit ${row.host}`), variant: 'outline' },
-              { icon: 'download', ariaLabel: `Download ${row.host}`, onClick: () => setNotice(`Download ${row.host}`), variant: 'outline' },
+              { icon: 'pencil', ariaLabel: `Edit ${row.host}`, onClick: () => setNotice(`Edit ${row.host}`), variant: 'subtle' },
+              { icon: 'download', ariaLabel: `Download ${row.host}`, onClick: () => setNotice(`Download ${row.host}`), variant: 'subtle' },
               { icon: 'trash', ariaLabel: `Delete ${row.host}`, onClick: () => setNotice(`Delete ${row.host}`), variant: 'filled-warning' },
             ]}
           />
         )}
         bulkActions={() => (
           <>
-            <Button size="large" variant="outline" icon="download" label="Download" onClick={() => setNotice('Download')} />
-            <Button size="large" variant="outline" icon="plus" label="Activate" onClick={() => setNotice('Activate')} />
-            <Button size="large" variant="outline-warning" icon="close" label="Deactivate" onClick={() => setNotice('Deactivate')} />
-            <Button size="large" variant="filled-warning" icon="trash" label="Delete" onClick={() => setNotice('Delete')} />
+            <Button className="bs-grid-table--bulkButton" size="large" variant="outline" icon="download" label="Download" onClick={() => setNotice('Download')} />
+            <Button className="bs-grid-table--bulkButton" size="large" variant="outline" icon="plus" label="Activate" onClick={() => setNotice('Activate')} />
+            <Button className="bs-grid-table--bulkButton" size="large" variant="outline-warning" icon="close" label="Deactivate" onClick={() => setNotice('Deactivate')} />
+            <Button className="bs-grid-table--bulkButton" size="large" variant="filled-warning" icon="trash" label="Delete" onClick={() => setNotice('Delete')} />
           </>
         )}
         summary={{
