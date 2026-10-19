@@ -5,7 +5,11 @@ import { Checkbox } from '../Checkbox';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
 import type { SizeVariant } from '../../shared/types';
-import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
+import {
+  defaultGetOptionKey,
+  defaultGetOptionLabel,
+  sortSelectedOptionsFirst,
+} from '../optionHelpers';
 import { useVisibleTagCount } from '../useVisibleTagCount';
 import type { DropdownPosition, DropdownSize } from '../Select/Select';
 
@@ -130,6 +134,13 @@ export function MultiSelectbox<T = string>({
     if (disabled) return;
     onChange(selected.filter((item) => resolveKey(item) !== resolveKey(option)));
   };
+
+  const orderedOptions = useMemo(
+    () => sortSelectedOptionsFirst(options, isSelected),
+    // selectedKey captures selection identity
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [options, selectedKey]
+  );
 
   const getSelectSizeClass = () => {
     if (size === 'small') return styles.selectSmall;
@@ -260,10 +271,10 @@ export function MultiSelectbox<T = string>({
                 : undefined
             }
           >
-            {options.length === 0 ? (
+            {orderedOptions.length === 0 ? (
               <li className={styles.emptyState}>No data</li>
             ) : (
-              options.map((option, idx) => (
+              orderedOptions.map((option, idx) => (
                 <li
                   key={resolveKey(option, idx)}
                   className={styles.option}

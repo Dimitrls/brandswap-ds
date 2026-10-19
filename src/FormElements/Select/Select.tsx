@@ -6,7 +6,11 @@ import { RadioButton } from '../RadioButton';
 import { RemovableTag, Tag } from '../../Buttons/Tag';
 import { Icon, IconName } from '../../Icons/Icon';
 import type { SizeVariant } from '../../shared/types';
-import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
+import {
+  defaultGetOptionKey,
+  defaultGetOptionLabel,
+  sortSelectedOptionsFirst,
+} from '../optionHelpers';
 import { useVisibleTagCount } from '../useVisibleTagCount';
 
 export { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
@@ -168,11 +172,16 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
     label,
   });
 
-  const filteredOptions = searchable
-    ? options.filter((option) =>
-      getOptionLabel(option).toLowerCase().includes(search.toLowerCase())
-    )
-    : options;
+  const filteredOptions = useMemo(() => {
+    const matched = searchable
+      ? options.filter((option) =>
+          getOptionLabel(option).toLowerCase().includes(search.toLowerCase())
+        )
+      : options;
+    return sortSelectedOptionsFirst(matched, isSelected);
+    // selectedKey captures selection identity; isSelected closes over it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options, searchable, search, selectedKey, getOptionLabel]);
 
   const resolvedVariant: SelectOptionVariant =
     optionVariant === 'radio' && multiple ? 'checkbox' : optionVariant;

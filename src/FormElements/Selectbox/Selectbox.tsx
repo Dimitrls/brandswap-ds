@@ -3,7 +3,11 @@ import './Selectbox.css';
 
 import { Icon, IconName } from '../../Icons/Icon';
 import type { SizeVariant } from '../../shared/types';
-import { defaultGetOptionKey, defaultGetOptionLabel } from '../optionHelpers';
+import {
+  defaultGetOptionKey,
+  defaultGetOptionLabel,
+  sortSelectedOptionsFirst,
+} from '../optionHelpers';
 import type { DropdownPosition, DropdownSize } from '../Select/Select';
 
 const styles: Record<string, string> = {
@@ -118,6 +122,13 @@ export function Selectbox<T = string>({
     return styles.dropdownMedium;
   };
 
+  const orderedOptions = sortSelectedOptionsFirst(
+    options,
+    (option) =>
+      selected != null &&
+      getOptionKey(option) === getOptionKey(selected as T)
+  );
+
   return (
     <div
       className={[styles.wrapper, disabled ? 'bs-selectbox--disabled' : '', className]
@@ -191,10 +202,10 @@ export function Selectbox<T = string>({
                 : undefined
             }
           >
-            {options.length === 0 ? (
+            {orderedOptions.length === 0 ? (
               <li className={styles.emptyState}>No data</li>
             ) : (
-              options.map((option, idx) => (
+              orderedOptions.map((option, idx) => (
                 <li
                   key={getOptionKey(option, idx)}
                   className={styles.option}
