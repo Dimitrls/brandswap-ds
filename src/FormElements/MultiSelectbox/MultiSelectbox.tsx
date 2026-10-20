@@ -86,6 +86,8 @@ export function MultiSelectbox<T = string>({
   ...props
 }: MultiSelectboxProps<T>) {
   const [open, setOpen] = useState(false);
+  /** Option order frozen at open so selecting does not reshuffle / jump scroll. */
+  const [openListOrder, setOpenListOrder] = useState<T[] | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const tagsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -111,10 +113,25 @@ export function MultiSelectbox<T = string>({
     label,
   });
 
+  const closeDropdown = () => {
+    setOpen(false);
+    setOpenListOrder(null);
+  };
+
+  const toggleDropdown = () => {
+    if (disabled) return;
+    if (open) {
+      closeDropdown();
+      return;
+    }
+    setOpenListOrder(sortSelectedOptionsFirst(options, isSelected));
+    setOpen(true);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
+        closeDropdown();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -135,12 +152,7 @@ export function MultiSelectbox<T = string>({
     onChange(selected.filter((item) => resolveKey(item) !== resolveKey(option)));
   };
 
-  const orderedOptions = useMemo(
-    () => sortSelectedOptionsFirst(options, isSelected),
-    // selectedKey captures selection identity
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [options, selectedKey]
-  );
+  const orderedOptions = openListOrder ?? options;
 
   const getSelectSizeClass = () => {
     if (size === 'small') return styles.selectSmall;
@@ -209,9 +221,7 @@ export function MultiSelectbox<T = string>({
         )}
         <div
           className={`${styles.select} ${getSelectSizeClass()}`}
-          onClick={() => {
-            if (!disabled) setOpen(!open);
-          }}
+          onClick={toggleDropdown}
           tabIndex={disabled ? -1 : 0}
           aria-disabled={disabled || undefined}
           style={{

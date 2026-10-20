@@ -5,25 +5,26 @@ import { create } from '@storybook/theming/create';
 import '../src/styles/global.css';
 import '../src/Buttons/shared/button-base.css';
 
+// Storybook theming (polished) cannot parse CSS variables — use concrete hex values.
 const docsTheme = create({
   base: 'light',
   brandTitle: 'BrandSwap Design System',
   brandUrl: '/',
   colorPrimary: '#3AB78F',
   colorSecondary: '#844AFF',
-  appBg: 'var(--bg-default)',
-  appContentBg: 'var(--bg-default)',
-  appBorderColor: 'var(--border-subtle)',
+  appBg: '#ffffff',
+  appContentBg: '#ffffff',
+  appBorderColor: '#f2f2f2',
   appBorderRadius: 12,
   fontBase: "'Poppins', sans-serif",
-  textColor: 'var(--text-default)',
-  textInverseColor: 'var(--text-negative)',
-  barTextColor: 'var(--text-muted)',
+  textColor: '#161616',
+  textInverseColor: '#ffffff',
+  barTextColor: '#77787e',
   barSelectedColor: '#3AB78F',
   barHoverColor: '#3AB78F',
-  inputBg: 'var(--bg-default)',
-  inputBorder: 'var(--border-subtle)',
-  inputTextColor: 'var(--text-default)',
+  inputBg: '#ffffff',
+  inputBorder: '#f2f2f2',
+  inputTextColor: '#161616',
   inputBorderRadius: 8,
 });
 

@@ -149,6 +149,8 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  /** Option order frozen at open so selecting does not reshuffle / jump scroll. */
+  const [openListOrder, setOpenListOrder] = useState<T[] | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const tagsContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -173,15 +175,12 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
   });
 
   const filteredOptions = useMemo(() => {
-    const matched = searchable
-      ? options.filter((option) =>
-          getOptionLabel(option).toLowerCase().includes(search.toLowerCase())
-        )
-      : options;
-    return sortSelectedOptionsFirst(matched, isSelected);
-    // selectedKey captures selection identity; isSelected closes over it
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options, searchable, search, selectedKey, getOptionLabel]);
+    const base = openListOrder ?? options;
+    if (!searchable || !search) return base;
+    return base.filter((option) =>
+      getOptionLabel(option).toLowerCase().includes(search.toLowerCase())
+    );
+  }, [openListOrder, options, searchable, search, getOptionLabel]);
 
   const resolvedVariant: SelectOptionVariant =
     optionVariant === 'radio' && multiple ? 'checkbox' : optionVariant;
@@ -189,6 +188,17 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
   const closeDropdown = () => {
     setOpen(false);
     setSearch('');
+    setOpenListOrder(null);
+  };
+
+  const toggleDropdown = () => {
+    if (disabled) return;
+    if (open) {
+      closeDropdown();
+      return;
+    }
+    setOpenListOrder(sortSelectedOptionsFirst(options, isSelected));
+    setOpen(true);
   };
 
   useEffect(() => {
@@ -401,9 +411,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
         )}
         <div
           className={`${styles.select} ${getSelectSizeClass()}`}
-          onClick={() => {
-            if (!disabled) setOpen(!open);
-          }}
+          onClick={toggleDropdown}
           tabIndex={disabled ? -1 : 0}
           role="combobox"
           aria-expanded={open}

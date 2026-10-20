@@ -16,14 +16,36 @@ const OPTIONS = [
   'Home & Garden',
   'Toys',
   'Health',
+  'Beauty & Personal Care',
+  'Baby Products',
+  'Pet Supplies',
+  'Office Supplies',
+  'Music & Instruments',
+  'Movies & TV',
+  'Video Games',
+  'Computers',
+  'Phones & Accessories',
+  'Cameras & Photo',
+  'Automotive',
+  'Tools & Home Improvement',
+  'Industrial & Scientific',
+  'Grocery',
+  'Appliances',
+  'Luggage & Travel',
+  'Jewelry',
+  'Watches',
+  'Handmade',
+  'Arts & Crafts',
+  'Collectibles',
+  'Outdoor Recreation',
+  'Software',
+  'Smart Home',
 ];
 
-const OBJECT_OPTIONS = [
-  { id: 1, name: 'Food & Drink' },
-  { id: 2, name: 'Sports' },
-  { id: 3, name: 'Books' },
-  { id: 4, name: 'Fashion' },
-];
+const OBJECT_OPTIONS = OPTIONS.map((name, index) => ({
+  id: index + 1,
+  name,
+}));
 
 export const SingleDefault = () => {
   const [value, setValue] = useState(null);

@@ -7,17 +7,19 @@ export default {
   tags: ['autodocs'],
 };
 
+const OPTIONS = Array.from({ length: 32 }, (_, index) => `Option ${index + 1}`);
+
 export const Default = () => (
   <Selectbox
     label="Choose an option"
-    options={['Option 1', 'Option 2', 'Option 3']}
+    options={OPTIONS}
   />
 );
 
 export const Small = () => (
   <Selectbox
     label="Small selectbox"
-    options={['Option 1', 'Option 2', 'Option 3']}
+    options={OPTIONS}
     size="small"
   />
 );
@@ -25,7 +27,7 @@ export const Small = () => (
 export const Medium = () => (
   <Selectbox
     label="Medium selectbox (default)"
-    options={['Option 1', 'Option 2', 'Option 3']}
+    options={OPTIONS}
     size="medium"
   />
 );
@@ -33,7 +35,7 @@ export const Medium = () => (
 export const Large = () => (
   <Selectbox
     label="Large selectbox"
-    options={['Option 1', 'Option 2', 'Option 3']}
+    options={OPTIONS}
     size="large"
   />
 );
@@ -41,7 +43,7 @@ export const Large = () => (
 export const WithIcon = () => (
   <Selectbox
     label="Selectbox with icon"
-    options={['Option 1', 'Option 2', 'Option 3']}
+    options={OPTIONS}
     icon={true}
     iconName="search"
   />
@@ -50,7 +52,7 @@ export const WithIcon = () => (
 export const WithIconSmall = () => (
   <Selectbox
     label="Small selectbox with icon"
-    options={['Option 1', 'Option 2', 'Option 3']}
+    options={OPTIONS}
     size="small"
     icon={true}
     iconName="filter"
@@ -61,7 +63,7 @@ export const SmallDropdownTop = () => (
   <div style={{ paddingTop: 180 }}>
     <Selectbox
       label="Top + small dropdown"
-      options={['Option 1', 'Option 2', 'Option 3']}
+      options={OPTIONS}
       size="small"
       dropdownSize="small"
       dropdownPosition="top"
