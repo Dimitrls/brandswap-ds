@@ -14,7 +14,7 @@
 .bs-selectbox--disabled .bs-selectbox--select {
   cursor: not-allowed;
 }
-.bs-selectbox--label { 
+.bs-selectbox--label {
   font-size: var(--font-body);
   color: var(--text-muted);
   display: inline-flex;
@@ -51,6 +51,7 @@
 
 .bs-selectbox--selectWrapper {
   position: relative;
+  width: 100%;
 }
 
 .bs-selectbox--selectWrapper[data-dropdown-open='top'] > .bs-selectbox--select {
@@ -58,7 +59,8 @@
   border-top-right-radius: 0;
 }
 
-.bs-selectbox--selectWrapper[data-dropdown-open='bottom'] > .bs-selectbox--select {
+.bs-selectbox--selectWrapper[data-dropdown-open='bottom']
+  > .bs-selectbox--select {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -168,7 +170,7 @@
 }
 
 .bs-selectbox--option:hover {
-  background: var(--primary-10, #3AB78F1a);
+  background: var(--primary-10, #3ab78f1a);
 }
 
 /* --- Dropdown size: medium = current/default --- */
@@ -259,7 +261,9 @@
   margin-right: 6px;
 }
 
-.bs-selectbox--dropdown--small .bs-checkbox--input:checked + .bs-checkbox--custom::after {
+.bs-selectbox--dropdown--small
+  .bs-checkbox--input:checked
+  + .bs-checkbox--custom::after {
   width: 3px;
   height: 7px;
 }
@@ -322,7 +326,9 @@
   margin-right: 10px;
 }
 
-.bs-selectbox--dropdown--large .bs-checkbox--input:checked + .bs-checkbox--custom::after {
+.bs-selectbox--dropdown--large
+  .bs-checkbox--input:checked
+  + .bs-checkbox--custom::after {
   width: 5px;
   height: 10px;
 }
@@ -395,7 +401,7 @@
 }
 
 .bs-selectbox--searchInput:focus {
-  border-color: var(--primary, #3AB78F);
+  border-color: var(--primary, #3ab78f);
 }
 
 .bs-selectbox--searchInput::placeholder {
@@ -421,9 +427,84 @@
 }
 
 .bs-selectbox--optionSelected {
-  background: var(--primary-10, #3AB78F1a);
+  background: var(--primary-10, #3ab78f1a);
 }
 
 .bs-selectbox--dropdownScroll {
   overflow-y: visible;
+}
+
+/* Match trigger width: wrap long labels instead of growing past the input */
+.bs-selectbox--dropdown--matchParent {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.bs-selectbox--dropdown--matchParent .bs-checkbox--custom {
+  margin-left: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.bs-selectbox--dropdown--matchParent .bs-selectbox--option,
+.bs-selectbox--dropdown--matchParent.bs-selectbox--dropdown--small
+  .bs-selectbox--option,
+.bs-selectbox--dropdown--matchParent.bs-selectbox--dropdown--medium
+  .bs-selectbox--option,
+.bs-selectbox--dropdown--matchParent.bs-selectbox--dropdown--large
+  .bs-selectbox--option {
+  height: auto;
+  white-space: normal;
+  align-items: flex-start;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.bs-selectbox--dropdown--matchParent.bs-selectbox--dropdown--small
+  .bs-selectbox--option {
+  min-height: 28px;
+}
+
+.bs-selectbox--dropdown--matchParent.bs-selectbox--dropdown--medium
+  .bs-selectbox--option {
+  min-height: 36px;
+}
+
+.bs-selectbox--dropdown--matchParent.bs-selectbox--dropdown--large
+  .bs-selectbox--option {
+  min-height: 44px;
+}
+
+.bs-selectbox--dropdown--matchParent .bs-selectbox--option:has(input) label {
+  align-items: flex-start;
+  height: auto;
+  min-width: 0;
+  width: 100%;
+}
+
+.bs-selectbox--dropdown--matchParent .bs-checkbox--wrapper,
+.bs-selectbox--dropdown--matchParent .bs-radio-button--wrapper {
+  align-items: flex-start;
+  min-width: 0;
+  width: 100%;
+}
+
+.bs-selectbox--dropdown--matchParent .bs-checkbox--label,
+.bs-selectbox--dropdown--matchParent .bs-radio-button--label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
+}
+
+.bs-selectbox--dropdown--matchParent .bs-selectbox--option:not(:has(input)) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }

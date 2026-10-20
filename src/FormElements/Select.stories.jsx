@@ -330,6 +330,31 @@ export const MultiSelectTopPosition = () => {
   );
 };
 
+export const MatchParentWidth = () => {
+  const [value, setValue] = useState([]);
+  return (
+    <div style={{ width: 260, padding: 16, border: '1px dashed #ccc' }}>
+      <Select
+        label="Match parent width"
+        options={[
+          'Flash Sale: 40% Off Sitewide for the Next 24 Hours',
+          'Try Our Premium Plan Free for 14 Days — No Commitment',
+          'Food & Drink',
+          'E-Commerce & Product-Focused Layouts',
+        ]}
+        multiple
+        value={value}
+        onChange={setValue}
+        size="small"
+        dropdownSize="small"
+        optionVariant="checkbox"
+        dropdownMatchParentWidth
+        placeholder="Select..."
+      />
+    </div>
+  );
+};
+
 export const LabelHeightDoesNotAffectTopPosition = () => {
   const [short, setShort] = useState(null);
   const [tall, setTall] = useState(null);

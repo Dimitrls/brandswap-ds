@@ -156,6 +156,37 @@ describe('Select dropdownPosition / dropdownSize', () => {
     expect(selectWrapper.contains(dropdown)).toBe(true)
   })
 
+  it('keeps content-sized dropdown by default', () => {
+    render(
+      <Select
+        options={['A', 'B']}
+        value={null}
+        onChange={() => {}}
+        searchable={false}
+      />
+    )
+    openSelect()
+    const dropdown = container.querySelector('[role="listbox"]')
+    expect(dropdown.className).not.toContain('bs-selectbox--dropdown--matchParent')
+    expect(dropdown.getAttribute('data-dropdown-match-parent')).toBe(null)
+  })
+
+  it('supports dropdownMatchParentWidth', () => {
+    render(
+      <Select
+        options={['A very long option label that should wrap']}
+        value={null}
+        onChange={() => {}}
+        searchable={false}
+        dropdownMatchParentWidth
+      />
+    )
+    openSelect()
+    const dropdown = container.querySelector('[role="listbox"]')
+    expect(dropdown.className).toContain('bs-selectbox--dropdown--matchParent')
+    expect(dropdown.getAttribute('data-dropdown-match-parent')).toBe('true')
+  })
+
   it('marks selectWrapper with data-dropdown-open for merged corners', () => {
     render(
       <Select

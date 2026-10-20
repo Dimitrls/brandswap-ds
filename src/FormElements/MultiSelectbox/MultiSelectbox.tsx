@@ -41,6 +41,7 @@ const styles: Record<string, string> = {
   emptyState: "bs-selectbox--emptyState",
   optionSelected: "bs-selectbox--optionSelected",
   dropdownScroll: "bs-selectbox--dropdownScroll",
+  dropdownMatchParent: "bs-selectbox--dropdown--matchParent",
 };
 
 export interface MultiSelectboxProps<T = string>
@@ -62,6 +63,7 @@ export interface MultiSelectboxProps<T = string>
   dropdownPosition?: DropdownPosition;
   disabled?: boolean;
   dropdownMaxHeight?: number;
+  dropdownMatchParentWidth?: boolean;
 }
 
 export function MultiSelectbox<T = string>({
@@ -82,6 +84,7 @@ export function MultiSelectbox<T = string>({
   dropdownPosition = 'bottom',
   disabled = false,
   dropdownMaxHeight,
+  dropdownMatchParentWidth = false,
   className,
   ...props
 }: MultiSelectboxProps<T>) {
@@ -270,11 +273,13 @@ export function MultiSelectbox<T = string>({
               styles.dropdown,
               getDropdownPositionClass(),
               getDropdownSizeClass(),
+              dropdownMatchParentWidth ? styles.dropdownMatchParent : '',
             ]
               .filter(Boolean)
               .join(' ')}
             data-dropdown-position={dropdownPosition}
             data-dropdown-size={dropdownSize}
+            data-dropdown-match-parent={dropdownMatchParentWidth || undefined}
             style={
               dropdownMaxHeight != null
                 ? { maxHeight: dropdownMaxHeight, overflow: 'auto' }
@@ -288,7 +293,6 @@ export function MultiSelectbox<T = string>({
                 <li
                   key={resolveKey(option, idx)}
                   className={styles.option}
-                  style={{ display: 'flex', alignItems: 'center' }}
                 >
                   <Checkbox
                     label={getOptionLabel(option)}

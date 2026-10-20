@@ -43,6 +43,7 @@ const styles: Record<string, string> = {
   emptyState: 'bs-selectbox--emptyState',
   optionSelected: 'bs-selectbox--optionSelected',
   dropdownScroll: 'bs-selectbox--dropdownScroll',
+  dropdownMatchParent: 'bs-selectbox--dropdown--matchParent',
 };
 
 export type SelectOptionVariant = 'default' | 'checkbox' | 'radio';
@@ -75,6 +76,8 @@ export type SelectSharedProps<T = string> = Omit<
   searchPlaceholder?: string;
   disabled?: boolean;
   dropdownMaxHeight?: number;
+  /** When true, dropdown width matches the trigger and long labels wrap (up to 3 lines). Default keeps content-sized width. */
+  dropdownMatchParentWidth?: boolean;
 };
 
 export type SelectSingleProps<T = string> = SelectSharedProps<T> & {
@@ -123,6 +126,7 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
     searchPlaceholder = 'Search...',
     disabled = false,
     dropdownMaxHeight,
+    dropdownMatchParentWidth = false,
     className,
     value,
     onChange,
@@ -320,7 +324,6 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
         <li
           key={optionKey}
           className={styles.option}
-          style={{ display: 'flex', alignItems: 'center' }}
         >
           <Checkbox
             label={optionLabel}
@@ -338,7 +341,6 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
         <li
           key={optionKey}
           className={styles.option}
-          style={{ display: 'flex', alignItems: 'center' }}
         >
           <RadioButton
             label={optionLabel}
@@ -440,12 +442,14 @@ export function Select<T = string>(props: SelectProps<T>): React.ReactElement {
               styles.dropdown,
               getDropdownPositionClass(),
               getDropdownSizeClass(),
+              dropdownMatchParentWidth ? styles.dropdownMatchParent : '',
             ]
               .filter(Boolean)
               .join(' ')}
             role="listbox"
             data-dropdown-position={dropdownPosition}
             data-dropdown-size={dropdownSize}
+            data-dropdown-match-parent={dropdownMatchParentWidth || undefined}
           >
             {searchable && (
               <div
